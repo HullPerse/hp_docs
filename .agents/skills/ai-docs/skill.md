@@ -77,11 +77,48 @@ Present findings as a table:
 
 Only suggest changes where there is a real, measurable benefit. Do not suggest changes just because the canonical stack is different.
 
-### 4. Generate .docs/ Files
+### 4. File Naming Analysis
+
+Analyze existing file naming conventions in the project:
+
+**For existing projects:**
+1. Scan file names across `src/`, `lib/`, `components/`, `hooks/`, `api/`, `types/`, `config/`
+2. Detect patterns:
+   - **Casing**: camelCase, PascalCase, kebab-case, snake_case, dot.notation
+   - **Suffixes**: `.component.tsx`, `.service.ts`, `.hook.ts`, `.utils.ts`, `.config.ts`, or none
+   - **Prefixes**: `use*` for hooks, `I*` for interfaces, or none
+   - **Index files**: `index.ts` barrel exports or direct imports
+3. Check consistency -- are there conflicting patterns?
+4. Adopt the dominant pattern as the project convention
+
+**For new projects:**
+1. Detect language and ecosystem conventions:
+   - **TypeScript/JavaScript**: camelCase for functions/variables, PascalCase for components/classes, kebab-case or camelCase for files
+   - **React**: PascalCase for component files (`Button.tsx`), camelCase for hooks/utils (`useAuth.ts`)
+   - **Vue**: PascalCase for SFCs (`Button.vue`), camelCase for composables
+   - **Rust**: snake_case for files (`my_module.rs`), PascalCase for types
+   - **Python**: snake_case for files and functions (`my_module.py`)
+   - **Go**: snake_case for files, PascalCase for exports
+2. Ask user which convention they prefer
+3. Recommend the ecosystem-standard variant with `(recommended)`
+
+Present findings:
+
+```
+File Naming Convention:
+  Detected: camelCase files, .component.tsx suffix, use* prefix for hooks
+  Consistent: YES (98% compliance)
+  Convention adopted: [chosen pattern]
+  Exceptions: [list inconsistencies if any]
+```
+
+If inconsistencies exist, list them and ask user whether to fix now or defer.
+
+### 5. Generate .docs/ Files
 
 Generate ALL of the following files with full content adapted to the detected stack. Do NOT use placeholders like `{{...}}` -- fill everything with real data from the project.
 
-### 5. Docs Health Check
+### 6. Docs Health Check
 
 After generating all files, verify completeness. For EACH file, check that ALL required sections from "Template Files" below are present. Report missing sections:
 
@@ -97,7 +134,7 @@ Docs Health Check:
 
 If sections are missing, generate them before proceeding. Do not skip health check.
 
-### 6. Verify
+### 7. Verify
 
 Run these commands to confirm they work:
 - `bun run dev` (or equivalent)
@@ -107,15 +144,21 @@ Run these commands to confirm they work:
 
 Report which commands work, which fail, and why.
 
-### 7. Ask User
+### 8. Ask User
 
-After generating `.docs/`, health check, and stack comparison:
+After generating `.docs/`, health check, stack comparison, and file naming analysis:
 
 ```
-Проект обнаружен и .docs/ заполнен. Стек: [detected stack].
+Проект обнаружен и .docs/ заполнен.
+
+Стек: [detected stack]
+Нейминг файлов: [detected convention or chosen convention for new project]
 
 Несоответствия с каноническим стеком:
 [stack comparison table, if any]
+
+Нарушения ней밍а:
+[list inconsistencies if any, or "нет"]
 
 Выбери:
 1. Глубокий анализ существующего проекта -- детальная проверка кода,
@@ -153,7 +196,7 @@ The main session contract. Must contain ALL of these sections:
 10. **Query rules** (if TanStack Query used): one query per file, `data` naming, `isLoading`/`isError` handling
 11. **Type rules**: no `any`, `unknown` only in boundary code, narrow before use
 12. **Directory boundaries**: where types, helpers, configs, hooks, API clients go
-13. **File naming**: camelCase basenames, preserve service suffixes
+13. **File naming**: project convention detected during first-run (see file naming analysis); preserve established patterns, service suffixes, and casing
 14. **Testing contract**: unit for domain rules, integration for persistence, fake services, typecheck + lint + test
 15. **Documentation**: update DECISIONS.md, features, DESIGN.md, README
 16. **Anti-slop rules**: ASCII punctuation only (no em/en dash), no template intros, no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of decision logging
@@ -173,7 +216,8 @@ Permanent project contract. Must contain ALL of these sections:
 7. **Feature file format**: style rules (plain text, Idea/Comment/Pros/Cons, no decorative tables)
 8. **Decision journal rules**: mandatory logging, conflict resolution
 9. **Anti-slop rules**: text/punctuation, code/architecture, UI/UX subsections
-10. **Documentation index**: what each .docs/ file contains
+10. **File naming convention**: detected or chosen pattern with examples (casing, suffixes, prefix rules, exceptions)
+11. **Documentation index**: what each .docs/ file contains
 
 ### .docs/DESIGN.md
 
@@ -290,7 +334,7 @@ Check the codebase against the rules defined in `.docs/DEVELOPMENT.md` and `.doc
 - Are configs in `config/*.config.ts`?
 - Are hooks in `hooks/**/*.hook.ts` (or equivalent)?
 - Are API clients in `api/**/*.api.ts` (or equivalent)?
-- Do component files use camelCase basenames with service suffixes?
+- Do files follow the project's detected naming convention (casing, suffixes, prefixes)?
 
 **Code quality:**
 - No explicit `any` in written code
