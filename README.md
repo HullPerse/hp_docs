@@ -44,7 +44,7 @@ cp -r .docs/ <your-project>/.docs/
 
 - **No explicit `any`** -- in written code; `unknown` only in boundary code (JSON parsing, `catch`, external libs)
 - **Narrow `unknown`** -- before leaving boundary code, narrow to concrete type via Zod or type guard
-- **File naming** -- follow project convention (risovach-style `<domain>.<suffix>.<ext>` recommended for TypeScript)
+- **File naming** -- follow project convention (4 options: industry standard, HullPerse, custom, or agent decides)
 - **Directory boundaries** -- types in `types/`, helpers in `lib/`, configs in `config/`, hooks in `hooks/`, API clients in `api/`
 
 ### Query/Data Patterns (TanStack Query)
@@ -113,14 +113,34 @@ Suggests alternatives only when there's a real, measurable benefit.
 ### File Naming Analysis
 
 Detects and enforces consistent file naming:
+
 - **Existing projects**: scans conventions, detects casing/suffixes/prefixes, adopts dominant pattern
-- **New projects**: asks user, recommends risovach-style convention for TypeScript
+- **New projects**: presents 4 options and asks user to choose
 - Reports inconsistencies and asks whether to fix now or defer
-- Detected convention stored in `.docs/DEVELOPMENT.md` for all future sessions
+- Detected/chosen convention stored in `.docs/DEVELOPMENT.md` for all future sessions
 
-**Risovach convention (recommended for TypeScript):**
+**4 naming options:**
 
-Pattern: `<domain>.<suffix>.<ext>`
+| # | Option | When to recommend |
+|---|--------|-------------------|
+| 1 | **Industry standard** | Large team, ecosystem interop, non-TypeScript |
+| 2 | **HullPerse** | Solo/small project, TypeScript, component-heavy |
+| 3 | **Custom** | User has their own convention |
+| 4 | **Decide yourself** | Agent picks based on project context |
+
+**Option 1: Industry standard**
+
+| Language | Convention | Example |
+|----------|------------|---------|
+| TypeScript/React | PascalCase components, camelCase utils | `Button.tsx`, `useAuth.ts` |
+| Vue | PascalCase SFCs, camelCase composables | `Button.vue`, `useAuth.ts` |
+| Rust | snake_case files | `my_module.rs` |
+| Python | snake_case files | `my_module.py` |
+| Go | snake_case files | `my_package.go` |
+
+**Option 2: HullPerse** (risovach-style)
+
+Pattern: `<domain>.<suffix>.<ext>` (camelCase basename, dot separator)
 
 | Category | Suffix | Example |
 |----------|--------|---------|
@@ -142,10 +162,17 @@ Pattern: `<domain>.<suffix>.<ext>`
 | Backend DB | `.db.ts` | `schema.db.ts` |
 | Backend entry | `.server.ts` | `app.server.ts` |
 
-Other ecosystems:
-- **Rust**: snake_case files, PascalCase types
-- **Python**: snake_case everywhere
-- **Go**: snake_case files, PascalCase exports
+**Option 3: Custom**
+
+User describes their convention. Agent documents it in `.docs/DEVELOPMENT.md` and enforces it.
+
+**Option 4: Decide yourself**
+
+Agent logic:
+- TypeScript + solo/small team + component-heavy -> HullPerse
+- TypeScript + large team + library ecosystem -> Industry standard
+- Non-TypeScript -> Industry standard for that language
+- Unclear -> ask user, don't guess
 
 ### Docs Health Check
 
@@ -160,7 +187,7 @@ After generating `.docs/`, verifies every file has all required sections:
 
 During deep analysis, checks codebase against `.docs/` rules:
 - File organization (types, helpers, configs, hooks, API clients)
-- File naming (casing, suffixes, prefixes consistency)
+- File naming (casing, suffixes, prefixes consistency against chosen convention)
 - Code quality (no `any`, no debug logs, no dead code)
 - Query patterns (one query per file, explicit states)
 - State management (single source of truth)

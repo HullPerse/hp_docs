@@ -92,19 +92,35 @@ Analyze existing file naming conventions in the project:
 4. Adopt the dominant pattern as the project convention
 
 **For new projects:**
-1. Detect language and ecosystem conventions:
-   - **TypeScript/React (risovach-style)** `(recommended)`: camelCase basename + dot separator + domain suffix. Pattern: `<domain>.<suffix>.<ext>`. See convention table below.
-   - **TypeScript/React (ecosystem standard)**: PascalCase for component files (`Button.tsx`), camelCase for hooks/utils (`useAuth.ts`)
-   - **Vue**: PascalCase for SFCs (`Button.vue`), camelCase for composables
-   - **Rust**: snake_case for files (`my_module.rs`), PascalCase for types
-   - **Python**: snake_case for files and functions (`my_module.py`)
-   - **Go**: snake_case for files, PascalCase for exports
-2. Ask user which convention they prefer
-3. Recommend the risovach-style convention for TypeScript projects with `(recommended)`
+1. Detect language and ecosystem
+2. Present 4 options to user:
 
-**Risovach naming convention (recommended for TypeScript):**
+| # | Option | Description |
+|---|--------|-------------|
+| 1 | **Industry standard** | Standard convention for the language/ecosystem (see table below) |
+| 2 | **HullPerse** | `<domain>.<suffix>.<ext>` camelCase with dot separator (see table below) |
+| 3 | **Custom** | User describes their own convention |
+| 4 | **Decide yourself** | Agent picks based on project type, team size, and ecosystem norms |
 
-Pattern: `<domain>.<suffix>.<ext>`
+3. Mark one option `(recommended)` based on project context:
+   - Solo/small project, TypeScript: HullPerse `(recommended)`
+   - Large team, ecosystem interop needed: Industry standard `(recommended)`
+   - Non-TypeScript: Industry standard `(recommended)`
+4. Ask user which to use
+
+**Option 1: Industry standard**
+
+| Language | Convention | Example |
+|----------|------------|---------|
+| TypeScript/React | PascalCase components, camelCase utils | `Button.tsx`, `useAuth.ts`, `formatDate.ts` |
+| Vue | PascalCase SFCs, camelCase composables | `Button.vue`, `useAuth.ts` |
+| Rust | snake_case files | `my_module.rs`, `my_struct.rs` |
+| Python | snake_case files | `my_module.py`, `my_class.py` |
+| Go | snake_case files | `my_package.go` |
+
+**Option 2: HullPerse** (risovach-style)
+
+Pattern: `<domain>.<suffix>.<ext>` (camelCase basename, dot separator)
 
 | Category | Suffix | Example |
 |----------|--------|---------|
@@ -125,6 +141,18 @@ Pattern: `<domain>.<suffix>.<ext>`
 | Backend plugins | `.plugin.ts` | `auth.plugin.ts` |
 | Backend DB | `.db.ts` | `schema.db.ts` |
 | Backend entry | `.server.ts` | `app.server.ts` |
+
+**Option 3: Custom**
+
+User describes their convention. Agent documents it in `.docs/DEVELOPMENT.md` and enforces it.
+
+**Option 4: Decide yourself**
+
+Agent logic:
+- TypeScript + solo/small team + component-heavy -> HullPerse
+- TypeScript + large team + library/plugin ecosystem -> Industry standard
+- Non-TypeScript -> Industry standard for that language
+- Unclear -> ask user, don't guess
 
 Present findings:
 
