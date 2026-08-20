@@ -93,14 +93,38 @@ Analyze existing file naming conventions in the project:
 
 **For new projects:**
 1. Detect language and ecosystem conventions:
-   - **TypeScript/JavaScript**: camelCase for functions/variables, PascalCase for components/classes, kebab-case or camelCase for files
-   - **React**: PascalCase for component files (`Button.tsx`), camelCase for hooks/utils (`useAuth.ts`)
+   - **TypeScript/React (risovach-style)** `(recommended)`: camelCase basename + dot separator + domain suffix. Pattern: `<domain>.<suffix>.<ext>`. See convention table below.
+   - **TypeScript/React (ecosystem standard)**: PascalCase for component files (`Button.tsx`), camelCase for hooks/utils (`useAuth.ts`)
    - **Vue**: PascalCase for SFCs (`Button.vue`), camelCase for composables
    - **Rust**: snake_case for files (`my_module.rs`), PascalCase for types
    - **Python**: snake_case for files and functions (`my_module.py`)
    - **Go**: snake_case for files, PascalCase for exports
 2. Ask user which convention they prefer
-3. Recommend the ecosystem-standard variant with `(recommended)`
+3. Recommend the risovach-style convention for TypeScript projects with `(recommended)`
+
+**Risovach naming convention (recommended for TypeScript):**
+
+Pattern: `<domain>.<suffix>.<ext>`
+
+| Category | Suffix | Example |
+|----------|--------|---------|
+| UI components | `.component.tsx` | `button.component.tsx` |
+| Canvas/Specialized | `.canvas.tsx` | `editor.canvas.tsx` |
+| Icons | `.icon.tsx` | `github.icon.tsx` |
+| Variants | `.variants.ts` | `button.variants.ts` |
+| Routes | `.route.tsx` | `auth.route.tsx` |
+| Route pages | `.auth.tsx`, `.menu.tsx`, etc. | `login.auth.tsx` |
+| Hooks | `.hook.ts` | `dots.hook.ts` |
+| Utils | `.utils.ts` | `color.utils.ts` |
+| Contracts | `.contract.ts` | `replay.contract.ts` |
+| Configs | `.config.ts` | `api.config.ts` |
+| API clients | `.api.ts` | `user.api.ts` |
+| Types | `.d.ts` | `auth.d.ts` |
+| Tests | `.test.ts` | `canvas.test.ts` |
+| Backend services | `.service.ts` | `user.service.ts` |
+| Backend plugins | `.plugin.ts` | `auth.plugin.ts` |
+| Backend DB | `.db.ts` | `schema.db.ts` |
+| Backend entry | `.server.ts` | `app.server.ts` |
 
 Present findings:
 

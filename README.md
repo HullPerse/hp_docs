@@ -44,7 +44,7 @@ cp -r .docs/ <your-project>/.docs/
 
 - **No explicit `any`** -- in written code; `unknown` only in boundary code (JSON parsing, `catch`, external libs)
 - **Narrow `unknown`** -- before leaving boundary code, narrow to concrete type via Zod or type guard
-- **File naming** -- follow project convention detected during first-run (casing, suffixes, prefixes)
+- **File naming** -- follow project convention (risovach-style `<domain>.<suffix>.<ext>` recommended for TypeScript)
 - **Directory boundaries** -- types in `types/`, helpers in `lib/`, configs in `config/`, hooks in `hooks/`, API clients in `api/`
 
 ### Query/Data Patterns (TanStack Query)
@@ -114,12 +114,35 @@ Suggests alternatives only when there's a real, measurable benefit.
 
 Detects and enforces consistent file naming:
 - **Existing projects**: scans conventions, detects casing/suffixes/prefixes, adopts dominant pattern
-- **New projects**: asks user, recommends ecosystem standard with `(recommended)`
+- **New projects**: asks user, recommends risovach-style convention for TypeScript
 - Reports inconsistencies and asks whether to fix now or defer
 - Detected convention stored in `.docs/DEVELOPMENT.md` for all future sessions
 
-Ecosystem defaults:
-- **TypeScript/React**: PascalCase for components, camelCase for hooks/utils, service suffixes
+**Risovach convention (recommended for TypeScript):**
+
+Pattern: `<domain>.<suffix>.<ext>`
+
+| Category | Suffix | Example |
+|----------|--------|---------|
+| UI components | `.component.tsx` | `button.component.tsx` |
+| Canvas/Specialized | `.canvas.tsx` | `editor.canvas.tsx` |
+| Icons | `.icon.tsx` | `github.icon.tsx` |
+| Variants | `.variants.ts` | `button.variants.ts` |
+| Routes | `.route.tsx` | `auth.route.tsx` |
+| Route pages | `.auth.tsx`, `.menu.tsx` | `login.auth.tsx` |
+| Hooks | `.hook.ts` | `dots.hook.ts` |
+| Utils | `.utils.ts` | `color.utils.ts` |
+| Contracts | `.contract.ts` | `replay.contract.ts` |
+| Configs | `.config.ts` | `api.config.ts` |
+| API clients | `.api.ts` | `user.api.ts` |
+| Types | `.d.ts` | `auth.d.ts` |
+| Tests | `.test.ts` | `canvas.test.ts` |
+| Backend services | `.service.ts` | `user.service.ts` |
+| Backend plugins | `.plugin.ts` | `auth.plugin.ts` |
+| Backend DB | `.db.ts` | `schema.db.ts` |
+| Backend entry | `.server.ts` | `app.server.ts` |
+
+Other ecosystems:
 - **Rust**: snake_case files, PascalCase types
 - **Python**: snake_case everywhere
 - **Go**: snake_case files, PascalCase exports
