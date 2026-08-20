@@ -1,92 +1,184 @@
-# .docs-templates
+# ai-docs
 
-Универсальные шаблоны `.docs/` для проектов с AI-агентами (opencode, freebuff, grok build и другие).
+Universal `.docs/` template system for AI agents. Generates comprehensive project documentation, decision journals, review workflows, and performs deep analysis including rule compliance auditing.
 
-## Структура
+## Quick Start
 
-```
-.docs-templates/
-  AGENTS.md              -- точка входа агента (копируется 1:1)
-  first-run.md           -- промпт для первого запуска и заполнения шаблонов
-  README.md              -- этот файл
-  .docs/
-    AGENT_PROMPT.md      -- контракт сессии (с плейсхолдерами)
-    DEVELOPMENT.md       -- постоянный контракт проекта (с плейсхолдерами)
-    DESIGN.md            -- дизайн-система (упрощённый, с плейсхолдерами)
-    DECISIONS.md         -- журнал решений (копируется 1:1)
-    CHECKLIST.md         -- чеклист реализации (с плейсхолдерами)
-    REVIEWER.md          -- промпт ревьюера (копируется 1:1)
-    agents-audit.prompt.md -- аудит актуальности правил (копируется 1:1)
-    features/
-      README.md          -- инструкция по ведению feature-файлов
-    reviews/
-      README.md          -- описание папки с issue-файлами
+```bash
+# Copy templates to your project
+cp -r .agents/skills/ai-docs <your-project>/.agents/skills/
+cp AGENTS.md <your-project>/
+cp -r .docs/ <your-project>/.docs/
+
+# Or just add the skill to your agent
+# The agent will detect missing .docs/ and generate them on first run
 ```
 
-## Как использовать
+## What It Does
 
-### Для нового проекта
+1. **First run**: Analyzes project stack, compares with canonical baseline, generates full `.docs/`
+2. **Deep analysis**: Code review + dependency audit + rule compliance checking with refactoring suggestions
+3. **Every session**: Enforces audit-before-code, disposition gates, anti-slop rules, decision logging
 
-1. Скопируй содержимое `.docs-templates/` в корень проекта:
-   ```bash
-   cp -r .docs-templates/AGENTS.md <project>/
-   cp -r .docs-templates/.docs/ <project>/.docs/
-   ```
+## Rules
 
-2. При первом запуске агента он найдёт `AGENTS.md`, прочитает `first-run.md` и автоматически заполнит плейсхолдеры.
+### Core Workflow
 
-3. Агент предложит:
-   - **Глубокий анализ** существующего проекта (код, зависимости, архитектура)
-   - **Инициализацию** нового проекта (выбор стека, создание структуры)
+- **Audit before code** -- every task starts with analysis, not editing
+- **Disposition gate** -- new features require two decisions: implementation (now/defer/reject) + documentation (feature file/DECISIONS.md only)
+- **Decision logging** -- every significant decision goes to `DECISIONS.md` with Decision/Context/Consequence/Source
+- **Critical mode** -- don't agree with bad ideas; direct verdict with reason, consequence, and alternative
 
-4. Альтернативно: вставь содержимое `first-run.md` как первый промпт агенту.
+### Anti-Slop
 
-### Для существующего проекта
+- **ASCII punctuation only** -- no em dash (`---`), no en dash (`--`); use hyphens and commas
+- **No comment-parrots** -- comments explain why, not what
+- **No debug logs** -- remove before finishing
+- **No dead code** -- no unused functions, imports, or variables
+- **No placeholder data** -- no fake data in production code
+- **No TODO** -- log decisions in DECISIONS.md instead
+- **No template intros** -- skip "Here's what I'll do" preambles
+- **No marketing language** -- no "seamless", "better experience", "robust solution"
 
-1. Скопируй только универсальные файлы (DECISIONS.md, REVIEWER.md, agents-audit.prompt.md).
-2. Скопируй шаблоны AGENT_PROMPT.md и DEVELOPMENT.md и вручную заполни плейсхолдеры.
+### Code Quality
 
-### Что делает агент при first-run
+- **No explicit `any`** -- in written code; `unknown` only in boundary code (JSON parsing, `catch`, external libs)
+- **Narrow `unknown`** -- before leaving boundary code, narrow to concrete type via Zod or type guard
+- **File naming** -- camelCase basenames with service suffix (`.component.tsx`, `.utils.ts`, `.config.ts`)
+- **Directory boundaries** -- types in `types/`, helpers in `lib/`, configs in `config/`, hooks in `hooks/`, API clients in `api/`
 
-1. Сканирует проект (package.json, структуру, зависимости)
-2. Заполняет плейсхолдеры `{{...}}` в шаблонах
-3. Задаёт вопрос: анализ существующего проекта или пропустить
-4. Если анализ -- детально проверяет код, пакеты, инструменты
-5. Предлагает улучшения с disposition (сейчас/отложить/отклонить)
-6. Записывает все решения в DECISIONS.md
+### Query/Data Patterns (TanStack Query)
 
-## Уровни файлов
+- **One query per file** -- one `useQuery`/`useSuspenseQuery` per file; justify exceptions
+- **`data` naming** -- don't rename without reason; use `data?.field` access
+- **Explicit states** -- handle `isLoading`, `isError`, `isFetching` separately
+- **Server state via Query** -- don't replace query with manual `useEffect`/`useState`
 
-### Универсальные (копируются без изменений)
-- `AGENTS.md`
-- `.docs/DECISIONS.md`
-- `.docs/REVIEWER.md`
-- `.docs/agents-audit.prompt.md`
-- `.docs/reviews/README.md`
-- `.docs/features/README.md`
+### State Management
 
-### С плейсхолдерами (заполняются при first-run)
-- `.docs/AGENT_PROMPT.md` -- `{{PROJECT_NAME}}`, `{{PROJECT_CONTEXT}}`, `{{COMMANDS}}`
-- `.docs/DEVELOPMENT.md` -- `{{PROJECT_NAME}}`, `{{PROJECT_OVERVIEW}}`, `{{FIXED_DECISIONS}}`, `{{DIRECTORY_STRUCTURE}}`, `{{COMMANDS}}`
-- `.docs/DESIGN.md` -- все `{{...}}` (опционально для не-UI проектов)
-- `.docs/CHECKLIST.md` -- `{{LINT_COMMAND}}`, `{{TYPECHECK_COMMAND}}`, `{{TEST_COMMAND}}`
+- **Single source of truth** -- one store per piece of state
+- **No duplicate state** -- server state in Query, client state in Zustand/store
+- **No speculative abstractions** -- no empty extension points, no unused interfaces
 
-## Поддерживаемые агенты
+### UI/UX
 
-Шаблоны универсальны и работают с любым AI-агентом, который:
-- читает файлы проекта
-- выполняет команды
-- записывает файлы
+- **Focus indicators** -- all interactive elements must have visible focus
+- **Required states** -- implement loading, empty, error, disabled, dirty, stale, recovery
+- **Design tokens** -- use CSS variables, no hardcoded colors/radii
+- **No duplicate components** -- reuse existing ones from `ui/`/`shared/`
+- **Accessibility** -- `sr-only` labels for icon-only buttons, keyboard navigation
 
-Проверено для:
+### Questions & Communication
+
+- **Russian language** -- questions in simple Russian, no mixed English phrases
+- **Short labels** -- one thought per option, no marketing filler
+- **`(recommended)` marker** -- only with real justification; never when options are equivalent
+- **`реши сам` = delegation** -- agent picks the recommended option and logs it
+- **Don't ask what docs answer** -- read the code and documentation first
+
+### Testing
+
+- **Tests with features** -- every new feature includes tests in the same change
+- **Unit for domain rules** -- pure functions and business logic
+- **Integration for persistence** -- database, filesystem, network
+- **Fake services** -- mock external dependencies
+- **Typecheck + lint + test** -- run all three before marking done
+
+### Documentation
+
+- **DECISIONS.md is mandatory** -- log every significant decision before finishing
+- **Feature files** -- plain text style, Idea/Comment/Pros/Cons, no decorative tables
+- **Conflict resolution** -- if new decision conflicts with existing, stop and ask user
+- **No silent overrides** -- never change behavior without a task
+
+### Reviewer Rules
+
+- **Read-only** -- reviewer doesn't fix code, only reports findings
+- **No .docs/ changes** -- except creating `reviews/` issue files
+- **Severity levels** -- Blocker/Critical/High/Medium/Low/Gap/Optimization/Cleanup
+- **Evidence required** -- every finding needs file path, line number, and proof
+- **No fake verification** -- don't claim tests passed without output
+
+## Features
+
+### Stack Analysis
+
+Compares detected project stack against canonical baseline:
+- **Backend**: Bun + Elysia + Drizzle + SQLite
+- **Frontend**: React 19 + Vite + TanStack Router/Query + Zustand
+- **Tooling**: oxlint/oxfmt, Vitest, TypeScript strict
+
+Suggests alternatives only when there's a real, measurable benefit.
+
+### Docs Health Check
+
+After generating `.docs/`, verifies every file has all required sections:
+- AGENT_PROMPT.md: 18 sections
+- DEVELOPMENT.md: 10 sections
+- DESIGN.md: 8 sections
+- CHECKLIST.md: 5 sections
+- REVIEWER.md: 9 sections
+
+### Rule Compliance Analysis
+
+During deep analysis, checks codebase against `.docs/` rules:
+- File organization (types, helpers, configs, hooks, API clients)
+- Code quality (no `any`, no debug logs, no dead code)
+- Query patterns (one query per file, explicit states)
+- State management (single source of truth)
+- UI/UX (focus indicators, required states, design tokens)
+
+Outputs a compliance table with PASS/FAIL/WARN per rule.
+
+### Docs Migration
+
+When the skill is updated:
+- Compares current `.docs/` with new template
+- Reports ADD/UPDATE/KEEP per section
+- Never deletes existing decisions
+- Re-runs health check after migration
+
+### Git Hooks
+
+Suggests pre-commit hooks for:
+- ASCII punctuation check (no em/en dash)
+- No `any` in TypeScript files
+- File naming conventions
+
+Does not install without user permission.
+
+### Multi-Agent Rules
+
+For parallel agent work:
+- DECISIONS.md as single source of truth
+- Session source in every decision entry
+- Conflict detection protocol (read -> check -> stop)
+- Never silently override existing decisions
+
+## Template Files
+
+### Universal (copy as-is)
+- `AGENTS.md` -- agent entry point
+- `.docs/DECISIONS.md` -- decision journal
+- `.docs/REVIEWER.md` -- reviewer prompt
+- `.docs/agents-audit.prompt.md` -- rules audit
+- `.docs/features/README.md` -- feature file instructions
+- `.docs/reviews/README.md` -- review issues folder
+
+### Adapted to project (generated by agent)
+- `.docs/AGENT_PROMPT.md` -- session contract with 18 required sections
+- `.docs/DEVELOPMENT.md` -- permanent contract with 10 required sections
+- `.docs/DESIGN.md` -- design system with 8 required sections
+- `.docs/CHECKLIST.md` -- implementation checklist with 5 required sections
+
+## Supported Agents
+
+Works with any AI agent that reads files, runs commands, and writes files:
 - opencode (OpenAI)
 - freebuff (Buffy/mimo)
 - grok build (xAI)
+- Any agent with file access
 
-## Кастомизация
+## License
 
-После first-run можно:
-- Добавить проект-специфичные правила в `DEVELOPMENT.md`
-- Расширить `DESIGN.md` для UI-проектов
-- Добавить feature-файлы в `.docs/features/`
-- Настроить `CHECKLIST.md` под особенности проекта
+MIT
