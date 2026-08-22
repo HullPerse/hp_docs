@@ -8,22 +8,22 @@ Works with any agent that reads files and runs commands: opencode, Claude Code, 
 
 ```bash
 # All bundled skills into your project (recommended)
-npx skills add hullperse/ai-docs
+npx skills add HullPerse/ai-docs
 
 # bunx / pnpm equivalents
-bunx skills add hullperse/ai-docs
-pnpm dlx skills add hullperse/ai-docs
+bunx skills add HullPerse/ai-docs
+pnpm dlx skills add HullPerse/ai-docs
 
 # Pick specific skills
-npx skills add hullperse/ai-docs --skill ai-docs
-npx skills add hullperse/ai-docs --skill deslop
-npx skills add hullperse/ai-docs --skill docs-refactor
-npx skills add hullperse/ai-docs --skill docs-onboard
-npx skills add hullperse/ai-docs --skill docs-init
-npx skills add hullperse/ai-docs --skill scandinavian-design
+npx skills add HullPerse/ai-docs --skill ai-docs
+npx skills add HullPerse/ai-docs --skill deslop
+npx skills add HullPerse/ai-docs --skill docs-refactor
+npx skills add HullPerse/ai-docs --skill docs-onboard
+npx skills add HullPerse/ai-docs --skill docs-init
+npx skills add HullPerse/ai-docs --skill scandinavian-design
 
 # Pin a specific version (tag tree URL)
-npx skills add https://github.com/hullperse/ai-docs/tree/v1.4.0/skills/ai-docs
+npx skills add https://github.com/HullPerse/ai-docs/tree/v1.4.0/skills/ai-docs
 ```
 
 Manual install: copy `skills/*` into your project's `.agents/skills/` and `.docs/` next to your code.
@@ -35,7 +35,7 @@ Then open your agent in the project: it detects missing `.docs/` placeholders an
 No terminal needed: open any coding agent in a clean project and paste:
 
 ```text
-Install the ai-docs documentation package from github.com/hullperse/ai-docs:
+Install the ai-docs documentation package from github.com/HullPerse/ai-docs:
 run the docs-init skill, or read its SKILL.md from the repo and follow it.
 Ask me every question you need.
 ```
@@ -56,7 +56,7 @@ The full package initializes through one skill install - templates travel inside
 
 ```bash
 cd <your-project>
-npx skills add hullperse/ai-docs     # lands in .agents/skills/
+npx skills add HullPerse/ai-docs     # lands in .agents/skills/
 ```
 
 Then open any agent in the project. It finds `AGENTS.md` rules missing and runs the first-run flow automatically:
@@ -71,7 +71,7 @@ Then open any agent in the project. It finds `AGENTS.md` rules missing and runs 
 ### Path 2: manual
 
 ```bash
-git clone https://github.com/hullperse/ai-docs
+git clone https://github.com/HullPerse/ai-docs
 cp -r ai-docs/skills/* <your-project>/.agents/skills/
 ```
 

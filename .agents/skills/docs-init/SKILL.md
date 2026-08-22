@@ -3,7 +3,7 @@ name: docs-init
 version: 1.0.0
 description: >
   Install and initialize the ai-docs documentation package in any project from scratch.
-  Detects whether the hullperse/ai-docs skills are already installed, installs them via
+  Detects whether the HullPerse/ai-docs skills are already installed, installs them via
   npx/bunx/pnpm dlx (git clone as fallback), verifies the installation, then hands off to
   the first-run flow which asks all initialization questions. Use when the user says
   "install ai-docs", "set up docs", "инициализируй документацию", "подключи доки", or
@@ -39,7 +39,7 @@ Ask one question: which runner to use?
 Then execute from the project root:
 
 ```bash
-<runner> skills add hullperse/ai-docs --skill '*' -y
+<runner> skills add HullPerse/ai-docs --skill '*' -y
 ```
 
 Notes:
@@ -53,7 +53,7 @@ Notes:
 No JS runtime available:
 
 ```bash
-git clone https://github.com/hullperse/ai-docs /tmp/ai-docs
+git clone https://github.com/HullPerse/ai-docs /tmp/ai-docs
 mkdir -p .agents/skills
 cp -r /tmp/ai-docs/skills/* .agents/skills/
 rm -rf /tmp/ai-docs
@@ -86,7 +86,7 @@ Finish with:
 
 - what was installed (method, runner, target directory);
 - what was created during initialization (file tree);
-- how to update later: `<runner> skills update ai-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/hullperse/ai-docs/tree/<tag>/skills`);
+- how to update later: `<runner> skills update ai-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/HullPerse/ai-docs/tree/<tag>/skills`);
 - next concrete action for the user.
 
 ## Rules
