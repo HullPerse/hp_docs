@@ -17,7 +17,7 @@ Brings existing code into compliance with the project's own rules from `.docs/`.
 
 ## Preconditions
 
-- `.docs/` exists and is filled (no `{{...}}` placeholders). If partially filled - run the `ai-docs` first-run flow first.
+- `.docs/` exists and is filled (no `{{...}}` placeholders). If partially filled - run the `hp-docs` first-run flow first.
 - Read before auditing: root `AGENTS.md`, `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md` (including "Typing by language" and the data-flow model), `.docs/DECISIONS.md`, `.docs/DESIGN.md` for UI parts, `.docs/CHECKLIST.md`.
 - List available MCP tools and keep the list.
 - Quick rule-freshness check: when a rule contradicts the actual code everywhere, that is a stale-rule finding, not a code finding. Flag it and ask the user; never silently follow a stale rule.

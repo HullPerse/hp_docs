@@ -24,7 +24,7 @@ $pairs = @(
 
 foreach ($p in $pairs) {
     $src = Join-Path $root $p[0]
-    $dst = Join-Path $root ("skills\ai-docs\templates\" + $p[1])
+    $dst = Join-Path $root ("skills\hp-docs\templates\" + $p[1])
     if (-not (Test-Path -LiteralPath $src)) { throw "Missing source: $src" }
     New-Item -ItemType Directory -Force -Path (Split-Path -Parent $dst) | Out-Null
     Copy-Item -LiteralPath $src -Destination $dst -Force
@@ -40,7 +40,7 @@ Copy-Item -Path (Join-Path $root "skills\*") -Destination "$mirror\" -Recurse -F
 $failed = 0
 foreach ($p in $pairs) {
     $src = Join-Path $root $p[0]
-    $dst = Join-Path $root ("skills\ai-docs\templates\" + $p[1])
+    $dst = Join-Path $root ("skills\hp-docs\templates\" + $p[1])
     $a = (Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash
     $b = (Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash
     if ($a -ne $b) { Write-Output "HASH MISMATCH: $($p[0])"; $failed++ }

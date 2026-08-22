@@ -2,17 +2,17 @@
 name: docs-init
 version: 1.0.0
 description: >
-  Install and initialize the ai-docs documentation package in any project from scratch.
-  Detects whether the HullPerse/ai-docs skills are already installed, installs them via
+  Install and initialize the hp_docs documentation package in any project from scratch.
+  Detects whether the HullPerse/hp_docs skills are already installed, installs them via
   npx/bunx/pnpm dlx (git clone as fallback), verifies the installation, then hands off to
   the first-run flow which asks all initialization questions. Use when the user says
-  "install ai-docs", "set up docs", "инициализируй документацию", "подключи доки", or
-  when .agents/skills/ contains ai-docs but the project root has no AGENTS.md and no .docs/.
+  "install hp_docs", "install ai-docs", "set up docs", "инициализируй документацию", "подключи доки", or
+  when .agents/skills/ contains hp-docs but the project root has no AGENTS.md and no .docs/.
 ---
 
 # Docs Init
 
-Installs the ai-docs package into a project and initializes its documentation. End state: skills discoverable in `.agents/skills/`, root `AGENTS.md` present, full `.docs/` generated with real project data and all initialization questions answered.
+Installs the hp_docs package into a project and initializes its documentation. End state: skills discoverable in `.agents/skills/`, root `AGENTS.md` present, full `.docs/` generated with real project data and all initialization questions answered.
 
 This skill handles installation only. The questions about documentation language, package manager, lint preset, design preset, and product spec belong to the first-run flow - never ask them here.
 
@@ -20,7 +20,7 @@ This skill handles installation only. The questions about documentation language
 
 Check, in order:
 
-1. `.agents/skills/ai-docs/SKILL.md` exists -> skills are installed; go to step 3.
+1. `.agents/skills/hp-docs/SKILL.md` exists -> skills are installed; go to step 3.
 2. Nothing installed:
    a. `node` available (`node --version`) -> go to step 2.
    b. No node/npm/bun/pnpm on the machine -> go to step 2 fallback.
@@ -39,7 +39,7 @@ Ask one question: which runner to use?
 Then execute from the project root:
 
 ```bash
-<runner> skills add HullPerse/ai-docs --skill '*' -y
+<runner> skills add HullPerse/hp_docs --skill '*' -y
 ```
 
 Notes:
@@ -53,10 +53,10 @@ Notes:
 No JS runtime available:
 
 ```bash
-git clone https://github.com/HullPerse/ai-docs /tmp/ai-docs
+git clone https://github.com/HullPerse/hp_docs /tmp/hp_docs
 mkdir -p .agents/skills
-cp -r /tmp/ai-docs/skills/* .agents/skills/
-rm -rf /tmp/ai-docs
+cp -r /tmp/hp_docs/skills/* .agents/skills/
+rm -rf /tmp/hp_docs
 ```
 
 On Windows use PowerShell equivalents with explicit UTF-8-safe copy operations (Copy-Item is byte-exact and safe).
@@ -65,8 +65,8 @@ On Windows use PowerShell equivalents with explicit UTF-8-safe copy operations (
 
 Before continuing, confirm:
 
-1. `.agents/skills/ai-docs/templates/` directory exists and contains template files.
-2. All six skills present: `ai-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `docs-init`.
+1. `.agents/skills/hp-docs/templates/` directory exists and contains template files.
+2. All six skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `docs-init`.
 3. Every installed `SKILL.md` has YAML frontmatter with `name` and `description`.
 
 Any miss - report what is broken and stop; a broken install must not bootstrap half-initialized docs.
@@ -75,8 +75,8 @@ Any miss - report what is broken and stop; a broken install must not bootstrap h
 
 Read the installed files and execute the full first-run flow from them:
 
-- `.agents/skills/ai-docs/SKILL.md` - the master flow description;
-- `.agents/skills/ai-docs/templates/first-run.md` - the step-by-step procedure.
+- `.agents/skills/hp-docs/SKILL.md` - the master flow description;
+- `.agents/skills/hp-docs/templates/first-run.md` - the step-by-step procedure.
 
 From this point the docs-init skill is done: first-run performs the MCP check, project scan, asks the five initialization questions in one batch, generates `AGENTS.md` + `.docs/` from templates, runs the health check. Do not duplicate or pre-answer its questions here.
 
@@ -86,7 +86,7 @@ Finish with:
 
 - what was installed (method, runner, target directory);
 - what was created during initialization (file tree);
-- how to update later: `<runner> skills update ai-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/HullPerse/ai-docs/tree/<tag>/skills`);
+- how to update later: `<runner> skills update hp-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills`);
 - next concrete action for the user.
 
 ## Rules

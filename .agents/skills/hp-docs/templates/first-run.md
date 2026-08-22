@@ -121,7 +121,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `ai-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat). Install all of them: they are small and their triggers differ.
 
 ---
 

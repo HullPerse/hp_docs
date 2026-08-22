@@ -1,4 +1,4 @@
-# ai-docs
+# hp_docs
 
 Universal `.docs/` template system and skills for AI coding agents. Generates project documentation, decision journals, review workflows, runs compliance refactoring, and onboards fresh agent sessions - with audit-before-code, disposition gates, anti-slop rules and a mandatory decision log baked in.
 
@@ -8,22 +8,22 @@ Works with any agent that reads files and runs commands: opencode, Claude Code, 
 
 ```bash
 # All bundled skills into your project (recommended)
-npx skills add HullPerse/ai-docs
+npx skills add HullPerse/hp_docs
 
 # bunx / pnpm equivalents
-bunx skills add HullPerse/ai-docs
-pnpm dlx skills add HullPerse/ai-docs
+bunx skills add HullPerse/hp_docs
+pnpm dlx skills add HullPerse/hp_docs
 
 # Pick specific skills
-npx skills add HullPerse/ai-docs --skill ai-docs
-npx skills add HullPerse/ai-docs --skill deslop
-npx skills add HullPerse/ai-docs --skill docs-refactor
-npx skills add HullPerse/ai-docs --skill docs-onboard
-npx skills add HullPerse/ai-docs --skill docs-init
-npx skills add HullPerse/ai-docs --skill scandinavian-design
+npx skills add HullPerse/hp_docs --skill hp-docs
+npx skills add HullPerse/hp_docs --skill deslop
+npx skills add HullPerse/hp_docs --skill docs-refactor
+npx skills add HullPerse/hp_docs --skill docs-onboard
+npx skills add HullPerse/hp_docs --skill docs-init
+npx skills add HullPerse/hp_docs --skill scandinavian-design
 
 # Pin a specific version (tag tree URL)
-npx skills add https://github.com/HullPerse/ai-docs/tree/v1.4.0/skills/ai-docs
+npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
 ```
 
 Manual install: copy `skills/*` into your project's `.agents/skills/` and `.docs/` next to your code.
@@ -35,7 +35,7 @@ Then open your agent in the project: it detects missing `.docs/` placeholders an
 No terminal needed: open any coding agent in a clean project and paste:
 
 ```text
-Install the ai-docs documentation package from github.com/HullPerse/ai-docs:
+Install the hp_docs documentation package from github.com/HullPerse/hp_docs:
 run the docs-init skill, or read its SKILL.md from the repo and follow it.
 Ask me every question you need.
 ```
@@ -46,17 +46,17 @@ The `docs-init` skill handles everything end to end:
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
 3. Verifies all six skills landed with readable frontmatter.
 4. Hands off to the first-run flow, which asks the five initialization questions and generates `AGENTS.md` + `.docs/`.
-5. Reports what was created and how to update later (`npx skills update ai-docs`).
+5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
 ## Initialize .docs in Your Project
 
-The full package initializes through one skill install - templates travel inside the `ai-docs` skill itself (`skills/ai-docs/templates/`), so nothing else needs downloading.
+The full package initializes through one skill install - templates travel inside the `hp-docs` skill itself (`skills/hp-docs/templates/`), so nothing else needs downloading.
 
 ### Path 1: via the skills CLI (recommended)
 
 ```bash
 cd <your-project>
-npx skills add HullPerse/ai-docs     # lands in .agents/skills/
+npx skills add HullPerse/hp_docs     # lands in .agents/skills/
 ```
 
 Then open any agent in the project. It finds `AGENTS.md` rules missing and runs the first-run flow automatically:
@@ -71,8 +71,8 @@ Then open any agent in the project. It finds `AGENTS.md` rules missing and runs 
 ### Path 2: manual
 
 ```bash
-git clone https://github.com/HullPerse/ai-docs
-cp -r ai-docs/skills/* <your-project>/.agents/skills/
+git clone https://github.com/HullPerse/hp_docs
+cp -r hp_docs/skills/* <your-project>/.agents/skills/
 ```
 
 Same flow - the agent picks it up on the next session start.
@@ -146,7 +146,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 
 | Skill | What it does |
 |-------|--------------|
-| `ai-docs` | First-run analysis, init questions, template generation, deep analysis, health checks |
+| `hp-docs` | First-run analysis, init questions, template generation, deep analysis, health checks |
 | `deslop` | Consolidated prose de-slopping catalog merged from ten upstream anti-slop skills |
 | `scandinavian-design` | Deep-dive visual system behind the default DESIGN.md preset |
 | `docs-refactor` | Brings an existing codebase to compliance with its own `.docs/` rules |
@@ -172,7 +172,7 @@ Built from real production usage and these upstream sources:
 
 ## CI
 
-`.github/workflows/docs-check.yml` verifies ASCII punctuation (vendor skill exempt), SKILL.md frontmatter integrity, and that `skills/ai-docs/templates/` matches live files byte-for-byte.
+`.github/workflows/docs-check.yml` verifies ASCII punctuation (vendor skill exempt), SKILL.md frontmatter integrity, and that `skills/hp-docs/templates/` matches live files byte-for-byte.
 
 `scripts/pre-commit` is a ready-to-use hook for consumer projects: dash check, explicit `any`, component naming.
 

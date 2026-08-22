@@ -1,6 +1,6 @@
 {
-  "name": "ai-docs",
-  "version": "1.0.0",
+  "name": "hp-docs",
+  "version": "1.4.1",
   "description": "Universal .docs template system for AI agents - first-run analysis, deep project review, and new project initialization",
   "keywords": [
     "ai",
@@ -12,12 +12,12 @@
     "architecture"
   ],
   "author": "HullPerse",
-  "license": "MIT",
+  "license": "Unlicense",
   "repository": {
     "type": "git",
-    "url": "https://github.com/HullPerse/ai-docs.git"
+    "url": "https://github.com/HullPerse/hp_docs.git"
   },
   "files": [
-    "skill.md"
+    "SKILL.md"
   ]
 }

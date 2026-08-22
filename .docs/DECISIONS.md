@@ -150,6 +150,13 @@ User decision journal. The agent must check this file before any question and ap
 - Consequence: onboarding cost for new users drops to one command plus an agent conversation.
 - Source: session of EN migration 2026-08-22.
 
+### 2026-08-22: Repository and skill renamed to hp_docs / hp-docs
+
+- Decision: GitHub repository renamed `HullPerse/ai-docs` -> `HullPerse/hp_docs`; local folder renamed to `D:\Projects\hp_docs`; the master skill renamed `ai-docs` -> `hp-docs` (folder, frontmatter name, package.json) with all cross-references updated across README, docs-init, docs-onboard, docs-refactor, first-run and sync scripts. Historical DECISIONS entries keep the old name as records of past state.
+- Context: user wants repo naming aligned with the HullPerse branding; full rebrand chosen over half-rename because zero external installs existed yet - cheapest possible moment.
+- Consequence: install commands become `npx skills add HullPerse/hp_docs`; skill flag is `--skill hp-docs`; docs-init keeps the legacy "install ai-docs" trigger phrase for continuity; old tags v1.2-ru/v1.4.0 remain pointing at pre-rename commits.
+- Source: session of rename 2026-08-22.
+
 ### 2026-08-22: docs-init skill for agent-driven installation
 
 - Decision: new skill `skills/docs-init/SKILL.md` installs the package into a clean project through an agent: detects installation state (installed / empty / already initialized), asks one runner question (npx recommended), installs into `.agents/skills/` with git-clone fallback when node is absent and `--copy` retry on Windows symlink failures, verifies all six skills plus templates, then hands off to the first-run flow which owns all initialization questions. README gained an "Install via Your Agent" section with a copy-paste prompt and a pinned-version example via tag tree URL.

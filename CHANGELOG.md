@@ -2,6 +2,19 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [1.4.1] - 2026-08-22
+
+### Changed
+
+- Repository renamed `HullPerse/ai-docs` -> `HullPerse/hp_docs`; local folder renamed accordingly
+- Skill `ai-docs` renamed to `hp-docs` (folder, frontmatter name, package.json); all cross-references in README, docs-init, docs-onboard, docs-refactor, first-run and sync scripts updated
+- docs-init trigger list now includes both "install hp_docs" and legacy "install ai-docs"
+- Pinned-version install example switched from a frozen tag to a `<tag>` placeholder
+
+### Fixed
+
+- skills/hp-docs/package.json: stale license field MIT -> Unlicense, version aligned to 1.4.1, files entry points to SKILL.md
+
 ## [1.4.0] - 2026-08-22
 
 ### Added

@@ -1,10 +1,10 @@
 ---
-name: ai-docs
-version: 1.3.0
+name: hp-docs
+version: 1.4.1
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec), stack comparison, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
-# AI-Docs Skill
+# HP-Docs Skill
 
 Universal `.docs/` template system for AI agents. Generates comprehensive project documentation, decision journals, review workflows, and performs deep analysis including rule compliance auditing.
 
@@ -222,12 +222,12 @@ This skill ships inside a repository as part of the docs package:
 
 Bundled skills:
 
-- `ai-docs` - this skill
+- `hp-docs` - this skill
 - `deslop` - consolidated prose de-slopping catalog merged from ten upstream anti-slop skills (banned word lists EN/RU, structural tells, punctuation limits, voice preservation, draft -> audit -> final loop)
 - `scandinavian-design` - deep-dive visual system used by the default DESIGN.md preset; invoke for UI redesign work
 - `docs-refactor` - bring an existing codebase to compliance with its own `.docs/` rules (audit, disposition, fixes)
 - `docs-onboard` - connect a fresh agent chat to a project that already has AGENTS.md and `.docs/`; reads everything and returns the session contract summary
-- `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install ai-docs" or on skills present without root AGENTS.md
+- `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 
 ### 6. Docs Health Check
 

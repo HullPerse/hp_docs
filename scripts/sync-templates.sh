@@ -5,7 +5,7 @@
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-t="$root/skills/ai-docs/templates"
+t="$root/skills/hp-docs/templates"
 
 pairs=(
   "AGENTS.md AGENTS.md"

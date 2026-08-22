@@ -8,7 +8,7 @@ description: >
   immediately works by the project rules instead of guessing them. Use at the start of
   any session in such a project, when the user says "прочитай доки", "онбордь",
   "загрузи правила проекта", or when AGENTS.md exists with references to .docs/.
-  Not for projects with placeholder .docs/ - use the ai-docs first-run flow there.
+  Not for projects with placeholder .docs/ - use the hp-docs first-run flow there.
 ---
 
 # Docs Onboard
@@ -17,7 +17,7 @@ Connects a fresh agent to a project with existing documentation. Outcome: the ag
 
 ## Precondition
 
-A root `AGENTS.md` (or equivalent: CLAUDE.md) references a filled `.docs/`. When files contain `{{...}}` placeholders - do not onboard; suggest the first-run flow from the `ai-docs` skill.
+A root `AGENTS.md` (or equivalent: CLAUDE.md) references a filled `.docs/`. When files contain `{{...}}` placeholders - do not onboard; suggest the first-run flow from the `hp-docs` skill.
 
 ## Procedure
 
@@ -61,4 +61,4 @@ Unverified areas: ... or "everything read".
 - Onboarding changes nothing: no code, no `.docs/`, no settings.
 - Never retell documents in full: only the summary above. Long retellings are slop too.
 - When documents contradict each other - surface the contradiction as a finding and ask; never choose silently.
-- When a mandatory file is missing or empty - say so plainly and suggest restoring from the `ai-docs` templates.
+- When a mandatory file is missing or empty - say so plainly and suggest restoring from the `hp-docs` templates.
