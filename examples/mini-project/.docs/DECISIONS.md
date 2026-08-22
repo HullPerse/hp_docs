@@ -1,30 +1,30 @@
 # todo-cli Decisions
 
-Журнал решений. Агент читает файл до аудита и дописывает решения после ответа пользователя.
+Decision journal. The agent reads the file before the audit and appends decisions after user answers.
 
-## Формат записи
+## Entry format
 
 ```markdown
-### YYYY-MM-DD: Короткий заголовок
+### YYYY-MM-DD: Short heading
 
-- Решение: ...
-- Контекст: ...
-- Последствие: ...
-- Источник: ссылка на сессию/задачу
+- Decision: ...
+- Context: ...
+- Consequence: ...
+- Source: session/task reference
 ```
 
-## Решения
+## Entries
 
-### 2026-08-22: Хранение в JSON без БД
+### 2026-08-22: JSON storage without a database
 
-- Решение: один JSON-файл `~/.todo-cli/data.json`, без SQLite и миграций.
-- Контекст: микро-утилита, объём данных - десятки записей; БД добавила бы зависимость и шаги установки ради нулевой пользы.
-- Последствие: при повреждении файла показываем понятную ошибку с путём; параллельный доступ не поддерживается сознательно.
-- Источник: инициализация проекта.
+- Decision: a single JSON file `~/.todo-cli/data.json`, no SQLite, no migrations.
+- Context: micro-utility holding dozens of records; a database would add a dependency and install steps for zero benefit.
+- Consequence: on file corruption show a clear error with the path; parallel access is consciously unsupported.
+- Source: project initialization.
 
-### 2026-08-22: CHECKLIST.md опущен
+### 2026-08-22: CHECKLIST.md omitted
 
-- Решение: из пяти шаблонных файлов `.docs/` не создаём CHECKLIST.md.
-- Контекст: для микро-CLI чеклист дублирует AGENT_PROMPT и увеличивает стоимость чтения контракта.
-- Последствие: при росте проекта за пределы ~10 команд пересмотреть через disposition.
-- Источник: инициализация проекта.
+- Decision: of the five template files, `.docs/` does not create CHECKLIST.md.
+- Context: for a micro-CLI the checklist duplicates AGENT_PROMPT and raises contract reading cost.
+- Consequence: revisit via disposition when the project grows past ~10 commands.
+- Source: project initialization.

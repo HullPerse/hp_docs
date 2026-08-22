@@ -1,63 +1,63 @@
 # todo-cli Agent Prompt
 
-Контракт сессии для агента в проекте todo-cli.
+Session contract for the agent in the todo-cli project.
 
-## 1. Контекст проекта
+## 1. Project context
 
-- Рантайм: Bun, TypeScript strict.
-- CLI-утилита без сервера и UI; хранение - `~/.todo-cli/data.json`.
-- Структура: `src/` с модулями `commands/`, `storage/`, `types/`.
+- Runtime: Bun, TypeScript strict.
+- CLI utility without server or UI; storage is `~/.todo-cli/data.json`.
+- Layout: `src/` with modules `commands/`, `storage/`, `types/`.
 
-## 2. Обязательное чтение перед работой
+## 2. Mandatory reading before work
 
-1. Этот файл.
-2. `.docs/DEVELOPMENT.md` - конвенции и anti-slop.
-3. `.docs/DECISIONS.md` - проверить до аудита, дописывать после решений.
-4. Релевантный исходный код и тесты.
+1. This file.
+2. `.docs/DEVELOPMENT.md` - conventions and anti-slop.
+3. `.docs/DECISIONS.md` - check before audit, append after decisions.
+4. Relevant source code and tests.
 
-### Строгий gate для DECISIONS.md
+### Strict DECISIONS.md gate
 
-Любое существенное решение (формат хранения, публичные команды CLI, поведение при ошибках) получает запись в журнале до финального отчёта. Конфликт с существующей записью - стоп и вопрос пользователю.
+Every significant decision (storage format, public CLI commands, error behavior) gets a journal entry before the final report. A conflict with an existing entry - stop and ask the user.
 
-### Обязательный disposition gate для новых фич
+### Mandatory disposition gate for new features
 
-До каждой новой фичи два отдельных вопроса: implementation disposition (сейчас / отложить / отклонить) и documentation destination (существующий feature-файл / новый / только DECISIONS.md).
+Two separate questions per new feature: implementation disposition (now / defer / reject) and documentation destination (existing feature file / new one / DECISIONS.md only).
 
-## 3. Аудит
+## 3. Audit
 
-Каждая задача начинается с анализа кода и правил. Находки: Blocker / Risk / Gap / Optimization / Clear. Blocker останавливает работу до решения.
+Every task starts with code-and-rules analysis. Findings: Blocker / Risk / Gap / Optimization / Clear. A Blocker stops work until resolved.
 
-## 4. Вопросы
+## 4. Questions
 
-Иерархия источников: решение пользователя > DEVELOPMENT.md > DECISIONS.md > README > код. Варианты помечаются `(recommended)` только с обоснованием. Вопросы батчами, простым русским, без мусорных.
+Source hierarchy: user decision > DEVELOPMENT.md > DECISIONS.md > README > code. Options get `(recommended)` only with justification. Questions in batches, plain language, no junk.
 
-## 5. Планирование и реализация
+## 5. Planning and implementation
 
-- Минимальное связное изменение; переиспользуй существующий код.
-- Типизация: без явного `any`; `unknown` только на границе чтения JSON-файла, сужение через type guard.
-- Поток данных: синхронное чтение/запись файла через `Bun.file`; ошибки хранения - типизированный `StorageError`.
-- Каталоги: общие типы в `src/types/`, хранилище в `src/storage/`, команды в `src/commands/`.
+- Minimal coherent change; reuse existing code.
+- Typing: no explicit `any`; `unknown` only at the JSON-read boundary, narrowed via a type guard.
+- Data flow: synchronous file reads/writes through `Bun.file`; storage errors are a typed `StorageError`.
+- Directories: shared types in `src/types/`, storage in `src/storage/`, commands in `src/commands/`.
 
-## 6. Минимальность: лестница ponytail
+## 6. Minimalism: ponytail ladder
 
-Режим full. Ступени: YAGNI -> соседний код -> stdlib -> нативная платформа -> установленная зависимость -> одна строка -> минимальный код. Фикс бага у корня. Лень запрещена в валидации ввода, обработке ошибок против потери данных пользовательских задач.
+Mode full. Rungs: YAGNI -> neighboring code -> stdlib -> native platform -> installed dependency -> one line -> minimal code. Bug fixes at the root. Laziness forbidden at input validation and error handling against task data loss.
 
-## 7. Контракт тестирования
+## 7. Testing contract
 
-Каждая фича - с тестами (`bun test`). Доменные правила (парсинг аргументов, фильтры) - юнит-тесты; хранение - интеграционные на временной директории.
+Every feature ships with tests (`bun test`). Domain rules (argument parsing, filters) get unit tests; storage gets integration tests on a temp directory.
 
-## 8. Документация
+## 8. Documentation
 
-DECISIONS.md после каждого решения; README при изменении команд или структуры.
+DECISIONS.md after every decision; README when commands or structure change.
 
 ## 9. Anti-slop
 
-ASCII-пунктуация без длинных тире; комментарии только для неочевидных причин; без debug-логов, мёртвого кода и TODO вместо решений.
+ASCII punctuation without long dashes; comments rare and for causes only; no debug logs, dead code, or TODOs instead of decisions.
 
-## 10. Формат ответа
+## 10. Response format
 
-Аудит -> Нужные решения -> Скоуп и план -> Прогресс -> Проверка -> Итоговое состояние.
+Audit -> Decisions needed -> Scope and plan -> Progress -> Verification -> Final state.
 
-## Доступные инструменты: обязательная проверка MCP
+## Available tools: mandatory MCP check
 
-В начале сессии перечисли доступные MCP-серверы; документацию зависимостей проверяй через context7 до ответа из памяти.
+At session start enumerate available MCP servers; verify dependency docs via context7 before answering from memory.

@@ -45,7 +45,7 @@ The `docs-init` skill handles everything end to end:
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
 3. Verifies all six skills landed with readable frontmatter.
-4. Hands off to the first-run flow, which asks the five initialization questions and generates `AGENTS.md` + `.docs/`.
+4. Hands off to the first-run flow, which asks the six initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
 ## Initialize .docs in Your Project
@@ -64,7 +64,7 @@ Then open any agent in the project. It finds `AGENTS.md` rules missing and runs 
 1. Determines the project state (existing code / empty repo / fresh agent in a documented project).
 2. Lists available MCP tools.
 3. Scans package files, lockfile, directory tree.
-4. Asks five questions: documentation language, package manager, lint preset, design preset, optional product spec.
+4. Asks six questions: documentation language, package manager, lint preset, design preset, optional product spec, backend logging.
 5. Generates the full `.docs/` from bundled templates with real project data.
 6. Runs the docs health check and verifies lint/typecheck/test commands.
 
@@ -95,7 +95,7 @@ Same flow - the agent picks it up on the next session start.
     features/ reviews/ answers/
 ```
 
-Documentation language follows Question 1: English canonical by default; pick another language and the agent translates every file during initialization (see `examples/mini-project/` for a filled Russian example).
+Documentation language follows Question 1: English canonical by default; pick another language and the agent translates every file during initialization. `examples/mini-project/` shows a filled example.
 
 ## The Principles
 
@@ -119,7 +119,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 - **Stack-adaptive data flow**: query-library projects get TanStack Query rules; desktop/CLI projects get background-task rules (UI never blocks); anything else gets equivalent rules agreed at init.
 - **Typing by language**: TS (no `any`, boundary `unknown` narrowed via Zod), Rust (Option/Result, isolated `unsafe` FFI), Python (strict typing), Go (error values).
 - **Design presets**: Scandinavian (default: alpha ink ladder over white, Inter/system sans, 8px rhythm), neo-brutalism (radius 0, hard shadows), Zed dark (native tools). Custom style rewrites the preset section.
-- **Initialization questions**: project language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec.
+- **Initialization questions**: documentation language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec, backend logging.
 
 ### Tools
 
@@ -144,21 +144,35 @@ Documentation language follows Question 1: English canonical by default; pick an
 
 ## Bundled Skills
 
-| Skill | What it does |
-|-------|--------------|
-| `hp-docs` | First-run analysis, init questions, template generation, deep analysis, health checks |
-| `deslop` | Consolidated prose de-slopping catalog merged from ten upstream anti-slop skills |
-| `scandinavian-design` | Deep-dive visual system behind the default DESIGN.md preset |
-| `docs-refactor` | Brings an existing codebase to compliance with its own `.docs/` rules |
-| `docs-onboard` | Connects a fresh agent chat to a project with existing docs |
+### `hp-docs` - documentation engine
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files.
+The core skill. On first run it analyzes the project stack, compares it against the canonical baseline, detects file naming conventions, and generates the complete `.docs/` set from bundled templates. It owns the initialization questions (documentation language, package manager, lint preset, design preset, product spec, backend logging), performs deep code/dependency/architecture analysis with rule-compliance auditing on request, and runs docs health checks. Every later session works by the contract it generated.
+
+### `deslop` - prose de-slopping catalog
+
+A consolidated catalog of machine-writing tells merged from ten upstream anti-slop skills: banned-word lists for English and Russian, structural patterns (rule-of-three, parataxis, significance inflation, throat-clearing), punctuation limits, voice-preservation rules, and a draft -> audit -> final self-check loop. Use when drafting or reviewing any text that must not read as AI-generated.
+
+### `scandinavian-design` - visual system
+
+The deep-dive design system behind the default DESIGN.md preset: black-and-white alpha ink ladder, restrained sans-serif typography, 8px rhythm, chapters-not-card-stacks layout, dark-theme recalculation rules, and contrast validation. Invoke for real UI redesign work; vendored verbatim from ericzakariasson/scandinavian-design.
+
+### `docs-refactor` - compliance refactoring
+
+Brings an existing codebase to compliance with its own `.docs/` rules. Runs a compliance audit across file organization, naming, typing, data flow, state management, UI states, anti-slop and tests; reports a PASS/WARN/FAIL table; gets a disposition per work package (fix now / defer / reject); executes approved fixes with tests and re-verification.
+
+### `docs-onboard` - session bootstrap
+
+Connects a fresh agent chat to a project that already has AGENTS.md and `.docs/`. Reads the entry point, follows its mandatory reading list, checks available MCP tools, and returns a compact contract summary (stack, hard rules, recent decisions) so the agent immediately works by project rules instead of guessing them.
+
+### `docs-init` - package installer
+
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all six skills landed, then hands off to the first-run flow which owns all initialization questions.
+
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 
-`examples/mini-project/` shows filled docs on a fictional TypeScript/Bun CLI: what templates look like after first-run, including the decision to drop DESIGN.md and CHECKLIST.md as unnecessary for a non-UI micro-tool.
-
-## References
+`examples/mini-project/` shows filled docs on a fictional TypeScript/Bun CLI: what templates look like after first-run, including the decision to drop DESIGN.md and CHECKLIST.md as unnecessary for a non-UI micro-tool.## References
 
 Built from real production usage and these upstream sources:
 

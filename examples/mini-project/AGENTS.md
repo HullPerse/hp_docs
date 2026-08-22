@@ -1,33 +1,33 @@
 # todo-cli agent rules
 
-Консольный менеджер задач на TypeScript + Bun: добавление, список, отметка выполнения, фильтры. Хранение - JSON-файл в каталоге пользователя. Без UI, без сервера.
+A console task manager on TypeScript + Bun: add tasks, list them, mark done, filter. Storage is a JSON file in the user directory. No UI, no server.
 
-Полные правила живут в `.docs/`. Прочитай их перед работой.
+Full rules live in `.docs/`. Read them before working.
 
-## Обязательно
+## Mandatory
 
-1. Прочитай `.docs/AGENT_PROMPT.md` - контракт сессии (аудит перед кодом, формат ответа).
-2. Прочитай `.docs/DEVELOPMENT.md` - конвенции, типизация, anti-slop.
-3. Прочитай `.docs/DECISIONS.md` до аудита и дописывай решения по ходу задачи.
-4. Читай README модуля перед работой в соответствующем каталоге.
+1. Read `.docs/AGENT_PROMPT.md` - the session contract (audit before code, response format).
+2. Read `.docs/DEVELOPMENT.md` - conventions, typing, anti-slop.
+3. Read `.docs/DECISIONS.md` before the audit and append decisions as you go.
+4. Read module README before working in the respective directory.
 
-## Ключевые правила
+## Key rules
 
-- Сначала аудит, потом код; при Blocker - остановись и спроси.
-- Disposition новых фич обязателен: сейчас / отложить / отклонить + куда вести документацию.
-- Не поддакивай плохим идеям: прямой вердикт с причиной и альтернативой.
-- Каждый ответ вопросов фиксируется в `.docs/DECISIONS.md`.
-- Новая зависимость не добавляется молча: сначала проверь установленные пакеты.
+- Audit first, code second; stop and ask on a Blocker.
+- Feature disposition is mandatory: now / defer / reject + where to document it.
+- Do not rubber-stamp bad ideas: a direct verdict with reason and alternative.
+- Every answer to a question is recorded in `.docs/DECISIONS.md`.
+- No dependency is added silently: check installed packages first.
 
-## Команды
+## Commands
 
 ```bash
-bun run dev -- add "задача"
+bun run dev -- add "task"
 bun test
 bun run typecheck
 bun run lint
 ```
 
-## Доступные инструменты
+## Available tools
 
-В начале сессии проверь доступные MCP-серверы; для вопросов о библиотеках используй документационный инструмент до ответа из памяти.
+At session start list available MCP servers; for library questions use a documentation tool before answering from memory.

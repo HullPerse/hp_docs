@@ -106,10 +106,18 @@ Non-UI projects: the section is removed along with the other presets.
 
 ### Question 5: Product spec (optional)
 
-Does the project have a large product scope worth tracking in a separate file?
+Is there a large product scope worth tracking in a separate file?
 
 - Yes - `product-spec.md` is created in the project root: single source of truth for the feature set, referenced from AGENTS.md.
 - No `(recommended)` default - features live in `.docs/features/*.md`.
+
+### Question 6: Backend logging (backend projects only)
+
+- hp_logger - logging package by HullPerse for Bun/Elysia backends: transports, redaction, Prometheus metrics (github.com/HullPerse/hp_logger).
+- Ecosystem package - pino, winston, or another; pick during deep analysis with package comparison.
+- None yet / not a backend project - skip; revisit when the backend appears.
+
+The recommendation status of this question is intentionally neutral until the canonical stack recommendation is revised.
 
 ---
 
@@ -134,7 +142,7 @@ Replace all `{{...}}` with real project data:
 | `{{PROJECT_NAME}}` | Name from package.json/name or README |
 | `{{PROJECT_CONTEXT}}` | Stack + description from README/package.json |
 | `{{PROJECT_OVERVIEW}}` | Description + directory tree |
-| `{{FIXED_DECISIONS}}` | Answers to questions 1-5: manager, lint preset, language, design preset, data-flow model + base rules from README |
+| `{{FIXED_DECISIONS}}` | Answers to questions 1-6: manager, lint preset, language, design preset, data-flow model, backend logging + base rules from README |
 | `{{DIRECTORY_STRUCTURE}}` | Directory tree analysis |
 | `{{COMMANDS}}` | package.json scripts written through the chosen manager |
 | `{{PRODUCT_DESCRIPTION}}` | If product-spec.md was created |
@@ -244,7 +252,7 @@ When initializing:
 
 ## Step 9: Recording decisions
 
-Add entries: template initialization, each answer to questions 1-5, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
+Add entries: template initialization, each answer to questions 1-6, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
 
 ---
 

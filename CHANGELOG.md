@@ -2,6 +2,18 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [1.4.2] - 2026-08-22
+
+### Added
+
+- Initialization Question 6: backend logging (hp_logger by HullPerse for Bun/Elysia backends, an ecosystem package, or none); recommendation status intentionally neutral until the canonical stack recommendation is revised
+- Detailed per-skill descriptions in README (purpose, triggers, inputs for all six skills)
+
+### Changed
+
+- Repository language completed to full English: DECISIONS.md historical entries, CHANGELOG v1.0.0/v1.1.0 sections, and examples/mini-project translated; this overrides the earlier decision to keep the example in Russian as a translate-at-init demo
+- Kept deliberately: Russian trigger phrases in skill descriptions and the bilingual deslop word-tag catalog
+
 ## [1.4.1] - 2026-08-22
 
 ### Changed
@@ -45,33 +57,33 @@ All notable changes to the documentation template and skills. Keep a Changelog f
 
 ### Added
 
-- Обязательная проверка MCP-инструментов в начале сессии (AGENT_PROMPT, CHECKLIST, AGENTS.md)
-- Стек-адаптивные правила потока данных: query-библиотека или фоновые задачи, фиксируются при инициализации
-- Типизация по языку: варианты TS / Rust / Python / Go в DEVELOPMENT.md
-- Опциональный `product-spec.md` - источник истины по составу фич (паттерн hpClean)
-- Вопрос инициализации N5 про продуктовый спек в first-run
-- Скилл `docs-refactor` - приведение проекта к правилам его собственных `.docs/`
-- Скилл `docs-onboard` - подключение нового агента к проекту с готовыми доками
-- Скрипты синхронизации `scripts/sync-templates.ps1` / `.sh` с hash-верификацией
-- CI workflow `.github/workflows/docs-check.yml`: тире, frontmatter скиллов, свежесть templates
-- Pre-commit hook `scripts/pre-commit`: тире + any + нейминг компонентов
-- Пример заполненных доков `examples/mini-project/`
-- LICENSE (Unlicense) и версии скиллов во frontmatter
+- Mandatory MCP tool check at session start (AGENT_PROMPT, CHECKLIST, AGENTS.md)
+- Stack-adaptive data-flow rules: query library or background tasks, fixed at initialization
+- Typing by language: TS / Rust / Python / Go variants in DEVELOPMENT.md
+- Optional `product-spec.md` - feature-set source of truth (hpClean pattern)
+- Initialization question N5 about the product spec in first-run
+- Skill `docs-refactor` - bring a project to compliance with its own `.docs/`
+- Skill `docs-onboard` - connect a new agent to a project with existing docs
+- Sync scripts `scripts/sync-templates.ps1` / `.sh` with hash verification
+- CI workflow `.github/workflows/docs-check.yml`: dashes, skill frontmatter, templates freshness
+- Pre-commit hook `scripts/pre-commit`: dashes + any + component naming
+- Filled docs example `examples/mini-project/`
+- LICENSE (Unlicense) and skill versions in frontmatter
 
 ### Changed
 
-- Канон скиллов перенесён из `.docs/skills/` в корневой `skills/` ради совместимости с `npx skills add`; дистрибуция не изменилась - копирование в целевой проект
-- first-run.md переписан единым flow: MCP-проверка, 5 вопросов, установка скиллов, пресеты DESIGN, health check, глубокий анализ или новый проект
-- Health check переведён на фактические счётчики top-level секций: AGENT_PROMPT 12, DEVELOPMENT 13, DESIGN 7, CHECKLIST 5, REVIEWER 9
+- Skill canon moved from `.docs/skills/` to root `skills/` for `npx skills add` compatibility; distribution unchanged - copying into the target project
+- first-run.md rewritten as one flow: MCP check, questions, skill installation, DESIGN presets, health check, deep analysis or new project
+- Health check switched to real top-level section counters: AGENT_PROMPT 12, DEVELOPMENT 13, DESIGN 7, CHECKLIST 5, REVIEWER 9
 
 ## [1.0.0] - 2026-08-22
 
 ### Added
 
-- Лестница ponytail (режим full) секцией в AGENT_PROMPT; пункты в CHECKLIST
-- Режим grill в протокол вопросов AGENT_PROMPT
-- Deslop каталог: словарные теги EN/RU, структурные паттерны, сохранение голоса, self-check (DEVELOPMENT.md + скилл `deslop` из 10 upstream источников)
-- Дизайн-пресеты DESIGN.md: скандинавский (дефолт), нео-брутализм, Zed dark
-- Вопросы инициализации: язык проекта, пакетный менеджер (Bun recommended), линт-пресет (ultracite+oxc recommended), дизайн-пресет
-- Опциональные шаблоны ROADMAP.md и answers/
-- ASCII-пунктуация приведена к собственному правилу во всех файлах (em/en dash -> дефис); vendor scandinavian-design хранится verbatim
+- Ponytail ladder (mode full) as an AGENT_PROMPT section; items in CHECKLIST
+- Grill mode in the AGENT_PROMPT question protocol
+- Deslop catalog: EN/RU word tags, structural patterns, voice preservation, self-check (DEVELOPMENT.md + `deslop` skill from 10 upstream sources)
+- DESIGN.md design presets: Scandinavian (default), neo-brutalism, Zed dark
+- Initialization questions: documentation language, package manager (Bun recommended), lint preset (ultracite+oxc recommended), design preset
+- Optional ROADMAP.md and answers/ templates
+- ASCII punctuation brought to its own rule across all files (em/en dash -> hyphen); vendor scandinavian-design kept verbatim

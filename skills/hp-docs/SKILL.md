@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.4.1
+version: 1.4.2
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec), stack comparison, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
@@ -97,6 +97,14 @@ The answer defines every command in the docs (`bun run lint`, `pnpm lint`, ...).
 
 - Yes - create `product-spec.md` in the project root: single source of truth for the feature set, referenced from AGENTS.md; for projects with large product scope
 - No (default) - features live in `.docs/features/*.md` and DECISIONS.md
+
+**Q6: Backend logging** (backend projects only)
+
+- hp_logger - logging package by HullPerse for Bun/Elysia backends: transports, redaction, Prometheus metrics (github.com/HullPerse/hp_logger)
+- Ecosystem package - pino, winston, or another; pick during deep analysis with package comparison
+- None yet / not a backend project - skip; revisit when the backend appears
+
+Recommendation status intentionally neutral until the canonical stack recommendation is revised.
 
 ### 3. Stack Comparison
 

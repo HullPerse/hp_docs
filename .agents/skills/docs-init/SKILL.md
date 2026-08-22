@@ -78,7 +78,7 @@ Read the installed files and execute the full first-run flow from them:
 - `.agents/skills/hp-docs/SKILL.md` - the master flow description;
 - `.agents/skills/hp-docs/templates/first-run.md` - the step-by-step procedure.
 
-From this point the docs-init skill is done: first-run performs the MCP check, project scan, asks the five initialization questions in one batch, generates `AGENTS.md` + `.docs/` from templates, runs the health check. Do not duplicate or pre-answer its questions here.
+From this point the docs-init skill is done: first-run performs the MCP check, project scan, asks the six initialization questions in one batch, generates `AGENTS.md` + `.docs/` from templates, runs the health check. Do not duplicate or pre-answer its questions here.
 
 ## Step 5: Report
 

@@ -1,54 +1,54 @@
 # todo-cli DEVELOPMENT.md
 
-Постоянный контракт проекта.
+Permanent project contract.
 
-## Источник истины
+## Source of truth
 
-Решение пользователя > этот файл > DECISIONS.md > README > код.
+User decision > this file > DECISIONS.md > README > code.
 
-## Проект
+## Project
 
 - CLI `todo-cli`: TypeScript + Bun, strict mode.
-- Хранение: один JSON-файл в `~/.todo-cli/`, без БД.
-- Доки: `.docs/`, трекаются в Git.
+- Storage: a single JSON file in `~/.todo-cli/`, no database.
+- Docs: `.docs/`, tracked in Git.
 
-## Зафиксированные решения
+## Fixed decisions
 
-- Пакетный менеджер: Bun (выбран при инициализации).
-- Линт: oxlint + oxfmt через пресет ultracite (`check` = `ultracite check`, `fix` = `ultracite fix`).
-- Язык проекта: русский.
-- Модель потока данных: синхронные файловые операции, без query-библиотек и фоновых задач.
-- Формат хранения: JSON-массив задач с полями id, title, done, createdAt; миграций нет, при поломке файла - понятная ошибка и путь к файлу.
-- Отказано: облачная синхронизация, теги, подпроекты (вне scope до явного решения).
+- Package manager: Bun (chosen at initialization).
+- Lint: oxlint + oxfmt via the ultracite preset (`check` = `ultracite check`, `fix` = `ultracite fix`).
+- Project language: English.
+- Data-flow model: synchronous file operations, no query libraries or background tasks.
+- Storage format: JSON array of tasks with id, title, done, createdAt fields; no migrations - on a corrupted file show a clear error with the path.
+- Rejected: cloud sync, tags, subprojects (out of scope until an explicit decision).
 
-## Типизация по языку
+## Typing by language
 
-TypeScript: без явного `any`; `unknown` только на границе чтения JSON со сужением через type guard; `strict: true`.
+TypeScript: no explicit `any`; `unknown` only at the JSON-read boundary narrowed via a type guard; `strict: true`.
 
-## Команды проекта
+## Project commands
 
 `bun run dev`, `bun test`, `bun run typecheck`, `bun run lint`, `bun run check`, `bun run fix`.
 
-## Протокол коммуникации агента
+## Agent communication protocol
 
-Читать доки до кода; спрашивать перед неоднозначными решениями; тесты вместе с фичей; честно сообщать о непроверенном; не добавлять зависимости молча; обновлять DECISIONS.md.
+Read docs before code; ask before ambiguous decisions; tests together with features; honestly report what is unverified; never add dependencies silently; update DECISIONS.md.
 
-## Прямой критический режим
+## Direct critical mode
 
-Не поддакивать плохим идеям. Вердикт + причина + последствия + альтернатива + условие пересмотра. Резкий язык про решение допустим, унижение личности - нет.
+Never rubber-stamp bad ideas. Verdict + reason + consequences + alternative + revision condition. Harsh language about a decision is allowed; demeaning the person is not.
 
-## Disposition и destination новых фич
+## Feature disposition and destination
 
-Оба вопроса обязательны до кода. Deferred/rejected - с причиной и условием возврата. Повторно не спрашивать, пока не изменился scope.
+Both questions mandatory before code. Deferred/rejected carry a reason and return condition. Never asked again while scope is unchanged.
 
-## Обязательный журнал решений
+## Mandatory decision journal
 
-Читается до аудита, дополняется после каждого существенного решения, до финального отчёта.
+Read before audit, appended after every significant decision, before the final report.
 
-## Anti-slop правила
+## Anti-slop rules
 
-ASCII-пунктуация; комментарии редкие и по делу; без спекулятивных абстракций, debug-логов, мёртвого кода и placeholder-данных; UI-строки короткие и прямые.
+ASCII punctuation; rare purposeful comments; no speculative abstractions, debug logs, dead code, or placeholder data; UI strings short and direct.
 
-## Документация
+## Documentation
 
-AGENT_PROMPT.md - контракт сессии; DEVELOPMENT.md - этот файл; DECISIONS.md - журнал; CHECKLIST.md опущен как избыточный для микро-проекта (решение в DECISIONS.md); DESIGN.md удалён: проект без UI.
+AGENT_PROMPT.md - session contract; DEVELOPMENT.md - this file; DECISIONS.md - journal; CHECKLIST.md omitted as redundant for a micro-project (decision in DECISIONS.md); DESIGN.md deleted: the project has no UI.
