@@ -1,249 +1,110 @@
 # ai-docs
 
-Universal `.docs/` template system for AI agents. Generates comprehensive project documentation, decision journals, review workflows, and performs deep analysis including rule compliance auditing.
+Universal `.docs/` template system and skills for AI coding agents. Generates project documentation, decision journals, review workflows, runs compliance refactoring, and onboards fresh agent sessions - with audit-before-code, disposition gates, anti-slop rules and a mandatory decision log baked in.
 
-## Quick Start
+Works with any agent that reads files and runs commands: opencode, Claude Code, Cursor, Codex, Zed, and others (via [skills](https://github.com/vercel-labs/skills) or plain file copies).
+
+## Install
 
 ```bash
-# Copy templates to your project
-cp -r .agents/skills/ai-docs <your-project>/.agents/skills/
-cp AGENTS.md <your-project>/
-cp -r .docs/ <your-project>/.docs/
+# All bundled skills into your project (recommended)
+npx skills add hullperse/ai-docs
 
-# Or just add the skill to your agent
-# The agent will detect missing .docs/ and generate them on first run
+# bunx / pnpm equivalents
+bunx skills add hullperse/ai-docs
+pnpm dlx skills add hullperse/ai-docs
+
+# Pick specific skills
+npx skills add hullperse/ai-docs --skill ai-docs
+npx skills add hullperse/ai-docs --skill deslop
+npx skills add hullperse/ai-docs --skill docs-refactor
+npx skills add hullperse/ai-docs --skill docs-onboard
+npx skills add hullperse/ai-docs --skill scandinavian-design
 ```
 
-## What It Does
+Manual install: copy `skills/*` into your project's `.agents/skills/` and `.docs/` next to your code.
 
-1. **First run**: Analyzes project stack, compares with canonical baseline, detects file naming, generates full `.docs/`
-2. **Deep analysis**: Code review + dependency audit + rule compliance checking with refactoring suggestions
-3. **Every session**: Enforces audit-before-code, disposition gates, anti-slop rules, decision logging
+Then open your agent in the project: it detects missing `.docs/` placeholders and runs the first-run flow automatically.
 
-## Rules
+## The Principles
 
-### Core Workflow
+### Core workflow
 
-- **Audit before code** -- every task starts with analysis, not editing
-- **Disposition gate** -- new features require two decisions: implementation (now/defer/reject) + documentation (feature file/DECISIONS.md only)
-- **Decision logging** -- every significant decision goes to `DECISIONS.md` with Decision/Context/Consequence/Source
-- **Critical mode** -- don't agree with bad ideas; direct verdict with reason, consequence, and alternative
+- **Audit before code.** Every task starts with analysis. Findings are classified Blocker / Risk / Gap / Optimization / Clear; a Blocker stops work until resolved by the user.
+- **Disposition gate.** No new feature starts without two decisions: implementation disposition (now / defer / reject) and documentation destination (existing feature file / new one / DECISIONS.md only).
+- **Critical mode.** The agent does not agree with bad ideas. A direct verdict comes with the reason, consequences, an alternative, and the condition that would change it. Sharp language about a decision is allowed; attacks on the person are not.
+- **Decision journal.** Every significant decision lands in `.docs/DECISIONS.md` (Decision / Context / Consequence / Source). Conflicts stop and ask; nothing is silently overridden.
+- **`(recommended)` discipline.** The marker appears only with real justification, never as filler.
 
-### Anti-Slop
+### Text quality
 
-- **ASCII punctuation only** -- no em dash (`---`), no en dash (`--`); use hyphens and commas
-- **No comment-parrots** -- comments explain why, not what
-- **No debug logs** -- remove before finishing
-- **No dead code** -- no unused functions, imports, or variables
-- **No placeholder data** -- no fake data in production code
-- **No TODO** -- log decisions in DECISIONS.md instead
-- **No template intros** -- skip "Here's what I'll do" preambles
-- **No marketing language** -- no "seamless", "better experience", "robust solution"
+- **Anti-slop**: ASCII punctuation only (no em/en dashes), no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of a logged decision.
+- **Deslop catalog** (`deslop` skill + DEVELOPMENT.md): EN/RU banned-word tags, structural tells (rule-of-three, parataxis, significance inflation, throat-clearing), voice preservation, draft -> audit -> final loop.
+- **Ponytail ladder** (mode full): YAGNI -> reuse project code -> stdlib -> native platform -> installed dependency -> one line -> minimal code. Bug fixes at the root via caller grep. Laziness is forbidden at trust boundaries, error handling against data loss, security, a11y.
+- **Grill mode**: relentless one-question-at-a-time interviews for plans, each question with a recommended answer, depth-first through the decision tree.
 
-### Code Quality
+### Adaptivity
 
-- **No explicit `any`** -- in written code; `unknown` only in boundary code (JSON parsing, `catch`, external libs)
-- **Narrow `unknown`** -- before leaving boundary code, narrow to concrete type via Zod or type guard
-- **File naming** -- follow project convention (4 options: industry standard, HullPerse, custom, or agent decides)
-- **Directory boundaries** -- types in `types/`, helpers in `lib/`, configs in `config/`, hooks in `hooks/`, API clients in `api/`
+- **Stack-adaptive data flow**: query-library projects get TanStack Query rules; desktop/CLI projects get background-task rules (UI never blocks); anything else gets equivalent rules agreed at init.
+- **Typing by language**: TS (no `any`, boundary `unknown` narrowed via Zod), Rust (Option/Result, isolated `unsafe` FFI), Python (strict typing), Go (error values).
+- **Design presets**: Scandinavian (default: alpha ink ladder over white, Inter/system sans, 8px rhythm), neo-brutalism (radius 0, hard shadows), Zed dark (native tools). Custom style rewrites the preset section.
+- **Initialization questions**: project language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec.
 
-### Query/Data Patterns (TanStack Query)
+### Tools
 
-- **One query per file** -- one `useQuery`/`useSuspenseQuery` per file; justify exceptions
-- **`data` naming** -- don't rename without reason; use `data?.field` access
-- **Explicit states** -- handle `isLoading`, `isError`, `isFetching` separately
-- **Server state via Query** -- don't replace query with manual `useEffect`/`useState`
+- **Mandatory MCP check** at session start: agents list available servers and use them - docs tools (context7) for any library/API question before answering from memory, browser tools for UI verification.
 
-### State Management
+## Documentation Map
 
-- **Single source of truth** -- one store per piece of state
-- **No duplicate state** -- server state in Query, client state in Zustand/store
-- **No speculative abstractions** -- no empty extension points, no unused interfaces
+| File | Purpose |
+|------|---------|
+| `AGENTS.md` | Entry point: reading list, key rules, quick start |
+| `.docs/AGENT_PROMPT.md` | Session contract: audit, questions, grill mode, ponytail ladder, response format |
+| `.docs/DEVELOPMENT.md` | Permanent contract: conventions, typing by language, anti-slop + deslop catalog |
+| `.docs/DESIGN.md` | Design presets and UI rules |
+| `.docs/CHECKLIST.md` | Before/during/after implementation checklist |
+| `.docs/REVIEWER.md` | Independent review prompt (read-only, evidence-based findings) |
+| `.docs/DECISIONS.md` | Decision journal |
+| `.docs/ROADMAP.md` | Optional phased feature roadmap |
+| `.docs/answers/` | Long research answers |
+| `.docs/features/` | Feature files (Idea / Comment / Pros / Cons) |
+| `.docs/reviews/` | Review issue files |
+| `product-spec.md` | Optional single source of truth for the feature set |
 
-### UI/UX
+## Bundled Skills
 
-- **Focus indicators** -- all interactive elements must have visible focus
-- **Required states** -- implement loading, empty, error, disabled, dirty, stale, recovery
-- **Design tokens** -- use CSS variables, no hardcoded colors/radii
-- **No duplicate components** -- reuse existing ones from `ui/`/`shared/`
-- **Accessibility** -- `sr-only` labels for icon-only buttons, keyboard navigation
+| Skill | What it does |
+|-------|--------------|
+| `ai-docs` | First-run analysis, init questions, template generation, deep analysis, health checks |
+| `deslop` | Consolidated prose de-slopping catalog merged from ten upstream anti-slop skills |
+| `scandinavian-design` | Deep-dive visual system behind the default DESIGN.md preset |
+| `docs-refactor` | Brings an existing codebase to compliance with its own `.docs/` rules |
+| `docs-onboard` | Connects a fresh agent chat to a project with existing docs |
 
-### Questions & Communication
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files.
 
-- **Russian language** -- questions in simple Russian, no mixed English phrases
-- **Short labels** -- one thought per option, no marketing filler
-- **`(recommended)` marker** -- only with real justification; never when options are equivalent
-- **`реши сам` = delegation** -- agent picks the recommended option and logs it
-- **Don't ask what docs answer** -- read the code and documentation first
+## Example Project
 
-### Testing
+`examples/mini-project/` shows filled docs on a fictional TypeScript/Bun CLI: what templates look like after first-run, including the decision to drop DESIGN.md and CHECKLIST.md as unnecessary for a non-UI micro-tool.
 
-- **Tests with features** -- every new feature includes tests in the same change
-- **Unit for domain rules** -- pure functions and business logic
-- **Integration for persistence** -- database, filesystem, network
-- **Fake services** -- mock external dependencies
-- **Typecheck + lint + test** -- run all three before marking done
+## References
 
-### Documentation
+Built from real production usage and these upstream sources:
 
-- **DECISIONS.md is mandatory** -- log every significant decision before finishing
-- **Feature files** -- plain text style, Idea/Comment/Pros/Cons, no decorative tables
-- **Conflict resolution** -- if new decision conflicts with existing, stop and ask user
-- **No silent overrides** -- never change behavior without a task
+- Live examples: [risovach](https://github.com/HullPerse/risovach) (TypeScript web app), hpClean (Rust/GPUI desktop tool)
+- Anti-slop lineage: [anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing), [soundshuman](https://github.com/aashaexo/soundshuman), [elithrar/dotfiles anti-slop](https://github.com/elithrar/dotfiles), [stephenturner/skills deslop](https://github.com/stephenturner/skills), [humanizer-skill](https://github.com/aboudjem/humanizer-skill), [slopkit](https://github.com/ehmo/slopkit), [cursor/plugins unslop](https://github.com/cursor/plugins), [blader/humanizer](https://github.com/blader/humanizer), [no-ai-slop](https://github.com/petergyang/no-ai-slop), [stop-slop](https://github.com/hardikpandya/stop-slop)
+- Design: [scandinavian-design](https://github.com/ericzakariasson/scandinavian-design)
+- Interview format: [mattpocock/skills grill-me](https://github.com/mattpocock/skills)
+- Minimalism: ponytail (local skill)
+- Tooling presets: [ultracite](https://ultracite.ai), oxlint/oxfmt
+- Skills distribution: [vercel-labs/skills](https://github.com/vercel-labs/skills)
 
-### Reviewer Rules
+## CI
 
-- **Read-only** -- reviewer doesn't fix code, only reports findings
-- **No .docs/ changes** -- except creating `reviews/` issue files
-- **Severity levels** -- Blocker/Critical/High/Medium/Low/Gap/Optimization/Cleanup
-- **Evidence required** -- every finding needs file path, line number, and proof
-- **No fake verification** -- don't claim tests passed without output
+`.github/workflows/docs-check.yml` verifies ASCII punctuation (vendor skill exempt), SKILL.md frontmatter integrity, and that `skills/ai-docs/templates/` matches live files byte-for-byte.
 
-## Features
-
-### Stack Analysis
-
-Compares detected project stack against canonical baseline:
-- **Backend**: Bun + Elysia + Drizzle + SQLite
-- **Frontend**: React 19 + Vite + TanStack Router/Query + Zustand
-- **Tooling**: oxlint/oxfmt, Vitest, TypeScript strict
-
-Suggests alternatives only when there's a real, measurable benefit.
-
-### File Naming Analysis
-
-Detects and enforces consistent file naming:
-
-- **Existing projects**: scans conventions, detects casing/suffixes/prefixes, adopts dominant pattern
-- **New projects**: presents 4 options and asks user to choose
-- Reports inconsistencies and asks whether to fix now or defer
-- Detected/chosen convention stored in `.docs/DEVELOPMENT.md` for all future sessions
-
-**4 naming options:**
-
-| # | Option | When to recommend |
-|---|--------|-------------------|
-| 1 | **Industry standard** | Large team, ecosystem interop, non-TypeScript |
-| 2 | **HullPerse** | Solo/small project, TypeScript, component-heavy |
-| 3 | **Custom** | User has their own convention |
-| 4 | **Decide yourself** | Agent picks based on project context |
-
-**Option 1: Industry standard**
-
-| Language | Convention | Example |
-|----------|------------|---------|
-| TypeScript/React | PascalCase components, camelCase utils | `Button.tsx`, `useAuth.ts` |
-| Vue | PascalCase SFCs, camelCase composables | `Button.vue`, `useAuth.ts` |
-| Rust | snake_case files | `my_module.rs` |
-| Python | snake_case files | `my_module.py` |
-| Go | snake_case files | `my_package.go` |
-
-**Option 2: HullPerse** (risovach-style)
-
-Pattern: `<domain>.<suffix>.<ext>` (camelCase basename, dot separator)
-
-| Category | Suffix | Example |
-|----------|--------|---------|
-| UI components | `.component.tsx` | `button.component.tsx` |
-| Canvas/Specialized | `.canvas.tsx` | `editor.canvas.tsx` |
-| Icons | `.icon.tsx` | `github.icon.tsx` |
-| Variants | `.variants.ts` | `button.variants.ts` |
-| Routes | `.route.tsx` | `auth.route.tsx` |
-| Route pages | `.auth.tsx`, `.menu.tsx` | `login.auth.tsx` |
-| Hooks | `.hook.ts` | `dots.hook.ts` |
-| Utils | `.utils.ts` | `color.utils.ts` |
-| Contracts | `.contract.ts` | `replay.contract.ts` |
-| Configs | `.config.ts` | `api.config.ts` |
-| API clients | `.api.ts` | `user.api.ts` |
-| Types | `.d.ts` | `auth.d.ts` |
-| Tests | `.test.ts` | `canvas.test.ts` |
-| Backend services | `.service.ts` | `user.service.ts` |
-| Backend plugins | `.plugin.ts` | `auth.plugin.ts` |
-| Backend DB | `.db.ts` | `schema.db.ts` |
-| Backend entry | `.server.ts` | `app.server.ts` |
-
-**Option 3: Custom**
-
-User describes their convention. Agent documents it in `.docs/DEVELOPMENT.md` and enforces it.
-
-**Option 4: Decide yourself**
-
-Agent logic:
-- TypeScript + solo/small team + component-heavy -> HullPerse
-- TypeScript + large team + library ecosystem -> Industry standard
-- Non-TypeScript -> Industry standard for that language
-- Unclear -> ask user, don't guess
-
-### Docs Health Check
-
-After generating `.docs/`, verifies every file has all required sections:
-- AGENT_PROMPT.md: 18 sections
-- DEVELOPMENT.md: 11 sections
-- DESIGN.md: 8 sections
-- CHECKLIST.md: 5 sections
-- REVIEWER.md: 9 sections
-
-### Rule Compliance Analysis
-
-During deep analysis, checks codebase against `.docs/` rules:
-- File organization (types, helpers, configs, hooks, API clients)
-- File naming (casing, suffixes, prefixes consistency against chosen convention)
-- Code quality (no `any`, no debug logs, no dead code)
-- Query patterns (one query per file, explicit states)
-- State management (single source of truth)
-- UI/UX (focus indicators, required states, design tokens)
-
-Outputs a compliance table with PASS/FAIL/WARN per rule.
-
-### Docs Migration
-
-When the skill is updated:
-- Compares current `.docs/` with new template
-- Reports ADD/UPDATE/KEEP per section
-- Never deletes existing decisions
-- Re-runs health check after migration
-
-### Git Hooks
-
-Suggests pre-commit hooks for:
-- ASCII punctuation check (no em/en dash)
-- No `any` in TypeScript files
-- File naming conventions
-
-Does not install without user permission.
-
-### Multi-Agent Rules
-
-For parallel agent work:
-- DECISIONS.md as single source of truth
-- Session source in every decision entry
-- Conflict detection protocol (read -> check -> stop)
-- Never silently override existing decisions
-
-## Template Files
-
-### Universal (copy as-is)
-- `AGENTS.md` -- agent entry point
-- `.docs/DECISIONS.md` -- decision journal
-- `.docs/REVIEWER.md` -- reviewer prompt
-- `.docs/agents-audit.prompt.md` -- rules audit
-- `.docs/features/README.md` -- feature file instructions
-- `.docs/reviews/README.md` -- review issues folder
-
-### Adapted to project (generated by agent)
-- `.docs/AGENT_PROMPT.md` -- session contract with 18 required sections
-- `.docs/DEVELOPMENT.md` -- permanent contract with 11 required sections
-- `.docs/DESIGN.md` -- design system with 8 required sections
-- `.docs/CHECKLIST.md` -- implementation checklist with 5 required sections
-
-## Supported Agents
-
-Works with any AI agent that reads files, runs commands, and writes files:
-- opencode (OpenAI)
-- freebuff (Buffy/mimo)
-- grok build (xAI)
-- Any agent with file access
+`scripts/pre-commit` is a ready-to-use hook for consumer projects: dash check, explicit `any`, component naming.
 
 ## License
 
-MIT
+[Unlicense](LICENSE) - public domain. Use, copy, modify, sell, whatever. No attribution required, no warranties given.

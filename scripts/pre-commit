@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# Suggested pre-commit hook: ASCII punctuation, no explicit any, component naming.
+# Install: cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+# Requires GNU grep with -P (Git for Windows and Linux ship it).
+
+set -u
+fail=0
+
+staged() { git diff --cached --name-only --diff-filter=ACMR | grep -E "$1" || true; }
+
+# 1. No em/en dash in staged text files
+files=$(staged '\.(md|txt|ts|tsx|js|jsx|py|rs|go)$')
+if [ -n "$files" ]; then
+  hits=$(echo "$files" | xargs grep -Pn '[\x{2013}\x{2014}]' 2>/dev/null || true)
+  if [ -n "$hits" ]; then
+    echo "ERROR: em/en dash found. Use ASCII punctuation only:"; echo "$hits"; fail=1
+  fi
+fi
+
+# 2. No explicit any in staged TypeScript
+tsfiles=$(staged '\.tsx?$')
+if [ -n "$tsfiles" ]; then
+  hits=$(echo "$tsfiles" | xargs grep -Pn ':\s*any\b|\bas\s+any\b' 2>/dev/null || true)
+  if [ -n "$hits" ]; then
+    echo "ERROR: explicit 'any' in TypeScript:"; echo "$hits"; fail=1
+  fi
+fi
+
+# 3. Component basenames in camelCase before service suffix (HullPerse projects only)
+comp=$(staged '(^|/)[a-z0-9]+(-[a-z0-9]+)+\.(component|canvas|icon)\.tsx$')
+if [ -n "$comp" ]; then
+  echo "ERROR: component basenames must be camelCase without hyphens (button.component.tsx):"
+  echo "$comp"; fail=1
+fi
+
+exit $fail

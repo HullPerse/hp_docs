@@ -1,0 +1,31 @@
+name: docs-check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Em/en dash check (ASCII punctuation only, vendor skill exempt)
+        run: |
+          ! grep -rnP '[\x{2013}\x{2014}]' --include='*.md' . | grep -v 'skills/scandinavian-design/'
+
+      - name: Skill frontmatter check
+        run: |
+          status=0
+          for f in skills/*/SKILL.md; do
+            case "$f" in skills/scandinavian-design/*) continue ;; esac
+            head -1 "$f" | grep -q '^---$' || { echo "Missing frontmatter: $f"; status=1; }
+            grep -q '^name:' "$f" || { echo "Missing name: $f"; status=1; }
+            grep -q '^description:' "$f" || { echo "Missing description: $f"; status=1; }
+          done
+          exit $status
+
+      - name: Templates freshness (sync must produce no diff)
+        run: |
+          bash scripts/sync-templates.sh
+          git diff --exit-code
