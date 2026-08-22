@@ -19,12 +19,83 @@ npx skills add hullperse/ai-docs --skill ai-docs
 npx skills add hullperse/ai-docs --skill deslop
 npx skills add hullperse/ai-docs --skill docs-refactor
 npx skills add hullperse/ai-docs --skill docs-onboard
+npx skills add hullperse/ai-docs --skill docs-init
 npx skills add hullperse/ai-docs --skill scandinavian-design
+
+# Pin a specific version (tag tree URL)
+npx skills add https://github.com/hullperse/ai-docs/tree/v1.4.0/skills/ai-docs
 ```
 
 Manual install: copy `skills/*` into your project's `.agents/skills/` and `.docs/` next to your code.
 
 Then open your agent in the project: it detects missing `.docs/` placeholders and runs the first-run flow automatically.
+
+## Install via Your Agent
+
+No terminal needed: open any coding agent in a clean project and paste:
+
+```text
+Install the ai-docs documentation package from github.com/hullperse/ai-docs:
+run the docs-init skill, or read its SKILL.md from the repo and follow it.
+Ask me every question you need.
+```
+
+The `docs-init` skill handles everything end to end:
+
+1. Checks whether the package is already installed.
+2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
+3. Verifies all six skills landed with readable frontmatter.
+4. Hands off to the first-run flow, which asks the five initialization questions and generates `AGENTS.md` + `.docs/`.
+5. Reports what was created and how to update later (`npx skills update ai-docs`).
+
+## Initialize .docs in Your Project
+
+The full package initializes through one skill install - templates travel inside the `ai-docs` skill itself (`skills/ai-docs/templates/`), so nothing else needs downloading.
+
+### Path 1: via the skills CLI (recommended)
+
+```bash
+cd <your-project>
+npx skills add hullperse/ai-docs     # lands in .agents/skills/
+```
+
+Then open any agent in the project. It finds `AGENTS.md` rules missing and runs the first-run flow automatically:
+
+1. Determines the project state (existing code / empty repo / fresh agent in a documented project).
+2. Lists available MCP tools.
+3. Scans package files, lockfile, directory tree.
+4. Asks five questions: documentation language, package manager, lint preset, design preset, optional product spec.
+5. Generates the full `.docs/` from bundled templates with real project data.
+6. Runs the docs health check and verifies lint/typecheck/test commands.
+
+### Path 2: manual
+
+```bash
+git clone https://github.com/hullperse/ai-docs
+cp -r ai-docs/skills/* <your-project>/.agents/skills/
+```
+
+Same flow - the agent picks it up on the next session start.
+
+### What you get
+
+```text
+<your-project>/
+  AGENTS.md                  # entry point for agents
+  product-spec.md            # optional: feature source of truth
+  .docs/
+    AGENT_PROMPT.md          # session contract
+    DEVELOPMENT.md           # permanent conventions
+    DESIGN.md                # chosen design preset
+    CHECKLIST.md             # implementation checklist
+    REVIEWER.md              # independent review prompt
+    DECISIONS.md             # decision journal
+    ROADMAP.md               # optional, 5+ features
+    agents-audit.prompt.md   # rule freshness audit
+    features/ reviews/ answers/
+```
+
+Documentation language follows Question 1: English canonical by default; pick another language and the agent translates every file during initialization (see `examples/mini-project/` for a filled Russian example).
 
 ## The Principles
 

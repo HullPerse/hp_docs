@@ -1,22 +1,22 @@
 # {{PROJECT_NAME}} features
 
-Рабочие документы решений по каждой фиче или направлению. Файлы создаются по мере появления фич.
+Working decision documents per feature or direction. Files are created as features appear.
 
-## Формат
+## Format
 
-Каждый файл - рабочий журнал, а не презентация. Для каждой идеи:
+Every file is a working journal, not a presentation. For every idea:
 
-- **Идея**: что предлагаем сделать.
-- **Комментарий**: зачем, для кого и в каком состоянии это находится.
-- **Плюсы**: конкретная польза.
-- **Минусы**: конкретная цена, риск или ограничение.
+- **Idea**: what is proposed.
+- **Comment**: why, for whom, and current status.
+- **Pros**: concrete benefit.
+- **Cons**: concrete cost, risk, or limitation.
 
-Если идея спорная или слабая, добавляй альтернативы и объясняй, почему они лучше или хуже.
+If an idea is contested or weak, add alternatives and explain why they are better or worse.
 
-## Правила
+## Rules
 
-- Не копируй код, ассеты, брендинг или внутреннюю архитектуру референсных проектов.
-- Используй референсы только как источники поведения, UX-идей и архитектурных паттернов.
-- Для каждого решения фиксируй: выбранный вариант, почему, последствия, затронутые системы и источник-референс.
-- Не дублируй подробные решения из других feature-файлов. Ссылайся на файл-владелец.
-- Если пункт отложен, запиши причину, разрешенный scope и условие возврата.
+- Never copy code, assets, branding, or internal architecture from reference projects.
+- Use references only as sources of behavior, UX ideas, and architectural patterns.
+- For every decision record: chosen option, why, consequences, affected systems, and the source reference.
+- Never duplicate detailed decisions from other feature files. Link to the owning file.
+- If an item is deferred, record reason, allowed scope, and a return condition.

@@ -1,35 +1,36 @@
 # {{PROJECT_NAME}} agent rules
 
-Полные правила для агентов живут в `.docs/`. Прочитай их перед работой.
+Full agent rules live in `.docs/`. Read them before working.
 
-## Обязательно
+## Mandatory
 
-1. Прочитай `.docs/AGENT_PROMPT.md` - основной контракт сессии (аудит перед кодом, формат ответа).
-2. Прочитай `.docs/DEVELOPMENT.md` - конвенции проекта, anti-slop правила, принятые решения.
-3. Прочитай `.docs/DESIGN.md` перед любой работой с UI/UX.
-4. Прочитай `.docs/CHECKLIST.md` перед реализацией и ревью.
-5. Прочитай `.docs/DECISIONS.md` в начале каждой задачи и повторно перед любым вопросом (ответ или ограничение может уже быть записано). После каждого существенного решения или изменения поведения добавь запись в `.docs/DECISIONS.md` до завершения задачи.
-6. Читай README и package.json модуля перед работой в соответствующем каталоге.
-7. Если в корне есть `product-spec.md` - это источник истины по составу фич; читай его перед disposition новых фич.
-8. Используй `.docs/agents-audit.prompt.md`, когда нужно проверить, что правила не устарели и соответствуют коду.
+1. Read `.docs/AGENT_PROMPT.md` - the session contract (audit before code, response format).
+2. Read `.docs/DEVELOPMENT.md` - conventions, anti-slop rules, accepted decisions.
+3. Read `.docs/DESIGN.md` before any UI/UX work.
+4. Read `.docs/CHECKLIST.md` before implementation and review.
+5. Analyze `.docs/DECISIONS.md` at the start of every task and again before any question (the answer or constraint may already be recorded). After every significant decision or behavior change, append an entry to `.docs/DECISIONS.md` before finishing the task.
+6. Read module README and package.json before working in the respective directory.
+7. If `product-spec.md` exists in the root - it is the source of truth for the feature set; read it before dispositioning new features.
+8. Use `.docs/agents-audit.prompt.md` to verify that agent rules are not stale and still match the code.
 
-## Ключевые правила
+## Key rules
 
-- **Сначала аудит, потом код.** Перед реализацией найди проблемы, классифицируй находки (Blocker/Risk/Gap/Optimization/Clear), при Blocker остановись и спроси.
-- **Задавай вопросы, чтобы не сделать плохо.** Не предполагай по спорным решениям. Но не задавай вопросы, ответ на которые есть в документации или коде.
-- **Не поддакивай плохим идеям.** Если запрос или решение пользователя реально ненужны, вредны, противоречат продукту, создают неоправданную сложность или ведут к плохой архитектуре, агент обязан сказать это прямо и жестко, поспорить и предложить лучший вариант. Допустима ругань про идею или решение, но всегда с конкретным объяснением: что именно плохо, почему, какие последствия, что делать вместо этого и что изменило бы вердикт. Не унижай пользователя как человека и не используй оскорбление личности вместо анализа.
-- **Пиши вопросы простым русским языком.** Labels и descriptions должны быть короткими, конкретными и без маркетингового мусора. Не смешивай русский с случайными английскими фразами вроде `better experience`, не используй псевдотехнические конструкции и не прячь отсутствие мысли за словами `scope`, `pipeline`, `seamless` и подобными. Технический термин оставляй только когда он нужен, и объясняй его по-русски.
-- **Пиши feature-файлы почти как обычный текст.** В `.docs/features/*.md` используй короткие заголовки только для разделения категорий. Для каждой идеи обязательно указывай идею, комментарий, плюсы и минусы. Если идея спорная или слабая, добавляй альтернативы. Не используй тяжелое форматирование, декоративные таблицы и сложную вложенность без пользы. Примеры старого и нового кода добавляй только когда они помогают понять изменение, каждый пример помещай в обычный блок ```.
-- **Отмечай рекомендации.** При предложении вариантов помечай рекомендуемый `(recommended)` и объясняй почему. Не добавляй `(recommended)` если варианты равноценны.
-- **Disposition новой фичи обязателен.** До реализации каждой новой фичи или существенного изменения агент задаёт два решения: реализовать сейчас/отложить/отклонить и куда вести документацию - в существующий `.docs/features/*.md`, в новый `.docs/features/<slug>.md` или только в `.docs/DECISIONS.md`. Для маленького бага или изменения без отдельной feature-документации это явно объясняется.
-- **`реши сам` = делегирование.** Можешь выбрать обоснованный `(recommended)` вариант и записать, что решение делегировано.
-- **DECISIONS.md обязателен.** Агент обязан анализировать `.docs/DECISIONS.md` до аудита и реализации, учитывать его как источник истины и дописывать туда каждое существенное продуктовое, UX, архитектурное, техническое решение или исправление поведения. Нельзя завершать задачу с таким изменением без записи в файле.
-- **Сначала проверь пакеты.** Перед реализацией нетривиальной задачи агент проверяет установленные зависимости, их версии, существующие места использования и документацию. Если готового решения в проекте нет, агент предлагает несколько подходящих современных вариантов пакетов с последствиями и рекомендацией, а не пишет замену с нуля и не добавляет зависимость молча.
+- **Audit first, code second.** Find problems before implementing anything; classify findings (Blocker/Risk/Gap/Optimization/Clear); stop and ask on a Blocker.
+- **Clarify what you did not fully understand.** If the goal, boundaries, or expected outcome of a task are unclear, restate your interpretation in one sentence and ask before implementing. Never guess where a misunderstanding would lead to wrong scope.
+- **Ask questions to avoid doing harm.** Do not assume on contested decisions. But never ask questions that documentation or code already answer.
+- **Do not rubber-stamp bad ideas.** If a request or solution is truly unnecessary, harmful, contradicts the product, creates unjustified complexity, or leads to bad architecture, the agent must say so directly and argue for a better option. Harsh language about an idea or a decision is allowed, always with concrete explanation: what exactly is bad, why, what the consequences are, what to do instead, and what would change the verdict. Never demean the user as a person and never substitute proof-based analysis with personal insults.
+- **Write questions in plain language.** Labels and descriptions must be short, concrete, and free of marketing filler. No stray foreign phrases, no pseudo-technical jargon, nothing hiding the absence of thought behind words like "scope", "pipeline", "seamless". Keep a technical term only when it carries meaning, and explain it plainly.
+- **Write feature files almost like plain text.** In `.docs/features/*.md` use short headings only to separate categories. Every idea must include: idea, comment, pros, cons. If an idea is contested or weak, add alternatives. No heavy formatting, decorative tables, or deep nesting without benefit. Add old/new code examples only when they help understanding; put each example in a plain fenced block.
+- **Mark recommendations.** When proposing options, mark the recommended one `(recommended)` and explain why. Do not add `(recommended)` when options are equivalent.
+- **Feature disposition is mandatory.** Before implementing each new feature or significant change, the agent asks two decisions: implement now / defer / reject, and where to document - existing `.docs/features/*.md`, a new `.docs/features/<slug>.md`, or only `.docs/DECISIONS.md`. For a small bug fix or a change without separate feature documentation, state this explicitly.
+- **"You decide" = delegation.** The agent may pick a justified `(recommended)` option and record the delegated ownership.
+- **DECISIONS.md is mandatory.** The agent analyzes `.docs/DECISIONS.md` before audit and implementation, treats it as a source of truth, and appends every significant product, UX, architecture, or technical decision plus every behavior fix. Never finish a task with such a change left unlogged.
+- **Check packages first.** Before implementing a non-trivial task, inspect installed dependencies, their versions, existing usage sites, and documentation. If no ready-made solution exists in the project, propose several modern candidate packages with trade-offs and a recommendation instead of writing a replacement from scratch or adding a dependency silently.
 
-## Первый запуск
+## First run
 
-Если `.docs/` содержит плейсхолдеры `{{...}}` -- это первый запуск. Прочитай `first-run.md` и выполни: заполни шаблоны, предложи глубокий анализ проекта или инициализацию нового проекта. Все строгие правила действуют и при первом запуске.
+If `.docs/` contains `{{...}}` placeholders - this is the first run. Read `first-run.md` and execute it: fill the templates, then offer a deep analysis of the existing project or initialization of a new one. All strict rules apply during the first run as well.
 
-## Доступные инструменты
+## Available tools
 
-В начале сессии агент обязан проверить список доступных MCP-серверов и инструментов и использовать их, когда задача подпадает под них: документация библиотек через context7 до ответа из памяти, браузерные инструменты для проверки UI. Полное правило - в `.docs/AGENT_PROMPT.md`, раздел "Доступные инструменты". Не злоупотребляй вызовами.
+At session start the agent must list available MCP servers and tools, and use them whenever the task matches: library docs via context7 before answering from memory, browser tools for UI verification. Full rule: `.docs/AGENT_PROMPT.md`, section "Available tools". Do not overuse calls.

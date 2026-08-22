@@ -1,7 +1,7 @@
 ---
 name: ai-docs
-version: 1.1.0
-description: Universal .docs template system for AI agents. Handles first-run project analysis and initialization questions (project language, package manager, lint/format preset, design preset, product spec), stack comparison, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
+version: 1.3.0
+description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec), stack comparison, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
 # AI-Docs Skill
@@ -62,10 +62,12 @@ Identify:
 
 Ask the user as one batch before filling templates. Every answer is logged in `.docs/DECISIONS.md` and reflected in the `.docs/` files. Mark one option `(recommended)` per question.
 
-**Q1: Project language** (docs, agent questions, UI copy)
+**Q1: Documentation language**
 
-- Russian `(recommended)` - default of this template
-- English - switch all rules to English-only mode
+Canonical templates are English. Which language should generated docs and agent communication use?
+
+- English `(recommended)` - zero translation drift; canonical text used as-is
+- Russian or another language - the agent translates every generated `.docs/` file into that language during initialization; communication follows it; deslop word-tag lists stay bilingual
 
 **Q2: Package manager**
 
@@ -225,6 +227,7 @@ Bundled skills:
 - `scandinavian-design` - deep-dive visual system used by the default DESIGN.md preset; invoke for UI redesign work
 - `docs-refactor` - bring an existing codebase to compliance with its own `.docs/` rules (audit, disposition, fixes)
 - `docs-onboard` - connect a fresh agent chat to a project that already has AGENTS.md and `.docs/`; reads everything and returns the session contract summary
+- `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install ai-docs" or on skills present without root AGENTS.md
 
 ### 6. Docs Health Check
 
@@ -257,22 +260,22 @@ Report which commands work, which fail, and why.
 After generating `.docs/`, health check, stack comparison, and file naming analysis:
 
 ```
-Проект обнаружен и .docs/ заполнен.
+Project detected and .docs/ filled.
 
-Стек: [detected stack]
-Нейминг файлов: [detected convention or chosen convention for new project]
+Stack: [detected stack]
+File naming: [detected convention or chosen convention for new project]
 
-Несоответствия с каноническим стеком:
+Deviations from the canonical stack:
 [stack comparison table, if any]
 
-Нарушения ней밍а:
-[list inconsistencies if any, or "нет"]
+Naming violations:
+[list inconsistencies if any, or "none"]
 
-Выбери:
-1. Глубокий анализ существующего проекта -- детальная проверка кода,
-   зависимостей, архитектуры + проверка соответствия правилам
-   из .docs/ с предложениями рефакторинга.
-2. Пропустить анализ -- перейти к обычной работе.
+Choose:
+1. Deep analysis of the existing project -- detailed review of code,
+   dependencies, architecture + rule compliance check against .docs/
+   with refactoring proposals.
+2. Skip analysis -- proceed to regular work.
 ```
 
 ## Template Files (Full Content)
@@ -549,9 +552,9 @@ If project doesn't exist (empty repo):
 ### 1. Ask User
 
 ```
-Проект не обнаружен. Выбери:
-1. Предложить стек и инициализировать проект
-2. Только заполнить .docs/ -- стек определит пользователь позже
+No project detected. Choose:
+1. Propose a stack and initialize the project
+2. Fill .docs/ only -- the user defines the stack later
 ```
 
 ### 2. Determine Requirements

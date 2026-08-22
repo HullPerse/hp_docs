@@ -1,18 +1,22 @@
 # {{PROJECT_NAME}} Decisions
 
-Журнал решений пользователя. Агент обязан проверить этот файл перед вопросом и записывать сюда решения после ответа, чтобы не переспрашивать.
+User decision journal. The agent must check this file before any question and append decisions after answers, so nothing gets asked twice.
 
-## Формат записи
+## Entry format
 
 ```markdown
-### YYYY-MM-DD: Короткий заголовок
+### YYYY-MM-DD: Short heading
 
-- Решение: ...
-- Контекст: ...
-- Последствие: ...
-- Источник: ссылка на сессию/задачу
+- Decision: ...
+- Context: ...
+- Consequence: ...
+- Source: session/task reference
 ```
 
-## Решения
+## Conflict rule
 
-<!-- Записи добавляются агентом по мере принятия решений -->
+When a new decision conflicts with an existing one, stop and ask the user. Never silently override or delete an existing entry.
+
+## Entries
+
+<!-- Appended by the agent as decisions are made -->

@@ -1,14 +1,14 @@
 # {{PROJECT_NAME}} Agent Rules Audit Prompt
 
-Запусти этот промпт, когда нужно проверить, что правила агентов не устарели и соответствуют текущему коду.
+Run this prompt when you need to verify that agent rules are not stale and still match the current code.
 
-## Задача
+## Task
 
-Проанализируй каждый файл правил агентов в `.docs/` и корневой `AGENTS.md` и сопоставь их с текущим состоянием приложения.
+Analyze every agent rules file in `.docs/` and the root `AGENTS.md`, and match them against the current state of the application.
 
-Файлы правил:
+Rules files:
 
-- `AGENTS.md` (корневой)
+- `AGENTS.md` (root)
 - `.docs/AGENT_PROMPT.md`
 - `.docs/DEVELOPMENT.md`
 - `.docs/CHECKLIST.md`
@@ -16,32 +16,32 @@
 - `.docs/DESIGN.md`
 - `.docs/REVIEWER.md`
 
-## Что проверить
+## What to check
 
-1. **Команды и скрипты**: совпадают ли упомянутые команды с реальными в `package.json` (или `Cargo.toml`, `pyproject.toml`, и т.д.).
-2. **Структура проекта**: совпадает ли описанная структура с реальным деревом файлов.
-3. **Принятые решения**: не изменилось ли что-то в коде так, что противоречит записям `.docs/DECISIONS.md`.
-4. **Технологии**: не появились ли новые зависимости/паттерны, не упомянутые в правилах.
-5. **Дизайн-система**: совпадают ли токены и компоненты в `.docs/DESIGN.md` с реальными (если применимо).
-6. **Отсутствие**: есть ли в правилах пробелы, которые не покрывают текущие сценарии работы агента.
-7. **Устаревание**: есть ли правила, описывающие то, чего больше нет в коде.
+1. **Commands and scripts**: do mentioned commands match real ones in `package.json` (or `Cargo.toml`, `pyproject.toml`, etc.).
+2. **Project structure**: does the described structure match the real file tree.
+3. **Accepted decisions**: did anything change in code contradicting `.docs/DECISIONS.md` entries.
+4. **Technologies**: are there new dependencies/patterns not covered by the rules.
+5. **Design system**: do tokens and components in `.docs/DESIGN.md` match real ones (when applicable).
+6. **Coverage gaps**: are there scenarios in current work not covered by any rule.
+7. **Staleness**: are there rules describing things no longer present in the code.
 
-## Формат ответа
+## Response format
 
-### Противоречия
-Каждая несостыковка: путь в правиле, что написано, что в коде, предложение исправления.
+### Contradictions
+Every mismatch: rule path, what is written, what is in code, proposed fix.
 
-### Пробелы
-Что в коде не покрыто правилами, и какое правило добавить.
+### Gaps
+What in the code is uncovered by rules, and which rule to add.
 
-### Устаревшее
-Какие правила больше не соответствуют коду, и что с ними делать (удалить/переформулировать).
+### Stale
+Which rules no longer match the code, and what to do with them (delete/reformulate).
 
-### Итог
-Краткое резюме: здоровье правил, приоритеты правок. Помечай `(recommended)` реальные рекомендации.
+### Summary
+Brief health summary of the rules and fix priorities. Mark `(recommended)` on real recommendations.
 
-## Правила
+## Rules
 
-- Не редактируй файлы правил по итогам аудита без одобрения пользователя.
-- Это аналитический промпт, а не ревью кода: фокус на соответствии правил коду, а не на багах в коде.
-- Не задавай вопросов, на которые отвечает код или уже записанные решения.
+- Never edit rules files based on audit results without user approval.
+- This is an analytical prompt, not a code review: focus on rules-to-code correspondence, not on bugs in the code.
+- Never ask questions that code or recorded decisions already answer.

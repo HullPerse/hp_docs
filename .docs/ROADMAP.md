@@ -1,25 +1,25 @@
 # {{PROJECT_NAME}} Roadmap
 
-Дорожная карта фич, dispositioned через disposition gate. Создаётся опционально, когда фич больше пяти и они образуют фазы.
+Feature roadmap dispositioned through the disposition gate. Created optionally when there are five or more features forming phases.
 
-## Формат
+## Format
 
-- Источник: список фич от пользователя или референсы; каждая позиция проходит disposition gate (сейчас / отложено / отклонено) до попадания сюда.
-- Порядок реализации: фазы A, B, C... от фундамента к UX.
-- Статусы: `done` | `now` (принято, не реализовано) | `deferred` | `rejected`.
-- Каждая запись: короткий ID, формулировка, статус, причина для deferred/rejected и условие возврата.
-- Реализованные пункты не удаляются: статус меняется на `done`, ссылка на решение в `.docs/DECISIONS.md`.
+- Source: user feature list or references; every item passes the disposition gate (now / deferred / rejected) before landing here.
+- Implementation order: phases A, B, C... from foundation to UX.
+- Statuses: `done` | `now` (accepted, not yet implemented) | `deferred` | `rejected`.
+- Every entry: short ID, formulation, status, reason for deferred/rejected plus a return condition.
+- Implemented items are never deleted: status flips to `done` with a reference to the decision in `.docs/DECISIONS.md`.
 
-## Шаблон записи
+## Entry template
 
 ```markdown
-- {ID}: {формулировка фичи}. Status: {status} ({фаза/причина}).
+- {ID}: {feature formulation}. Status: {status} ({phase/reason}).
 ```
 
-## Фазы
+## Phases
 
-<!-- Пример:
+<!-- Example:
 ## Phase A: Foundation
-- A1: Схема БД и подключение. Status: done.
-- A2: Каркас роутинга. Status: now.
+- A1: DB schema and connection. Status: done.
+- A2: Routing skeleton. Status: now.
 -->

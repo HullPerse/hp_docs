@@ -1,11 +1,11 @@
 # Answers
 
-Папка для развёрнутых исследовательских ответов: анализ миграций, сравнение библиотек, разбор технологий. Создаётся по запросу пользователя, когда ответ слишком большой для чата и должен остаться в проекте.
+Folder for extended research answers: migration analysis, library comparisons, technology deep-dives. Created on user request when an answer is too large for chat and must stay in the project.
 
-## Формат
+## Format
 
-- Один файл на один вопрос: `answer_{N}.md` с порядковым номером или `<slug>.md` по теме.
-- Внутри: Контекст (что спросили), Анализ (таблицы статусов, сравнения, breaking changes), Вывод, Рекомендация с `(recommended)` при обосновании.
-- Факты со временем жизни (статусы проектов, версии) датируются в заголовке раздела.
-- Решения, принятые на основе ответа, дублируются короткой записью в `.docs/DECISIONS.md`; сам ответ не заменяет журнал.
-- Стиль: обычные абзацы и таблицы без декоративного форматирования; ASCII-пунктуация.
+- One file per question: `answer_{N}.md` with a sequential number or `<slug>.md` by topic.
+- Inside: Context (what was asked), Analysis (status tables, comparisons, breaking changes), Conclusion, Recommendation with `(recommended)` when justified.
+- Time-sensitive facts (project statuses, versions) are dated in the section heading.
+- Decisions made based on an answer are duplicated as short entries in `.docs/DECISIONS.md`; the answer never replaces the journal.
+- Style: plain paragraphs and tables without decorative formatting; ASCII punctuation.

@@ -13,52 +13,52 @@ description: >
 
 # Docs Onboard
 
-Подключает нового агента к проекту с готовой документацией. Результат - агент в текущем чате работает строго по правилам проекта и явно показывает, что их прочитал.
+Connects a fresh agent to a project with existing documentation. Outcome: the agent in the current chat works strictly by the project rules and visibly proves it has read them.
 
-## Предусловие
+## Precondition
 
-Корневой `AGENTS.md` (или эквивалент: CLAUDE.md) ссылается на заполненный `.docs/`. Если в файлах есть плейсхолдеры `{{...}}` - onboarding не выполняется; предложи flow first-run из скилла `ai-docs`.
+A root `AGENTS.md` (or equivalent: CLAUDE.md) references a filled `.docs/`. When files contain `{{...}}` placeholders - do not onboard; suggest the first-run flow from the `ai-docs` skill.
 
-## Процедура
+## Procedure
 
-1. **Точка входа**: прочитай корневой `AGENTS.md` полностью. Извлеки: обязательный список чтения, ключевые правила, команды быстрого старта.
-2. **Обязательное чтение**: пройди список из точки входа по порядку. Минимум для контракта:
-   - `.docs/AGENT_PROMPT.md` - контракт сессии;
-   - `.docs/DEVELOPMENT.md` - конвенции, зафиксированные решения, типизация по языку, модель потока данных;
-   - `.docs/DECISIONS.md` - журнал решений;
-   - `.docs/DESIGN.md` - если затронут UI;
-   - `.docs/CHECKLIST.md` - перед реализацией;
-   - feature-файлы, релевантные задаче пользователя, если она уже известна.
-   Не пропускай файлы списка со ссылкой "потом прочитаю": контракт неполон без них.
-3. **MCP-инструменты**: перечисли доступные серверы одним действием (обязательная проверка из AGENT_PROMPT).
-4. **Резюме контракта** - выдай в текущий чат компактно:
+1. **Entry point**: read root `AGENTS.md` fully. Extract: mandatory reading list, key rules, quick-start commands.
+2. **Mandatory reading**: walk the entry-point list in order. Minimum for a complete contract:
+   - `.docs/AGENT_PROMPT.md` - session contract;
+   - `.docs/DEVELOPMENT.md` - conventions, fixed decisions, typing by language, data-flow model;
+   - `.docs/DECISIONS.md` - decision journal;
+   - `.docs/DESIGN.md` - when UI is affected;
+   - `.docs/CHECKLIST.md` - before implementation;
+   - feature files relevant to the user's task, when already known.
+   Never defer list items to "read later": without them the contract is incomplete.
+3. **MCP tools**: enumerate available servers in one action (mandatory check from AGENT_PROMPT).
+4. **Contract summary** - output compactly into the current chat:
 
 ```markdown
-## Контракт проекта: {{NAME}}
+## Project contract: {{NAME}}
 
-Стек: ...
-Команды: lint/typecheck/test через ...
+Stack: ...
+Commands: lint/typecheck/test via ...
 
-Жёсткие правила (верхний уровень):
+Hard rules (top level):
 - ...
-- ... (7-10 пунктов максимум)
+- ... (7-10 items max)
 
-Иерархия источников истины: пользователь > DEVELOPMENT > DECISIONS > дизайн/README > код.
+Source-of-truth hierarchy: user > DEVELOPMENT > DECISIONS > design/README > code.
 
-Последние решения из DECISIONS.md (дата + заголовок):
+Recent decisions from DECISIONS.md (date + heading):
 - ...
 - ...
 
-Открытые disposition'ы / roadmap-хвосты: ... или "нет".
+Open dispositions / roadmap tails: ... or "none".
 
-Непроверенное: ... или "всё прочитано".
+Unverified areas: ... or "everything read".
 ```
 
-5. **Готовность**: спроси задачу, если пользователь её ещё не назвал. Дальше работай по полному контракту без повторного чтения в этой сессии.
+5. **Ready**: ask for the task if the user has not named one yet. From now on work by the full contract without re-reading in this session.
 
-## Ограничения
+## Constraints
 
-- Onboarding ничего не изменяет: ни кода, ни `.docs/`, ни настроек.
-- Не пересказывай документы целиком: только сводка выше. Длинные пересказы - тот же slop.
-- Если документы противоречат друг другу - покажи противоречие как находку и спроси; не выбирай молча.
-- Если обязательный файл отсутствует или пуст - скажи прямо и предложи восстановление через шаблоны `ai-docs`.
+- Onboarding changes nothing: no code, no `.docs/`, no settings.
+- Never retell documents in full: only the summary above. Long retellings are slop too.
+- When documents contradict each other - surface the contradiction as a finding and ask; never choose silently.
+- When a mandatory file is missing or empty - say so plainly and suggest restoring from the `ai-docs` templates.

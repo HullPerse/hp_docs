@@ -1,21 +1,21 @@
 # {{PROJECT_NAME}} Decisions
 
-Журнал решений пользователя. Агент обязан проверить этот файл перед вопросом и записывать сюда решения после ответа, чтобы не переспрашивать.
+User decision journal. The agent must check this file before any question and append decisions after answers, so nothing gets asked twice. Historical entries may keep their original language; new entries are written in the project language chosen at initialization.
 
-## Формат записи
+## Entry format
 
 ```markdown
-### YYYY-MM-DD: Короткий заголовок
+### YYYY-MM-DD: Short heading
 
-- Решение: ...
-- Контекст: ...
-- Последствие: ...
-- Источник: ссылка на сессию/задачу
+- Decision: ...
+- Context: ...
+- Consequence: ...
+- Source: session/task reference
 ```
 
-## Решения
+## Entries
 
-<!-- Записи добавляются агентом по мере принятия решений -->
+<!-- Appended by the agent as decisions are made -->
 
 ### 2026-08-22: Скиллы канонически живут в .docs/skills/
 
@@ -128,3 +128,31 @@
 - Контекст: прежний счётчик "9 секций REVIEWER" и "19 секций AGENT_PROMPT" не соответствовали реальной структуре файлов.
 - Последствие: first-run и SKILL.md используют точные числа; README переписан полностью (принципы, карта доков, установка тремя менеджерами, референсы).
 - Источник: сессия расширения шаблонов 2026-08-22.
+
+### 2026-08-22: English becomes the canonical template language
+
+- Decision: all `.docs/` templates, AGENTS.md, and first-run.md translated to English; initialization Question 1 reworded to control the language of generated docs and agent communication; non-English choices are translated at generation time. Russian v1.2 archived as git tag `v1.2-ru` (commit dd7d2d6). examples/mini-project intentionally kept Russian as a live translate-at-init demo.
+- Context: user goal is wider adoption; skills and README were already English while core templates were Russian - inconsistency grew.
+- Consequence: deslop RU word-tag lists stay bilingual by design (they describe Russian-language slop); every future rule edit happens in English first; repo CHANGELOG entries are English from v1.3.0.
+- Source: session of EN migration 2026-08-22.
+
+### 2026-08-22: Clarify incomplete understanding before implementing
+
+- Decision: new rule in AGENT_PROMPT section 4 plus AGENTS.md key rules and a CHECKLIST item: when the goal, boundaries, or expected outcome of a task are unclear, the agent restates its interpretation in one sentence and asks before implementing instead of guessing. Junk-question guard kept: clarification required exactly where being wrong changes scope.
+- Context: existing protocol only demanded clarification "on conflict", which let plausible-but-wrong readings through.
+- Consequence: interpretation restatement becomes part of the standard question flow for every project on the template.
+- Source: session of EN migration 2026-08-22.
+
+### 2026-08-22: Initialization guide added to README
+
+- Decision: README gained an "Initialize .docs in Your Project" section explaining that templates ship inside the ai-docs skill, so one `npx skills add hullperse/ai-docs` call suffices; documents both CLI and manual paths, lists the five init questions, and shows the resulting file tree.
+- Context: user asked how the full .docs package actually initializes in target projects.
+- Consequence: onboarding cost for new users drops to one command plus an agent conversation.
+- Source: session of EN migration 2026-08-22.
+
+### 2026-08-22: docs-init skill for agent-driven installation
+
+- Decision: new skill `skills/docs-init/SKILL.md` installs the package into a clean project through an agent: detects installation state (installed / empty / already initialized), asks one runner question (npx recommended), installs into `.agents/skills/` with git-clone fallback when node is absent and `--copy` retry on Windows symlink failures, verifies all six skills plus templates, then hands off to the first-run flow which owns all initialization questions. README gained an "Install via Your Agent" section with a copy-paste prompt and a pinned-version example via tag tree URL.
+- Context: clean projects had no root AGENTS.md to anchor an agent; installation semantics (default-branch snapshot, no auto-update, update via `npx skills update`, pinning via tree URLs) were undocumented.
+- Consequence: full agent-driven path exists end to end; main branch must stay working at all times since every install snapshots it; releases are tagged so users can pin.
+- Source: session of docs-init 2026-08-22.

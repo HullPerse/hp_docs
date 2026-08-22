@@ -1,104 +1,104 @@
 # {{PROJECT_NAME}} Design System
 
-Источник правды по UI/UX (если применимо). Правила применяются к коду, новым компонентам и ревью.
+Source of truth for UI/UX (when applicable). Rules apply to code, new components, and reviews.
 
-## 0. Выбор пресета
+## 0. Preset selection
 
-Дизайн-пресет выбирается при инициализации проекта и фиксируется в `.docs/DECISIONS.md`. Дефолт - пресет "Скандинавский". Пользователь может назвать свой стиль: тогда агент переписывает секцию 1 под него, а остальные правила (состояния, a11y, запреты) остаются.
+The design preset is chosen at project initialization and recorded in `.docs/DECISIONS.md`. The default is "Scandinavian". A user-defined style rewrites section 1 for that preset; the remaining rules (states, a11y, bans) stay.
 
-| Пресет | Когда выбирать |
+| Preset | When to choose |
 | --- | --- |
-| Скандинавский `(recommended)` | Веб и продуктовые интерфейсы по умолчанию: спокойная чёрно-белая база, сдержанная типографика |
-| Нео-брутализм | Если пользователь явно хочет жёсткий контрастный стиль: radius 0, толстые границы, хард-тени, моноширинный шрифт |
-| Zed dark | Нативные десктоп-приложения (GPUI/компактные инструменты): тёмная тема, высокая плотность информации |
+| Scandinavian `(recommended)` | Web and product interfaces by default: calm black-and-white base, restrained typography |
+| Neo-brutalism | When the user explicitly wants a harsh high-contrast style: radius 0, thick borders, hard shadows, monospace font |
+| Zed dark | Native desktop applications (GPUI/compact tools): dark theme, high information density |
 
-Для не-UI проектов (CLI, бэкенд-only) оставь только этот раздел и раздел 5 или удали файл целиком.
+For non-UI projects (CLI, backend-only) keep only this section and section 5, or delete the file entirely.
 
-## 1. Пресет "Скандинавский" (дефолт)
+## 1. Preset "Scandinavian" (default)
 
-Спокойный функциональный интерфейс на нейтральной чёрно-белой базе. Простота - не минимализм: убираем лишнее, чтобы главная задача стала очевидной, но добавляем подписи, границы и плотность, когда они помогают пониманию. Тихий не значит пустой.
+A calm functional interface on a neutral black-and-white base. Simplicity is not minimalism: remove what is unnecessary so the primary task becomes obvious, but add labels, boundaries, and density when they aid comprehension. Quiet must never mean empty or vague.
 
-### Цвет: чернила через alpha, не серые краски
+### Color: ink via alpha, not gray paint
 
-Промежуточные тона строятся alpha-чёрным поверх белого, без тёплых или холодных оттенков серого:
+Intermediate tones are built with alpha black over white, without warm or cool gray casts:
 
-| Роль | Значение | Назначение |
+| Role | Value | Purpose |
 | --- | --- | --- |
-| Canvas / Surface | `#FFFFFF` | Фон страницы и панелей |
-| Primary ink | `#000000`, 90-100% | Основной текст, критичные иконки |
-| Secondary ink | `rgb(0 0 0 / 64%)` | Поддерживающий текст |
-| Tertiary ink | `rgb(0 0 0 / 44%)` | Метаданные, необязательные глифы; для читаемого текста на плотных экранах поднимать до ~56% |
-| Border | `rgb(0 0 0 / 10%)` | Разделители |
-| Strong border | `rgb(0 0 0 / 18%)` | Контуры полей и карточек |
-| Hover fill | `rgb(0 0 0 / 5%)` | Наведение |
-| Pressed fill | `rgb(0 0 0 / 9%)` | Нажатие, выбранное |
-| Scrim | `rgb(0 0 0 / 44%)` | Подложка модалок |
+| Canvas / Surface | `#FFFFFF` | Page and panel background |
+| Primary ink | `#000000`, 90-100% | Body text, critical icons |
+| Secondary ink | `rgb(0 0 0 / 64%)` | Supporting text |
+| Tertiary ink | `rgb(0 0 0 / 44%)` | Metadata, optional glyphs; lift to ~56% for readable text on dense screens |
+| Border | `rgb(0 0 0 / 10%)` | Separators |
+| Strong border | `rgb(0 0 0 / 18%)` | Field and card outlines |
+| Hover fill | `rgb(0 0 0 / 5%)` | Hover state |
+| Pressed fill | `rgb(0 0 0 / 9%)` | Pressed, selected |
+| Scrim | `rgb(0 0 0 / 44%)` | Modal backdrop |
 
-Правила цвета:
+Color rules:
 
-- Иерархия через ступени прозрачности, не через новые цвета. Чернила задаются alpha-цветом, не CSS `opacity`.
-- Один брендовый акцент допустим только для главного действия; декоративные акценты не вводятся.
-- Логотип остаётся в фирменном цвете; чужие логотипы в списках соцдоказательств - монохромные.
-- Скриншоты продукта и медиа сохраняют свои цвета; их нельзя перекрашивать токенами.
-- Тёмная тема: канвас около `#0A0A0A`, белый primary ink, secondary ~`rgb(255 255 255 / 56%)`, tertiary ~36%; hover ~9%, pressed ~14%. Alpha-значения светлой темы не переносить один-в-один.
-- Контраст проверять, а не предполагать: нижние ступени не дотягивают до 4.5:1 и предназначены только для необязательного.
+- Hierarchy comes from opacity rungs, not new colors. Set ink with an alpha color, never CSS `opacity`.
+- One brand accent may exist for the primary action only; no decorative accents.
+- The logo keeps its brand color; third-party logos in social-proof lists go monochrome.
+- Product screenshots and media keep their own colors; never repaint them with tokens.
+- Dark theme: canvas near `#0A0A0A`, white primary ink, secondary ~`rgb(255 255 255 / 56%)`, tertiary ~36%; hover ~9%, pressed ~14%. Never carry light-theme alphas over one-to-one.
+- Validate contrast instead of assuming: lower rungs fail 4.5:1 by design and are meant for optional content only.
 
-### Типографика
+### Typography
 
-- Один sans-serif: существующий качественный шрифт проекта > системный стек > Inter Variable.
-- Body 16-18px, weight 400, line-height 1.5-1.6; labels и контролы weight 500; заголовки 500-600, без 700+.
-- Крупные заголовки: line-height 1.05-1.15, лёгкий отрицательный трекинг.
-- Запрещён all-caps и принудительный uppercase в кнопках, навигации, бейджах; sentence case везде.
-- 3-4 различимых текстовых стиля на экран; иерархия через размер и воздух, а не через много весов.
-- Ширина прозы 55-68 символов.
+- One sans-serif: existing quality font of the project > system stack > Inter Variable.
+- Body 16-18px, weight 400, line-height 1.5-1.6; labels and controls weight 500; headings 500-600, never 700+.
+- Large headings: line-height 1.05-1.15, slight negative tracking.
+- No all-caps or forced uppercase in buttons, navigation, badges; sentence case everywhere.
+- 3-4 distinct text styles per screen; hierarchy through size and whitespace, not many weights.
+- Prose width 55-68 characters.
 
-### Пространство и структура
+### Spacing and structure
 
-- Ритм 8px, корректировки по 4px. Мобильные поля ~24px, десктоп 40-64px.
-- Длинные страницы собираются в просторные главы (переходы 96-144px), а не в стопку похожих карточек.
-- Пробел разделяет раньше линий; линия добавляется, только если без неё что-то неоднозначно.
-- Заголовок относится к контенту снизу: зазор сверху примерно втрое больше зазора снизу.
-- По умолчанию левое выравнивание всего текста, включая подписи и футеры; центрирование - редкое осознанное исключение.
-- Одна семья иконок, один вес штриха, монохром; emoji не иконки.
-- Вес элемента следует частоте использования: самая редкая кнопка региона не должна быть самой тяжёлой.
+- 8px rhythm, 4px adjustments allowed. Mobile margins ~24px, desktop 40-64px.
+- Long pages compose into spacious chapters (96-144px transitions), not stacks of similar cards.
+- Whitespace separates before lines do; add a line only when something stays ambiguous without it.
+- A heading belongs to the content below it: gap above roughly three times the gap below.
+- Left-align all text by default including headings, labels, footers; centering is a rare deliberate exception.
+- One icon family, one stroke weight, monochrome; emoji are not icons.
+- Element weight follows usage frequency: the least-used control in a region must never be its heaviest element.
 
-## 2. Пресет "Нео-брутализм"
+## 2. Preset "Neo-brutalism"
 
-Плоские поверхности, жёсткие границы 2px, нулевой радиус скругления, хард-тени без блюра, моноширинный шрифт. Иерархия строится на цветовых пятнах и тени.
+Flat surfaces, hard 2px borders, zero border radius, blur-free hard shadows, monospace font. Hierarchy built from color blocks and shadow.
 
-- Токены `:root`: background, card, border (#000), text (#000), muted, primary, secondary, accent, success, error; семантические утилиты Tailwind вместо хардкода hex.
-- Типографика: моноширинный шрифт (например JetBrains Mono), weight 600, базовый размер 20px; кнопки text-sm font-extrabold.
-- `border-radius: 0` глобально; границы `border-2`; хард-тени `4px 4px 0 0 var(--border)` и `2px 2px 0 0`.
-- Компоненты: Button (default/error/success/ghost/link, loading/disabled), Input (password show/hide, number arrows, счётчик длины), Modal (overlay blur + fade/zoom 100ms, закрытие кнопкой с sr-only подписью), Switch, Checkbox, Slider.
-- Скроллбар тонкий, primary на background, граница 2px.
+- `:root` tokens: background, card, border (#000), text (#000), muted, primary, secondary, accent, success, error; semantic Tailwind utilities instead of hardcoded hex.
+- Typography: monospace family (e.g. JetBrains Mono), weight 600, 20px base; buttons text-sm font-extrabold.
+- `border-radius: 0` globally; borders `border-2`; hard shadows `4px 4px 0 0 var(--border)` and `2px 2px 0 0`.
+- Components: Button (default/error/success/ghost/link, loading/disabled), Input (password show/hide, number arrows, length counter), Modal (blur overlay + fade/zoom 100ms, close button with sr-only label), Switch, Checkbox, Slider.
+- Thin scrollbar, primary on background, 2px border.
 
-## 3. Пресет "Zed dark" (десктоп/GPUI)
+## 3. Preset "Zed dark" (desktop/GPUI)
 
-Тёмная компактная тема редакторного типа для нативных инструментов. Один нейтральный масштаб несёт поверхности, один акцент маркирует взаимодействие и фокус.
+Dark compact editor-grade theme for native tools. One neutral scale carries surfaces, one accent marks interaction and focus.
 
-- Токены: background `#111110`, surface `#191918`, element `#222221`, border `#3b3a37`, border_focused `#004074`, text `#eeeeec`, text_muted `#b5b3ad`, primary `#0090ff`, danger `#e5484d`, warning `#ffe629`, success `#46a758`; плюс семантические цвета классификации (protected, unknown, cache, build, user_data).
-- Типографика: системный шрифт; 16px заголовки страниц, 14px тело и кнопки, 12px метаданные, 10px бейджи.
-- Радиусы 4/6/8px; границы 1px, фокус 2px `border_focused`; высота таб-бара 32px, кнопки 26px.
-- Никаких декоративных градиентов и свечения; переходы цвета 100-150ms ease-out.
+- Tokens: background `#111110`, surface `#191918`, element `#222221`, border `#3b3a37`, border_focused `#004074`, text `#eeeeec`, text_muted `#b5b3ad`, primary `#0090ff`, danger `#e5484d`, warning `#ffe629`, success `#46a758`; plus semantic classification colors (protected, unknown, cache, build, user_data).
+- Typography: system font; 16px page titles, 14px body/buttons, 12px metadata, 10px badges.
+- Radii 4/6/8px; 1px borders, 2px `border_focused` focus; tab bar 32px, buttons 26px tall.
+- No decorative gradients or glow; 100-150ms ease-out color transitions.
 
-## 4. Компоненты (общие требования)
+## 4. Components (common requirements)
 
-Независимо от пресета каждый компонент описывается до реализации:
+Regardless of preset, every component is described before implementation:
 
 - Variants, sizes, props (loading, disabled, rendered).
-- Состояния: normal, hover, active/pressed, focus-visible, disabled, error.
-- Реальные состояния поверхности: loading, empty, error, dirty, stale, recovery.
+- States: normal, hover, active/pressed, focus-visible, disabled, error.
+- Real surface states: loading, empty, error, dirty, stale, recovery.
 
-## 5. A11y и обязательные состояния
+## 5. A11y and required states
 
-- Все интерактивные элементы имеют видимый focus-индикатор минимум 2px.
-- Иконки без текста получают `sr-only` подпись; клавиатурная навигация обязательна.
-- Цвет никогда не единственный сигнал состояния: дублируется текстом или формой.
-- Язык интерфейса фиксируется при инициализации.
+- Every interactive element has a visible focus indicator of at least 2px.
+- Icon-only controls get `sr-only` labels; keyboard navigation is mandatory.
+- Color is never the only state signal: duplicate with text or shape.
+- Interface language is fixed at initialization.
 
-## 6. Правила
+## 6. Rules
 
-- Не создавать второй компонент, если существует аналог в общих каталогах.
-- Не хардкодить цвета, радиусы и отступы; только токены пресета.
-- Не менять пресет и его глобальные правила без явного решения пользователя и записи в `.docs/DECISIONS.md`.
-- Каждый визуальный выбор должен защищаться пользой для продукта: понятностью, иерархией, скоростью задачи или доступностью, а не "красиво".
+- Never create a second component when an analog exists in shared directories.
+- Never hardcode colors, radii, or spacing; use the preset's tokens only.
+- Never change the preset or its global rules without an explicit user decision recorded in `.docs/DECISIONS.md`.
+- Every visual choice must be defensible by product benefit: comprehension, hierarchy, task speed, or accessibility - not "it looks nice".

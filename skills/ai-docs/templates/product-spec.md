@@ -1,36 +1,36 @@
 # {{PROJECT_NAME}} Product Spec
 
-Опциональный источник истины по фичам продукта. Создаётся для проектов с большим продуктовым scope; если файл не используется, состав фич ведётся в `.docs/features/*.md` и DECISIONS.md.
+Optional single source of truth for the product feature set. Created for projects with a large product scope; when unused, features live in `.docs/features/*.md` and DECISIONS.md.
 
-## Роль файла
+## Role of this file
 
-- Единственный источник истины по составу фич: агент не добавляет фичи, которых здесь нет, без прохождения disposition gate.
-- Обновляется только по явному запросу пользователя; реализационные детали живут в feature-файлах.
-- Связь документов: здесь "что строим и почему", в `.docs/features/*.md` - "как и в каком статусе".
+- The single source of truth for what is in scope: the agent never adds features absent from this file without passing the disposition gate.
+- Updated only on explicit user request; implementation details live in feature files.
+- Document split: here - "what we build and why"; `.docs/features/*.md` - "how and in what status".
 
-## Продукт
+## Product
 
 {{PRODUCT_DESCRIPTION}}
 
 <!--
-Пример заполнения:
-Нативное Windows-приложение для анализа диска и безопасной очистки.
-Без облака, телеметрии и постоянного удаления по умолчанию.
+Example:
+A native Windows application for disk analysis and safe cleaning.
+No cloud, no telemetry, no permanent deletion by default.
 -->
 
-## Фичи
+## Features
 
 <!--
-Пример заполнения:
-- F1: Скан дисков в фоне с прогрессом - живой размер и счётчики в заголовке.
-- F2: Классификация находок - cache/build/user_data/system/protected с цветами из DESIGN.md.
-- F3: Quick Clean пресеты чекбоксами - декларативный JSON, удаление только в корзину.
+Example:
+- F1: Background drive scanning with progress - live size and counters in the header.
+- F2: Findings classification - cache/build/user_data/system/protected with colors from DESIGN.md.
+- F3: Quick Clean checkbox presets - declarative JSON, deletion to Recycle Bin only.
 -->
 
-## Не строим
+## Not building
 
 <!--
-Явные отказы с причиной: чтобы агенты не предлагали отвергнутое повторно.
-Пример:
-- CLI-режим: второй исполняемый файл вне scope, десктоп покрывает те же сценарии.
+Explicit rejections with reasons: so agents stop proposing rejected items.
+Example:
+- CLI mode: a second executable is out of scope; the desktop app covers the same flows.
 -->

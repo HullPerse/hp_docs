@@ -1,260 +1,261 @@
-# First-Run: полная инициализация документации
+# First-Run: Full Documentation Initialization
 
-Этот flow запускается агентом при первой встрече с `AGENTS.md` в проекте, где `.docs/` отсутствует или содержит плейсхолдеры `{{...}}`. Он объединяет всё: анализ проекта, вопросы инициализации, установку скиллов, генерацию документов, верификацию и выбор дальнейшего пути.
+This flow is executed by the agent on first encounter with `AGENTS.md` in a project where `.docs/` is missing or contains `{{...}}` placeholders. It consolidates everything: project analysis, initialization questions, skill installation, document generation, verification, and path selection.
 
-## Важно
+## Important
 
-Все строгие правила действуют в полной мере: аудит перед изменениями, disposition gate, anti-slop, прямой критический режим, запись решений в DECISIONS.md.
-
----
-
-## Шаг 0: Определи состояние проекта
-
-Три возможных состояния:
-
-1. **Проект существует, `.docs/` нет или с плейсхолдерами** - выполняй этот flow полностью.
-2. **Проект не существует** (пустой репозиторий) - шаги 1-4 заменяются на инициализацию нового проекта (шаг 8).
-3. **`.docs/` уже заполнены, а агент новый в чате** - этот flow не нужен; прочитай корневой `AGENTS.md` и `.docs/` напрямую или используй скилл `docs-onboard`.
-
-### Критерии "проект существует"
-
-- Есть `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod` или аналог.
-- Есть исходники (`src/` или аналог) хотя бы в нескольких файлах.
+All strict rules apply in full: audit before changes, disposition gate, anti-slop, direct critical mode, decision recording in DECISIONS.md.
 
 ---
 
-## Шаг 0.5: Обязательная проверка MCP-инструментов
+## Step 0: Determine the project state
 
-До анализа перечисли доступные MCP-серверы и инструменты одним действием и зафиксируй список:
+Three possible states:
 
-- документационные (context7 и аналоги) - понадобятся для актуальных доков зависимостей на шаге 2;
-- браузерные (Playwright и аналоги) - понадобятся для UI-проектов;
-- остальные - по типу задачи.
+1. **Project exists, `.docs/` missing or has placeholders** - execute this flow fully.
+2. **Project does not exist** (empty repository) - steps 1-4 are replaced by new-project initialization (step 8).
+3. **`.docs/` already filled and this is a fresh agent chat** - this flow is not needed; read root `AGENTS.md` and `.docs/` directly, or use the `docs-onboard` skill.
 
-Если нужного инструмента нет, отметь это в финальном отчёте.
+### "Project exists" criteria
+
+- A `package.json`, `Cargo.toml`, `pyproject.toml`, `go.mod`, or equivalent exists.
+- Sources exist (`src/` or equivalent) at least in a few files.
 
 ---
 
-## Шаг 1: Сканирование проекта
+## Step 0.5: Mandatory MCP tool check
 
-Прочитай и проанализируй:
+Before analysis, enumerate available MCP servers and tools in one action and keep the list:
 
-1. `package.json` (корневой и в подкаталогах) - стек, зависимости, скрипты.
-2. `Cargo.toml`, `pyproject.toml`, `go.mod` или другой файл зависимостей для не-JS проектов.
-3. `tsconfig.json` / эквиваленты - строгость типизации.
+- documentation tools (context7 and similar) - needed for current dependency docs in step 2;
+- browser tools (Playwright and similar) - needed for UI projects;
+- everything else - by task type.
+
+If a needed tool does not exist, note it in the final report.
+
+---
+
+## Step 1: Scan the project
+
+Read and analyze:
+
+1. `package.json` (root and subdirectories) - stack, dependencies, scripts.
+2. `Cargo.toml`, `pyproject.toml`, `go.mod`, or another dependency file for non-JS projects.
+3. `tsconfig.json` / equivalents - typing strictness.
 4. Lockfile: `bun.lock` / `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json` / `Cargo.lock`.
-5. Структура каталогов до 3 уровней.
-6. `README.md`, `.gitignore`, основные entry points.
-7. Существующие конфиги линтера/форматтера и CI.
+5. Directory tree up to 3 levels.
+6. `README.md`, `.gitignore`, main entry points.
+7. Existing linter/formatter configs and CI.
 
 ---
 
-## Шаг 2: Определение стека
+## Step 2: Determine the stack
 
-Определи и запиши для себя:
+Determine and note for yourself:
 
-- Язык и рантайм: TypeScript/Bun, Python, Rust, Go и т.д.
-- Frontend (если есть): React, Vue, Svelte и т.д.
-- Backend (если есть): Elysia, Express, Axum, FastAPI и т.д.
-- База данных: SQLite, PostgreSQL и т.д.
-- Query-библиотека (TanStack Query, SWR) - определяет вариант правил потока данных.
-- Пакетный менеджер по lockfile.
-- Команды dev/test/lint/typecheck/build.
+- Language and runtime: TypeScript/Bun, Python, Rust, Go, etc.
+- Frontend (if any): React, Vue, Svelte, etc.
+- Backend (if any): Elysia, Express, Axum, FastAPI, etc.
+- Database: SQLite, PostgreSQL, etc.
+- Query library (TanStack Query, SWR) - determines the data-flow rules variant.
+- Package manager from the lockfile.
+- dev/test/lint/typecheck/build commands.
 
-Для проверки версий и возможностей библиотек используй документационный MCP-инструмент вместо памяти.
-
----
-
-## Шаг 2.5: Вопросы инициализации
-
-Задай одним батчем до заполнения шаблонов. Каждый ответ фиксируется в `.docs/DECISIONS.md` и попадает в соответствующий файл `.docs/`.
-
-### Вопрос 1: Язык проекта
-
-На каком языке пишутся доки, вопросы агента и UI-копирайт?
-
-- Русский `(recommended)` - дефолт этого шаблона.
-- Английский - все правила переводятся в English-only режим.
-
-### Вопрос 2: Пакетный менеджер
-
-- Bun `(recommended)` - самый быстрый install/run/test из JS-менеджеров, встроенные test и TS.
-- pnpm - строгий node_modules, экономия диска, зрелые workspace.
-- npm - ноль дополнений, максимум совместимости.
-- yarn - только если проект уже на нём.
-- cargo/pip/uv/go - для не-JS стека вопрос снимается автоматически.
-
-Ответ определяет все команды во всех доках.
-
-### Вопрос 3: Линт и формат
-
-- Ultracite + oxlint/oxfmt `(recommended)` - AI-ready пресет без конфига, type-aware через oxlint-tsgolint, скорость OXC. Конфиги: `oxlint.config.ts` extends `ultracite/oxlint/core` (+ `ultracite/oxlint/react`, `ultracite/oxlint/tanstack` для фронта), `oxfmt.config.ts` = `ultracite/oxfmt`; скрипты `check`: `ultracite check`, `fix`: `ultracite fix`.
-- Ultracite + Biome - тот же пресет на движке Biome.
-- Голый oxlint + oxfmt - минимальный набор без пресета.
-- ESLint + Prettier - максимальная экосистема, медленнее и многословнее.
-- cargo clippy/fmt, ruff, gofmt - для не-JS стека.
-- Ничего - только typecheck (мелкие утилиты).
-
-### Вопрос 4: Дизайн-пресет (только UI-проекты)
-
-- Скандинавский `(recommended)` - спокойная чёрно-белая база, alpha-чернила, Inter/system sans, ритм 8px.
-- Нео-брутализм - radius 0, границы 2px, хард-тени, моноширинный шрифт.
-- Zed dark - тёмная тема нативных десктоп-инструментов.
-- Свой стиль - словами или референсом; агент перепишет секцию 1 DESIGN.md под него.
-
-Не-UI проекты: раздел удаляется вместе с остальными пресетами.
-
-### Вопрос 5: Продуктовый спек (опционально)
-
-Есть ли у проекта большой продуктовый scope, который стоит вести отдельным файлом?
-
-- Да - создаётся `product-spec.md` в корне: единственный источник истины по составу фич, ссылается из AGENTS.md.
-- Нет `(recommended)` по умолчанию - состав фич ведётся в `.docs/features/*.md`.
+Use a documentation MCP tool instead of memory when checking library versions and capabilities.
 
 ---
 
-## Шаг 2.6: Установка скиллов в проект
+## Step 2.5: Initialization questions
 
-Если скиллы едут из этого репозитория, скопируй их в целевой проект для автообнаружения агентами:
+Ask as one batch before filling templates. Every answer is recorded in `.docs/DECISIONS.md` and lands in the respective `.docs/` file.
+
+### Question 1: Documentation language
+
+Canonical templates are English. Which language should the generated docs and agent communication use?
+
+- English `(recommended)` - zero translation drift; canonical text used as-is.
+- Russian or another language - the agent translates every generated `.docs/` file into that language during initialization; all future communication and doc updates follow it too.
+
+### Question 2: Package manager
+
+- Bun `(recommended)` - fastest install/run/test among JS managers, built-in test and TS support.
+- pnpm - strict node_modules, disk efficiency, mature workspaces.
+- npm - zero extra tooling, maximum compatibility.
+- yarn - only if the project already uses it.
+- cargo/pip/uv/go - for a non-JS stack this question resolves automatically.
+
+The answer defines every command across all docs.
+
+### Question 3: Lint and format
+
+- Ultracite + oxlint/oxfmt `(recommended)` - AI-ready zero-config preset, type-aware rules via oxlint-tsgolint, OXC speed. Configs: `oxlint.config.ts` extends `ultracite/oxlint/core` (+ `ultracite/oxlint/react`, `ultracite/oxlint/tanstack` for frontend), `oxfmt.config.ts` = `ultracite/oxfmt`; scripts: `check` = `ultracite check`, `fix` = `ultracite fix`.
+- Ultracite + Biome - same preset on the Biome engine.
+- Plain oxlint + oxfmt - minimal ruleset without presets.
+- ESLint + Prettier - largest plugin ecosystem, slower and more verbose config.
+- cargo clippy/fmt, ruff, gofmt - for non-JS stacks.
+- None - typecheck only (tiny utilities).
+
+### Question 4: Design preset (UI projects only)
+
+- Scandinavian `(recommended)` - calm black-and-white base, alpha ink ladder, Inter/system sans, 8px rhythm.
+- Neo-brutalism - radius 0, 2px borders, hard shadows, monospace font.
+- Zed dark - dark theme for native desktop tools.
+- Custom - describe in words or by reference; the agent rewrites section 1 of DESIGN.md to match.
+
+Non-UI projects: the section is removed along with the other presets.
+
+### Question 5: Product spec (optional)
+
+Does the project have a large product scope worth tracking in a separate file?
+
+- Yes - `product-spec.md` is created in the project root: single source of truth for the feature set, referenced from AGENTS.md.
+- No `(recommended)` default - features live in `.docs/features/*.md`.
+
+---
+
+## Step 2.6: Installing skills into the project
+
+If skills ship from this repository, copy them into the target project so agents auto-discover them:
 
 ```bash
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Состав: `ai-docs` (этот flow), `deslop` (очистка прозы), `scandinavian-design` (глубокая UI-работа), `docs-refactor` (приведение проекта к правилам), `docs-onboard` (подключение нового агента к готовым доскам). Скиллы ставь все: они маленькие, а триггеры у них разные.
+Contents: `ai-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat). Install all of them: they are small and their triggers differ.
 
 ---
 
-## Шаг 3: Заполнение плейсхолдеров
+## Step 3: Filling placeholders
 
-Замени все `{{...}}` реальными данными проекта:
+Replace all `{{...}}` with real project data:
 
-| Плейсхолдер | Источник данных |
+| Placeholder | Data source |
 |---|---|
-| `{{PROJECT_NAME}}` | Имя из package.json/name или README |
-| `{{PROJECT_CONTEXT}}` | Стек + описание из README/package.json |
-| `{{PROJECT_OVERVIEW}}` | Описание + структура каталогов |
-| `{{FIXED_DECISIONS}}` | Ответы вопросов 1-5: менеджер, линт-пресет, язык, дизайн-пресет, модель потока данных + базовые правила из README |
-| `{{DIRECTORY_STRUCTURE}}` | Анализ дерева каталогов |
-| `{{COMMANDS}}` | Скрипты package.json, записанные через выбранный менеджер |
-| `{{PRODUCT_DESCRIPTION}}` | Если создан product-spec.md |
+| `{{PROJECT_NAME}}` | Name from package.json/name or README |
+| `{{PROJECT_CONTEXT}}` | Stack + description from README/package.json |
+| `{{PROJECT_OVERVIEW}}` | Description + directory tree |
+| `{{FIXED_DECISIONS}}` | Answers to questions 1-5: manager, lint preset, language, design preset, data-flow model + base rules from README |
+| `{{DIRECTORY_STRUCTURE}}` | Directory tree analysis |
+| `{{COMMANDS}}` | package.json scripts written through the chosen manager |
+| `{{PRODUCT_DESCRIPTION}}` | If product-spec.md was created |
 
-Дополнительные действия по файлам:
+Per-file actions:
 
-- **DEVELOPMENT.md**: заполни "Типизация по языку" выбранным вариантом (TS/Rust/Python/Go); зафиксируй модель потока данных (query-библиотека или фоновые задачи) в разделе "Зафиксированные решения".
-- **DESIGN.md**: оставь секцию выбранного пресета, остальные две удали или пометь "не используется". Для не-UI проекта оставь разделы 0 и 5 или удали файл.
-- **AGENT_PROMPT.md**: проверь, что подсекция "Правила потока данных" отражает выбранную модель.
+- **DEVELOPMENT.md**: fill "Typing by language" with the chosen variant (TS/Rust/Python/Go); fix the data-flow model (query library or background tasks) under "Fixed decisions".
+- **DESIGN.md**: keep the chosen preset section, delete the other two (or mark "not used"). For a non-UI project keep sections 0 and 5 or delete the file.
+- **AGENT_PROMPT.md**: verify the "Data flow rules" subsection reflects the chosen model.
+- If Question 1 chose a non-English language: translate every generated `.docs/` file and AGENTS.md into that language now, keeping structure and section counts identical. Do not translate the deslop word-tag lists - they are bilingual reference content.
 
-Не удаляй плейсхолдеры, которые не смог заполнить, - пометь `<!-- TODO: заполнить вручную -->`.
-
----
-
-## Шаг 3.5: Опциональные файлы
-
-Создавай по необходимости, не заранее:
-
-- `.docs/ROADMAP.md` - при 5+ dispositioned фичах, которые образуют фазы.
-- `.docs/answers/` - по запросу пользователя для длинных исследовательских ответов.
-- `product-spec.md` - если выбран в вопросе 5.
+Never delete placeholders you could not fill - mark them `<!-- TODO: fill manually -->`.
 
 ---
 
-## Шаг 4: Верификация команд
+## Step 3.5: Optional files
 
-Запусти и зафиксируй результат каждой: `{{LINT_COMMAND}}`, `{{TYPECHECK_COMMAND}}`, `{{TEST_COMMAND}}`. Отдельно пометь passed / failed / unavailable с причиной. Для нового проекта достаточно что команды существуют и не падают на пустом наборе.
+Create on demand, never upfront:
+
+- `.docs/ROADMAP.md` - with 5+ dispositioned features forming phases.
+- `.docs/answers/` - on user request for long research answers.
+- `product-spec.md` - if chosen in question 5.
 
 ---
 
-## Шаг 5: Docs Health Check
+## Step 4: Verify commands
 
-Проверь, что каждый файл содержит все обязательные top-level секции:
+Run each and record the result: `{{LINT_COMMAND}}`, `{{TYPECHECK_COMMAND}}`, `{{TEST_COMMAND}}`. Mark passed / failed / unavailable separately with reasons. For a fresh project it suffices that commands exist and do not fail on an empty suite.
+
+---
+
+## Step 5: Docs Health Check
+
+Verify every file contains all mandatory top-level sections:
 
 ```text
 Docs Health Check:
-  AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Доступные инструменты)
+  AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Available tools)
   DEVELOPMENT.md     [13/13 sections] OK
-  DESIGN.md          [ 7/7 sections]  OK   (или удалён для не-UI)
+  DESIGN.md          [ 7/7 sections]  OK   (or deleted for non-UI)
   CHECKLIST.md       [ 5/5 sections]  OK
-  REVIEWER.md        [ 8/8 sections]  OK   (заголовки шаблона issue-файла внутри кодового блока не считать)
+  REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
   DECISIONS.md       [ 2/2 sections]  OK
 ```
 
-Недостающие секции допиши до продолжения. После правки шаблонов пересчитывай счётчики заново.
+Add missing sections before continuing. After template edits recount manually.
 
 ---
 
-## Шаг 6: Выбор пути
+## Step 6: Path choice
 
-Задай пользователю:
+Ask the user:
 
-Проект обнаружен и `.docs/` заполнен. Стек: [...]. Нейминг файлов: [...]. Несоответствия канону: [...]. Выбери:
+Project detected and `.docs/` filled. Stack: [...]. File naming: [...]. Deviations from canon: [...]. Choose:
 
-1. **Глубокий анализ существующего проекта** - детальная проверка кода, зависимостей, архитектуры и соответствия правилам (шаг 7).
-2. **Пропустить анализ** - перейти к обычной работе.
+1. **Deep analysis of the existing project** - detailed code, dependency, architecture review plus rule compliance check (step 7).
+2. **Skip analysis** - proceed to regular work.
 
-Для пустого репозитория вместо этого задай вопрос шага 8.
-
----
-
-## Шаг 7: Глубокий анализ (если выбран)
-
-Все строгие правила действуют. Проверь четыре области:
-
-### 7.1 Код
-
-Архитектура (смешивание ответственности, дублирование, спекулятивные абстракции), типизация по языковым правилам, обработка ошибок, состояния (loading/error/empty/disabled/dirty/stale/recovery), тесты доменных правил, секреты, производительность, anti-slop.
-
-### 7.2 Зависимости
-
-Устаревшие пакеты с современными альтернативами, дубли функционала, уязвимости, тяжёлые пакеты, неиспользуемое. Для каждого: статус, альтернатива со сравнением (размер, скорость, поддержка, лицензия), `(recommended)` только с обоснованием.
-
-### 7.3 Инструменты
-
-Свежесть конфигов линтера/форматтера, строгость типизации, билд-система, тестовый фреймворк.
-
-### 7.4 Соответствие правилам
-
-Пройди код против правил `.docs/`: нейминг файлов, границы каталогов, модель потока данных, UI-состояния, deslop текстов. Выведи таблицу PASS/WARN/FAIL по каждому правилу с числом нарушений и файлами.
-
-### 7.5 Отчёт и disposition
-
-Формат: структура, стек-сравнение, находки по областям в таблицах, здоровье проекта X/10, критичные проблемы, следующий шаг. Каждое предложение получает disposition: сейчас / отложить (в feature-файл с условиями возврата) / отклонить (запись в DECISIONS.md с причиной). Для масштабного приведения кода к правилам предложи скилл `docs-refactor`.
+For an empty repository ask the step 8 question instead.
 
 ---
 
-## Шаг 8: Инициализация нового проекта (если проект не существует)
+## Step 7: Deep analysis (if chosen)
 
-Задай вопрос:
+All strict rules apply. Check four areas:
 
-Проект не обнаружен. Выбери:
+### 7.1 Code
 
-1. **Предложить стек и инициализировать проект** - агент предложит оптимальный стек и создаст базовую структуру.
-2. **Только заполнить .docs/** - стек определит пользователь позже.
+Architecture (responsibility mixing, duplication, speculative abstractions), typing per language rules, error handling, states (loading/error/empty/disabled/dirty/stale/recovery), domain-rule tests, secrets, performance, anti-slop.
 
-При инициализации:
+### 7.2 Dependencies
 
-1. Уточни задачу проекта (web/CLI/API/library/bot), платформы, референсы.
-2. Предложи 2-3 варианта стека таблицей с критериями (язык, фреймворк, БД, скорость, экосистема), `(recommended)` только с обоснованием.
-3. Создай структуру каталогов, инициализируй зависимости, настрой типизацию и линт-пресет из вопроса 3, добавь скрипты dev/test/lint/typecheck/build, `.gitignore`.
-4. Заполни `.docs/` реальными данными, включая выбранный дизайн-пресет.
-5. Верифицируй: dev стартует, test проходит (пусть пустой), lint/typecheck работают.
+Outdated packages with modern alternatives, duplicate functionality, vulnerabilities, heavy packages, unused entries. For each: status, alternative with comparison (size, speed, support, license), `(recommended)` only with justification.
 
----
+### 7.3 Tooling
 
-## Шаг 9: Запись в DECISIONS.md
+Linter/formatter config freshness, typing strictness, build system, test framework.
 
-Добавь записи: инициализация шаблона, каждый ответ вопросов 1-5, выбранная модель потока данных, созданные опциональные файлы. Формат - в `.docs/DECISIONS.md`.
+### 7.4 Rule compliance
 
----
+Walk the code against `.docs/`: file naming, directory boundaries, data-flow model, UI states, deslop of texts. Output a PASS/WARN/FAIL table per rule with violation counts and files.
 
-## Шаг 10: Отчёт пользователю
+### 7.5 Report and disposition
 
-Покажи: определённый стек и команды, какие файлы заполнены, что осталось пустым, результаты health check и верификации команд, записанные решения. Предложи проверить и дополнить `.docs/DECISIONS.md` и `.docs/DESIGN.md`.
+Format: structure, stack comparison, findings tables per area, project health X/10, critical issues, next step. Every suggestion receives disposition: now / defer (into a feature file with return conditions) / reject (recorded in DECISIONS.md with reason). For a large compliance campaign suggest the `docs-refactor` skill.
 
 ---
 
-## Ограничения flow
+## Step 8: New project initialization (if no project exists)
 
-- Не редактируй `AGENTS.md` при first-run, кроме добавления ссылки на product-spec.md, если он создан.
-- Не меняй структуру файлов шаблонов - только содержимое плейсхолдеров и пресетов.
-- Массовые правки текстовых файлов - только с явной кодировкой UTF-8 и выборочной перечиткой после записи: PS 5.1 Get-Content/Set-Content без указания кодировки портит кириллицу.
+Ask:
+
+No project detected. Choose:
+
+1. **Propose a stack and initialize the project** - the agent proposes an optimal stack and creates the base structure.
+2. **Fill .docs/ only** - the user defines the stack later.
+
+When initializing:
+
+1. Clarify the project purpose (web/CLI/API/library/bot), platforms, references.
+2. Propose 2-3 stack options in a table with criteria (language, framework, DB, speed, ecosystem), `(recommended)` only with justification.
+3. Create directory structure, initialize dependencies, configure typing and the lint preset from question 3, add dev/test/lint/typecheck/build scripts, `.gitignore`.
+4. Fill `.docs/` with real data, including the chosen design preset.
+5. Verify: dev starts, test passes (even empty), lint/typecheck work.
+
+---
+
+## Step 9: Recording decisions
+
+Add entries: template initialization, each answer to questions 1-5, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
+
+---
+
+## Step 10: Report to the user
+
+Show: detected stack and commands, which files were filled, what remains empty, health check and command verification results, recorded decisions. Suggest reviewing and extending `.docs/DECISIONS.md` and `.docs/DESIGN.md`.
+
+---
+
+## Flow constraints
+
+- Never edit `AGENTS.md` during first-run, except adding the product-spec.md link when one was created.
+- Never change template file structure - only placeholder contents and presets.
+- Mass text-file edits require explicit UTF-8 encoding and spot-reads after writing: PS 5.1 Get-Content/Set-Content without explicit encoding corrupts non-ASCII text.

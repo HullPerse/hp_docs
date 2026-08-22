@@ -1,6 +1,32 @@
 # Changelog
 
-Все заметные изменения шаблона документации и скиллов. Формат - Keep a Changelog, версии семантические: мажор - ломающие изменения контракта, минор - новые правила/файлы/скиллы, патч - формулировки и фиксы.
+All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
+
+## [1.4.0] - 2026-08-22
+
+### Added
+
+- Skill `docs-init`: agent-driven package installation for clean projects - installation state detection, runner question (npx/bunx/pnpm dlx), git-clone fallback without node, Windows `--copy` symlink fallback, verification of all six skills, handoff to first-run without duplicate questions
+- README "Install via Your Agent" section with a copy-paste prompt for users
+- Pinned-version install example via tag tree URL in README
+
+### Documented
+
+- Install semantics: CLI installs a snapshot of default branch at run time; updates via `npx skills update`; version pinning only through tag tree URLs
+
+## [1.3.0] - 2026-08-22
+
+### Added
+
+- Clarification rule: the agent must restate its interpretation and ask before implementing when the goal, boundaries, or expected outcome are unclear (AGENT_PROMPT section 4, AGENTS.md key rules, CHECKLIST item)
+- "Initialize .docs in Your Project" guide in README: both install paths, first-run steps, resulting file tree
+
+### Changed
+
+- Canonical template language switched from Russian to English: all `.docs/` templates, AGENTS.md, first-run.md translated
+- Initialization Question 1 reworded: now controls the language of generated docs and agent communication; non-English choices are translated at generation time (deslop RU word tags stay bilingual by design)
+- Russian v1.2 archived as git tag `v1.2-ru`
+- examples/mini-project intentionally kept in Russian as a live demonstration of translate-at-init
 
 ## [1.1.0] - 2026-08-22
 

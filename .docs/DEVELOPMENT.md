@@ -1,256 +1,258 @@
 # {{PROJECT_NAME}} DEVELOPMENT.md
 
-Постоянный контракт проекта и зафиксированное направление. Прочитай `AGENT_PROMPT.md` как главный промпт сессии.
+Permanent project contract and fixed direction. Read `AGENT_PROMPT.md` as the primary session prompt.
 
-## Источник истины
+## Source of truth
 
-При конфликтах используй этот порядок:
+On conflicts use this order:
 
-1. последнее явное решение пользователя;
-2. зафиксированные правила в этом файле;
-3. принятые решения в `.docs/DECISIONS.md`;
-4. дизайн-документы и README модулей;
-5. существующий код и допущения.
+1. the latest explicit user decision;
+2. recorded rules in this file;
+3. accepted decisions in `.docs/DECISIONS.md`;
+4. design documents and module READMEs;
+5. existing code and assumptions.
 
-Если конфликт важен - остановись и скажи пользователю. Не выбирай молча долгосрочную архитектуру.
+If a conflict matters - stop and tell the user. Never pick a long-term architecture silently.
 
-## Проект
+## Project
 
 {{PROJECT_OVERVIEW}}
 
 <!--
-Пример заполнения:
-- Бэкенд: `backend/` - Bun + Elysia + Drizzle ORM + SQLite. Прод-файл `data/db.sqlite` живёт локально на этой машине.
-- Фронтенд: `frontend/` - React 19, Vite, TanStack Router/Query, Zustand, Konva (канвас-редактор).
-- Схема БД (`backend/src/db/schema.db.ts`) - единственный источник истины для структуры БД. Миграционные файлы и таблица `__drizzle_migrations` не используются.
-- Документация проекта - в `.docs/`. Она трекается в Git и не попадает в `.gitignore`.
-- `.docs/DECISIONS.md` - обязательный журнал существенных решений и изменений поведения, а не только ответов на вопросы.
+Example:
+- Backend: `backend/` - Bun + Elysia + Drizzle ORM + SQLite. The production `data/db.sqlite` lives locally on this machine.
+- Frontend: `frontend/` - React 19, Vite, TanStack Router/Query, Zustand, Konva (canvas editor).
+- DB schema (`backend/src/db/schema.db.ts`) is the single source of truth for database structure. Migration files and the `__drizzle_migrations` table are not used.
+- Project documentation lives in `.docs/`, tracked in Git, never gitignored.
+- `.docs/DECISIONS.md` is a mandatory journal of significant decisions and behavior changes, not only answers to questions.
 -->
 
-## Зафиксированные решения
+## Fixed decisions
 
 {{FIXED_DECISIONS}}
 
 <!--
-Пример заполнения:
-- Миграции применяются вручную через drizzle-kit push: `bun run db:migrate` (NODE_ENV-зависимо).
-- Админ выдаётся по id через интерактивный `bun run db:seed`.
-- Роли пользователя: `user` (по умолчанию), `admin`, `subscriber` (зарезервирована).
-- Пакетный менеджер: Bun (выбирается при инициализации из Bun/pnpm/npm/yarn; все команды в доках пишутся через него).
-- Линт/формат: ultracite + oxlint/oxfmt (пресет выбирается при инициализации).
-- Язык проекта: русский (вопросы агента, доки, UI-копирайт).
-- Отказано (внедрять не нужно): слой репозиториев, overlay-либы, sandbox-исполнение JS, NATS-шина.
+Example:
+- Package manager: Bun (chosen at init from Bun/pnpm/npm/yarn; every command across docs uses it).
+- Lint/format: ultracite + oxlint/oxfmt (preset chosen at init).
+- Project language: English (agent replies, docs, UI copy).
+- Migrations applied manually via drizzle-kit push: `bun run db:migrate` (NODE_ENV-dependent). Tests apply the schema to a test DB themselves.
+- Admin granted by id via interactive `bun run db:seed`.
+- User roles: `user` (default), `admin`, `subscriber` (reserved).
+- Data flow model: server data via TanStack Query and API clients; queries explicitly use `isLoading`/`isError`, background refresh tracked separately via `isFetching`. Usually one `useQuery` per file; composite typed DTO allowed for related data; result stays in `data` without renaming.
+- Rejected (do not implement): repository layer, overlay libs, JS sandbox execution, NATS bus while monolithic.
 -->
 
-## Структура каталогов
+## Directory layout
 
 {{DIRECTORY_STRUCTURE}}
 
 <!--
-Пример заполнения:
-- Общие типы и интерфейсы: `types/*.d.ts`
-- Общие helpers и микрофункции: `lib/*.utils.ts`
-- Статические конфиги и hardcoded data: `config/*.config.ts`
-- Хуки: `hooks/**/*.hook.ts`
-- API-клиенты и классы связи с сервером: `api/**/*.api.ts`
-- Компоненты: базenames в camelCase без дефисов, служебные суффиксы `.component.tsx`, `.canvas.tsx`
+Example:
+- Shared types and interfaces: `types/*.d.ts`
+- Shared helpers and micro-functions: `lib/*.utils.ts`
+- Static configs and hardcoded data: `config/*.config.ts`
+- Hooks: `hooks/**/*.hook.ts`
+- API clients and server communication classes: `api/**/*.api.ts`
+- Components: camelCase basenames without hyphens, service suffixes `.component.tsx`, `.canvas.tsx`
 -->
 
-## Типизация по языку
+## Typing by language
 
-Базовые правила фиксируются при инициализации под язык проекта. Варианты шаблона:
+Base typing rules are fixed at initialization for the project language. Template variants:
 
-- **TypeScript**: явный `any` запрещён в написанном коде; `unknown` только в boundary-коде (разбор JSON, `catch`, внешние библиотеки, transport adapters) и сужается через Zod или type guard до входа в доменную/UI-логику; `strict: true` в tsconfig.
-- **Rust**: Option/Result явно на границах; типизированные enum вместо сырых строк для классификаций; `unsafe` разрешён только в изолированном документированном FFI-коде, никогда как способ пропустить обработку ошибок.
-- **Python**: строгий typing (`mypy`/`pyright`), без молчаливого Any на публичных границах; валидация внешних данных через pydantic или эквивалент.
-- **Go**: ошибки возвращаются значениями и проверяются явно; `interface{}`/`any` только на границах сериализации с немедленной конвертацией в конкретные типы.
+- **TypeScript**: explicit `any` forbidden in written code; `unknown` only in boundary code (JSON parsing, `catch`, external libraries, transport adapters), narrowed via Zod or a type guard before entering domain/UI logic; `strict: true`.
+- **Rust**: Option/Result explicit at boundaries; typed enums over raw strings for classifications; `unsafe` only in isolated documented FFI code, never as a way to skip error handling.
+- **Python**: strict typing (`mypy`/`pyright`), no silent Any on public boundaries; external data validated via pydantic or equivalent.
+- **Go**: errors returned as values and checked explicitly; `interface{}`/`any` only at serialization boundaries with immediate conversion to concrete types.
 
-Для другого языка агент формулирует эквивалент по духу этих правил и согласует с пользователем.
+For another language the agent formulates an equivalent in the same spirit and agrees on it with the user.
 
-## Команды проекта
+## Project commands
 
 {{COMMANDS}}
 
 <!--
-Пример заполнения:
-Бэкенд: `bun run dev`, `test`, `typecheck`, `lint`, `db:migrate`, `db:seed`, `db:clear`, `check`, `fix`.
-Фронтенд: `bun run dev`, `build`, `lint`, `test`, `check`, `fix`.
+Example:
+Backend: `bun run dev`, `test`, `typecheck`, `lint`, `db:migrate`, `db:seed`, `db:clear`, `check`, `fix`.
+Frontend: `bun run dev`, `build`, `lint`, `test`, `check`, `fix`.
 -->
 
-## Протокол коммуникации агента
+## Agent communication protocol
 
-Агент должен:
+The agent must:
 
-1. читать релевантные доки и код до предложения реализации;
-2. сообщать, что нашёл и что предполагает;
-3. спрашивать перед неоднозначным архитектурным, UX, безопасностным, лицензионным или публично-API решением;
-4. давать минимум два варианта и последствия для важных решений;
-4.1. до кода спрашивать implementation disposition новой фичи (сейчас, deferred или rejected) и documentation destination (существующий feature-файл, новый feature-файл или только DECISIONS.md);
-5. использовать план и чеклист для многошаговой работы;
-6. отчитываться после каждого выполненного шага, а не только в конце;
-7. явно называть противоречия, отсутствующие требования, возможности оптимизации и UX-риски;
-8. предпочитать минимальное связное изменение спекулятивной архитектуре;
-9. обновлять `.docs/DECISIONS.md` при каждом существенном решении, изменении поведения или исправлении пользовательского бага, а README - когда работа меняет команды, структуру или конвенции;
-10. проверять нетривиальный код typecheck-ом, lint и релевантными тестами;
-11. добавлять тесты каждой новой фиче до отметки `done`;
-12. честно сообщать о неудачных проверках и о том, что осталось непроверенным;
-13. останавливаться, а не угадывать, когда выбор может увести проект в дорогой путь;
-14. следовать протоколу вопросов из `AGENT_PROMPT.md` (батчинг, делегирование, отложенные, конфликты, запись решений);
-15. рекомендовать `.docs/REVIEWER.md` для независимого ревью крупных изменений.
+1. read relevant docs and code before proposing implementation;
+2. report what it found and what it assumes;
+3. clarify incomplete understanding before implementing: restate the interpretation in one sentence when the goal, boundaries, or expected outcome are unclear;
+4. ask before ambiguous architectural, UX, security, licensing, or public-API decisions;
+5. give at least two options with consequences for important decisions;
+6. before code, ask implementation disposition of a new feature (now / deferred / rejected) and documentation destination (existing feature file, new feature file, or DECISIONS.md only);
+7. use a plan and checklist for multi-step work;
+8. report after each completed step, not only at the end;
+9. name contradictions, missing requirements, optimization opportunities, and UX risks explicitly;
+10. prefer a minimal coherent change to speculative architecture;
+11. update `.docs/DECISIONS.md` on every significant decision, behavior change, or user-facing bug fix, and README whenever work changes commands, structure, or conventions;
+12. verify non-trivial code with typecheck, lint, and relevant tests;
+13. add tests to every new feature before marking it done;
+14. honestly report failed checks and what remains unverified;
+15. stop rather than guess when a choice could lead the project down an expensive path;
+16. follow the question protocol from `AGENT_PROMPT.md` (batching, delegation, deferrals, conflicts, decision recording);
+17. recommend `.docs/REVIEWER.md` for independent review of large changes.
 
-Агент не должен:
+The agent must not:
 
-- молча переопределять продукт;
-- добавлять библиотеку без проверки текущего стека, лицензии и необходимости;
-- запускать деструктивные или необратимые команды без явного разрешения;
-- ставить инструменты без разрешения, если установка не требуется для запрошенной проверки;
-- заявлять, что фича завершена, когда есть только заглушка или визуальный макет;
-- отмечать фичу завершённой без её тестов или явно одобренного исключения;
-- прятать трейдоффы за расплывчатыми формулировками;
-- делать несвязанные рефакторы при реализации фичи;
-- использовать `any` или протаскивать `unknown` из boundary-кода в доменную/UI-логику;
-- молча оставлять локальные типы или helpers вне закреплённых каталогов.
+- silently redefine the product;
+- add a library without checking the current stack, license, and need;
+- run destructive or irreversible commands without explicit permission;
+- install tools without permission unless required for the requested verification;
+- claim a feature is complete when it is a stub or visual mockup;
+- mark a feature done without its tests or an explicitly approved exception;
+- hide trade-offs behind vague wording;
+- do unrelated refactors while implementing a feature;
+- use `any` or leak `unknown` from boundary code into domain/UI logic;
+- silently leave local types or helpers outside the pinned directories.
 
-## Прямой критический режим
+## Direct critical mode
 
-- Агент не поддакивает плохой идее. Если запрос ненужен, вреден, преждевременен, чрезмерно сложен, противоречит scope или создает неоправданный риск, агент сначала дает прямой verdict.
-- Разбор обязан назвать конкретную проблему, последствия, альтернативу и условие, при котором verdict может измениться.
-- Можно использовать резкий разговорный язык и ругань про идею или решение по запросу пользователя. Нельзя унижать пользователя как человека или подменять доказательный анализ оскорблением личности.
-- Если предложение хорошее, агент так и говорит, не выдумывая критику.
-- Если предложение плохое, агент обязан возразить и выбрать предпочтительный путь, а не прятаться за равноправным списком вариантов.
-- Вопросы и варианты пишутся простым русским языком: короткий label, одно конкретное описание, без маркетинговых фраз, случайного английского и псевдотехнического жаргона.
+- The agent does not rubber-stamp bad ideas. If a request is unnecessary, harmful, premature, overcomplicated, contradicts scope, or creates unjustified risk, give a direct verdict first.
+- The critique must name the concrete problem, consequences, an alternative, and the condition under which the verdict would change.
+- Harsh conversational language about an idea or a decision is allowed on request. Demeaning the user as a person or substituting proof-based analysis with personal insults is not.
+- When a proposal is good, say so directly instead of inventing criticism.
+- When a proposal is bad, push back and state the preferred path rather than hiding behind an equal-weight list of options.
+- Questions and options are written in plain language: short label, one concrete description, no marketing phrases, stray foreign words, or pseudo-technical jargon.
 
-## Disposition и destination новых фич
+## Feature disposition and destination
 
-- Новая фича не переходит к реализации, пока пользователь не выбрал implementation disposition: реализовать сейчас, отложить с условием возврата или отклонить.
-- Для каждой новой фичи пользователь отдельно выбирает documentation destination: существующий релевантный `.docs/features/*.md`, новый `.docs/features/<slug>.md` или только `.docs/DECISIONS.md`.
-- Реализация и documentation destination не взаимоисключающие: фичу можно реализовать сейчас и одновременно записать в feature-файл.
-- Для deferred/rejected решений обязательны причина, разрешенный scope и условие пересмотра либо явная запись, что пересмотр не планируется.
-- Уже принятый disposition не спрашивается повторно, пока scope не изменился. Явная команда пользователя реализовать новую фичу считается disposition `сейчас`, но destination проверяется отдельно, если он не записан.
-- В multi-select `(recommended)` добавляется только к отдельной опции с реальным обоснованием. Если options просто перечисляют равноценный набор возможностей, marker не нужен.
-- Не использовать в options фразы вроде `better experience`, `seamless`, `scope-poop-based` и другие слова, которые не объясняют конкретное поведение или последствие.
+- A new feature does not proceed until the user picks implementation disposition: implement now, defer with a return condition, or reject.
+- For every new feature the user separately picks documentation destination: relevant existing `.docs/features/*.md`, new `.docs/features/<slug>.md`, or only `.docs/DECISIONS.md`.
+- Implementation and documentation destination are not mutually exclusive: implement now and write into a feature file simultaneously.
+- Deferred/rejected decisions require reason, allowed scope, and a revisit condition, or an explicit note that no revisit is planned.
+- An already-accepted disposition is not asked again while scope stays unchanged. An explicit user command counts as "now", but destination is still verified if unrecorded.
+- In multi-select, `(recommended)` attaches only to individual options with real justification; never to an equal-capability list.
+- Do not use option phrasing like "better experience", "seamless", or other words that explain no concrete behavior or consequence.
 
-## Формат feature-файлов
+## Feature file format
 
-`.docs/features/*.md` - это рабочие документы решений, а не презентации и не большие технические спецификации. Пиши их почти как обычный текст: короткие заголовки для категорий, простые абзацы и короткие списки.
+`.docs/features/*.md` are working decision documents, not presentations or big specs. Write them almost like plain text: short headings for categories, simple paragraphs, short lists.
 
-Для каждой идеи обязательно указывай:
+Every idea states:
 
-- Идея: что предлагаем.
-- Комментарий: зачем это нужно и какой у идеи статус.
-- Плюсы: конкретная польза.
-- Минусы: конкретные проблемы, цена или риск.
+- Idea: what is proposed.
+- Comment: why and current status.
+- Pros: concrete benefit.
+- Cons: concrete cost, risk, or limitation.
 
-Если основной вариант спорный или слабый, добавляй альтернативы и сравнивай их.
+When the main option is contested or weak, add alternatives and compare them.
 
-Не используй тяжелое форматирование, декоративные таблицы и сложную вложенность без пользы. Пример старого и нового кода добавляй только при реальном изменении кода или поведения и показывай его в обычных fenced code blocks. Для planning-only идеи не выдумывай код.
+No heavy formatting, decorative tables, or complex nesting without benefit. Old/new code examples only for real code or behavior changes, shown in plain fenced blocks. No invented code for planning-only ideas.
 
-Не переписывай старые feature-файлы целиком только ради нового стиля. Упрощай раздел, когда работаешь с ним по существу.
+Do not rewrite old feature files wholesale just for style. Simplify a section when next working on it substantively.
 
-## Обязательный журнал решений
+## Mandatory decision journal
 
-- Агент читает `.docs/DECISIONS.md` до аудита и учитывает его как источник истины.
-- Любое существенное продуктовое, UX, архитектурное, техническое, безопасностное или персистентное решение, а также исправление пользовательского поведения записывается в `.docs/DECISIONS.md` в той же задаче.
-- Запись добавляется до финального отчёта. Если задача не содержит существенных решений или изменений поведения, это явно указывается в отчёте.
-- При конфликте с существующей записью агент останавливается и спрашивает пользователя, а не выбирает молча.
+- The agent reads `.docs/DECISIONS.md` before the audit and treats it as a source of truth.
+- Every significant product, UX, architecture, technical, security, or persistence decision, plus every behavior fix, gets recorded in `.docs/DECISIONS.md` within the same task.
+- Entries are added before the final report. If the task produced none, say so explicitly.
+- On conflict with an existing entry, stop and ask the user; never choose silently.
 
-## Anti-slop правила
+## Anti-slop rules
 
-Применяются к коду, документации, UI-копиям, ответам агента, сообщениям коммитов.
+Applied to code, documentation, UI copy, agent replies, commit messages.
 
-### Текст и пунктуация
+### Text and punctuation
 
-- Не используй em/en dash (`-`, `-`). Только ASCII-пунктуация (дефис, запятые, двоеточие, скобки).
-- Без длинных шаблонных вступлений, фейкового энтузиазма и повторных заключений.
-- Без расплывчатых фраз вроде «бесшовный опыт», «надёжное решение» без измеримого смысла.
-- UI-подписи короткие, прямые, действие-ориентированные.
-- Сообщения об ошибках: что произошло и что делать дальше.
+- No em/en dashes (U+2014, U+2013). ASCII punctuation only (hyphens, commas, colons, parentheses).
+- No long template intros, fake enthusiasm, or repeated conclusions.
+- No vague phrases like "seamless experience" or "reliable solution" without measurable meaning.
+- UI labels short, direct, action-oriented.
+- Error messages: what happened and what to do next.
 
-### Код и архитектура
+### Code and architecture
 
-- Комментарии редкие. Только для неочевидной причины, инварианта, обхода или ограничения безопасности.
-- Без комментариев, пересказывающих код, и без гигантских doc-комментариев.
-- Без спекулятивных абстракций, пустых точек расширения, неиспользуемых интерфейсов и фейковых плагинных систем.
-- Без дублирующего стейта и дублирующих источников истины.
-- Явные имена, малые модули, типизированные ошибки, протестированная доменная логика.
-- Без debug-логов, мёртвого кода, placeholder-путей успеха и фейковых данных в проде.
-- Без TODO-комментариев вместо решения; записывай нерешённое в `.docs/DECISIONS.md`.
-- Не строй большую абстракцию под один гипотетический будущий случай.
+- Rare comments only for non-obvious cause, invariant, workaround, or security constraint.
+- No comment-parrots restating code; no giant doc-comments.
+- No speculative abstractions, empty extension points, unused interfaces, fake plugin systems.
+- No duplicated state or duplicated sources of truth.
+- Clear names, small modules, typed errors, tested domain logic.
+- No debug logs, dead code, placeholder success paths, or fake data in production.
+- No TODO comments instead of decisions; record unresolved items in `.docs/DECISIONS.md`.
+- Do not build a large abstraction for one hypothetical future case.
 
-### UI и UX
+### UI and UX
 
-- Не добавляй UI лишь потому, что есть у другого продукта.
-- Каждый контрол: пользовательская задача, ясное состояние, полезное состояние отказа.
-- Предпочитай видимые контекстные действия скрытому глобальному поиску.
-- Проектируй loading, empty, error, disabled, dirty, stale, recovery состояния до объявления поверхности готовой.
-- Следуй `.docs/DESIGN.md` (если применимо).
+- Never add UI just because another product has it.
+- Every control: user task, clear state, useful failure state.
+- Prefer visible contextual actions over hidden global search.
+- Design loading, empty, error, disabled, dirty, stale, recovery states before calling a surface done.
+- Follow `.docs/DESIGN.md` (when applicable).
 
-### Deslop прозы: каталог шаблонных паттернов
+### Deslop prose: template-pattern catalog
 
-Применяется к документации, feature-файлам, README, ответам агента, сообщениям коммитов и UI-копирайту. Цель - убрать паттерны, по которым читатель опознаёт машинный текст, не убив голос автора.
+Applies to documentation, feature files, README, agent replies, commit messages, and UI copy. Goal: remove patterns by which readers detect machine-written text without killing the author's voice.
 
-Словарные теги (EN): delve, tapestry, realm, landscape (переносное), underscore (переносное), leverage, seamless, robust, crucial, pivotal, testament, foster, elevate, unlock, navigate (переносное), comprehensive, state-of-the-art, vibrant, rich (переносное), groundbreaking, renowned, breathtaking, stunning, world-class, boasts.
+Word tags (EN): delve, tapestry, realm, landscape (figurative), underscore (figurative), leverage, seamless, robust, crucial, pivotal, testament, foster, elevate, unlock, navigate (figurative), comprehensive, state-of-the-art, vibrant, rich (figurative), groundbreaking, renowned, breathtaking, stunning, world-class, boasts.
 
-Словарные теги (RU): "бесшовный", "надёжное решение" без измеримого смысла, "стоит отметить", "не секрет, что", "в современном мире", "играет важную/ключевую роль", "открывает новые возможности", "инновационный" без факта, "уникальный" без факта, канцелярит ("осуществлять проверку" вместо "проверять").
+Word tags (RU): "бесшовный", "надёжное решение" without measurable meaning, "стоит отметить", "не секрет, что", "в современном мире", "играет важную/ключевую роль", "открывает новые возможности", "инновационный" без факта, "уникальный" без факта, канцелярит ("осуществлять проверку" instead of "проверять").
 
-Структурные паттерны:
+Structural patterns:
 
-- significance inflation: произвольный факт подаётся как часть большого тренда ("знаменует важный этап в развитии");
-- notability name-dropping: перечисление авторитетов без контекста;
-- деепричастные хвосты: "...подчёркивая важность", "...отражая дух эпохи" в конце предложения;
-- rule-of-three: список искусственно подогнан к трём пунктам;
-- негативный параллелизм: "не X, а Y" как трафарет абзаца; один раз - риторика, пять - шаблон;
-- драматическая фрагментация: "Скорость. Вот и весь трейдофф.";
-- риторическая подводка: "Результат? Разрушительный.";
-- throat-clearing: "Стоит отметить, что...", "Важно понимать...", объявление мысли вместо самой мысли;
-- demonstrative kicker: пустой вердикт после предложения ("Этот инстинкт и ломает всё.");
-- importance flagging: "Здесь скорость не мелочь" вместо показа последствия;
-- хедж-качели: позиция не названа, контраргументы уравновешены; бери сторону;
-- vague attribution: "эксперты считают" без имени источника;
-- section-closing summary: последний абзац пересказывает тот же абзац;
-- fractal summary: скажу -> сказал -> что я сказал;
-- false agency: неживое выполняет человеческое действие ("компилятор хочет", "баг решает");
-- formulaic challenges: обязательный раздел "Проблемы и перспективы" с бустеризмом в конце;
-- puffery adverbs: действительно, буквально, на самом деле, genuinely, truly, actually;
-- quotables: фраза написана ради цитаты, а не смысла.
+- significance inflation: arbitrary fact framed as part of a grand trend ("marks an important stage");
+- notability name-dropping: authority lists without context;
+- participle tails: "...highlighting importance", "...отражая дух эпохи" at sentence ends;
+- rule-of-three: lists artificially padded to three items;
+- negative parallelism: "not X, but Y" as a paragraph stencil; once is rhetoric, five is a stencil;
+- dramatic fragmentation: "Speed. That is the whole tradeoff.";
+- rhetorical setup: "The result? Devastating.";
+- throat-clearing: "It is worth noting...", "Важно понимать..." - announcing a thought instead of stating it;
+- demonstrative kicker: empty verdict fragment after a sentence ("That instinct breaks everything.");
+- importance flagging: "Speed is not a footnote here" instead of showing the consequence;
+- hedging seesaw: position unnamed, counterarguments balanced; take a side;
+- vague attribution: "experts believe" without a named source;
+- section-closing summary: last paragraph restates the same paragraph;
+- fractal summary: announce -> said -> recap of what was said;
+- false agency: inanimate things doing human verbs ("the compiler wants", "the bug decides");
+- formulaic challenges sections ending in boosterism;
+- puffery adverbs: genuinely, truly, actually, действительно, буквально, на самом деле;
+- quotables written for citation effect, not meaning.
 
-Пунктуация и точность:
+Punctuation and accuracy:
 
-- em/en dash запрещены (см. выше); многоточие только как реальный обрыв речи;
-- восклицательные знаки: максимум один на 1000 слов;
-- двоеточие перед "payoff" обязано доставать payoff;
-- не выдумывай числа, цитаты, источники и анекдоты; гипотетику помечай ("представим");
-- конкретика вместо общих слов: имя, число, место, время;
-- активный залог с именованным субъектом.
+- em/en dashes forbidden (see above); ellipsis only as genuine trailing off;
+- exclamation marks: max one per 1000 words;
+- a colon promising payoff must deliver payoff;
+- never invent numbers, quotes, sources, anecdotes; mark hypotheticals ("imagine", "представим");
+- specifics over generalities: name, number, place, time;
+- active voice with a named subject.
 
-Сохранение голоса:
+Voice preservation:
 
-- различай slop (формула без смысла) и voice (намеренный выбор автора): короткий ударный фрагмент после длинного предложения, нагрузочный контраст, сильная финальная строка - это голос, не трогай;
-- правки хирургические: меняй формулировки, а не структуру аргумента;
-- при сомнении оставляй: ложноположительный проход, сплющивший хорошую фразу, хуже выжившего тега.
+- distinguish slop (meaningless formula) from voice (deliberate author choice): a short punchy fragment after a long sentence, a load-bearing contrast, a strong closing line - that is voice, leave it alone;
+- edits stay surgical: change phrasing, not argument structure;
+- when unsure, leave it in: a false-positive pass that flattens a good sentence is worse than one surviving tag.
 
-Self-check перед сдачей текста:
+Self-check before delivering text:
 
-1. Есть словарные теги? Замени на конкретику или убери.
-2. Три подряд предложения одной длины? Разбей.
-3. Список подогнан к трём? Оставь реальное число.
-4. Позиция не названа из-за хеджа? Назови.
-5. Абзацы заканчиваются переходной формулой? Обрежь часть.
-6. Выдуманная конкретика? Убери или пометь как гипотезу.
-7. Последний абзац пересказывает текст? Удали.
-8. Прочитанный вслух текст звучит как типовой ассистент? Перепиши.
+1. Word-tag hits? Replace with specifics or cut.
+2. Three consecutive sentences of equal length? Break one.
+3. A list padded to three? Restore the true count.
+4. Position hidden behind hedging? Name it.
+5. Paragraphs all ending in transition formulas? Cut some endings abruptly.
+6. Invented specifics? Remove or flag as hypothesis.
+7. Last paragraph restating the text? Delete.
+8. Text sounding like a generic assistant aloud? Rewrite.
 
-## Документация
+## Documentation
 
-Документы в `.docs/`:
+Docs in `.docs/`:
 
-- `AGENT_PROMPT.md` - главный промпт сессии, аудит, вопросы, контракт проверки, формат ответа.
-- `DEVELOPMENT.md` - этот файл: постоянный контракт, зафиксированные решения, anti-slop.
-- `DECISIONS.md` - журнал решений пользователя (чтобы не переспрашивать).
-- `DESIGN.md` - дизайн-система: токены, компоненты, правила UI/UX (если применимо).
-- `CHECKLIST.md` - чеклист перед/во время/после реализации.
-- `REVIEWER.md` - промпт независимого ревью.
-- `reviews/` - issue-файлы, создаются только когда независимое ревью находит проблемы.
-- `agents-audit.prompt.md` - промпт аудита: сопоставление правил агентов с текущим кодом, поиск несостыковок/устаревшего/пробелов.
+- `AGENT_PROMPT.md` - primary session prompt: audit, questions, testing contract, response format.
+- `DEVELOPMENT.md` - this file: permanent contract, fixed decisions, anti-slop.
+- `DECISIONS.md` - user decision journal (so nothing gets asked twice).
+- `DESIGN.md` - design system: presets, tokens, components, UI/UX rules (when applicable).
+- `CHECKLIST.md` - checklist before/during/after implementation.
+- `REVIEWER.md` - independent review prompt.
+- `reviews/` - issue files, created only when independent review finds problems.
+- `agents-audit.prompt.md` - audit prompt: matching agent rules against current code, finding contradictions/staleness/gaps.
 
-Когда новая информация появляется - помещай её в наименьший релевантный документ. Затем обнови индекс в этом файле, если добавлен новый тип документа.
+When new information appears, put it in the smallest relevant document. Then update the index here if a new document type was added.

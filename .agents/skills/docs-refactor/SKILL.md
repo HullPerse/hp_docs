@@ -13,72 +13,72 @@ description: >
 
 # Docs Refactor
 
-Приводит существующий код к соответствию его собственным правилам из `.docs/`. Это не свободный рефакторинг: единственный допустимый источник требований - документы проекта.
+Brings existing code into compliance with the project's own rules from `.docs/`. This is not free-form refactoring: the only permitted source of requirements is the project's documentation.
 
-## Предусловия
+## Preconditions
 
-- `.docs/` существует и заполнен (нет плейсхолдеров `{{...}}`). Если заполнен частично - сначала выполни flow `ai-docs` first-run.
-- Прочитай до аудита: корневой `AGENTS.md`, `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md` (включая "Типизация по языку" и модель потока данных), `.docs/DECISIONS.md`, `.docs/DESIGN.md` для UI-частей, `.docs/CHECKLIST.md`.
-- Проверь доступные MCP-инструменты и зафиксируй список.
-- Быстрая проверка свежести правил: если правило противоречит фактическому коду повсеместно - это находка об устаревании правила, а не о коде. Пометь её и спроси пользователя; не молчи и следуй устаревшему правилу.
+- `.docs/` exists and is filled (no `{{...}}` placeholders). If partially filled - run the `ai-docs` first-run flow first.
+- Read before auditing: root `AGENTS.md`, `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md` (including "Typing by language" and the data-flow model), `.docs/DECISIONS.md`, `.docs/DESIGN.md` for UI parts, `.docs/CHECKLIST.md`.
+- List available MCP tools and keep the list.
+- Quick rule-freshness check: when a rule contradicts the actual code everywhere, that is a stale-rule finding, not a code finding. Flag it and ask the user; never silently follow a stale rule.
 
-## Скоуп
+## Scope
 
-Если пользователь не указал область - спроси: весь проект, модуль или конкретные группы правил. Не угадывай по последним изменённым файлам.
+If the user did not specify an area - ask: whole project, one module, or specific rule groups. Never guess from recently modified files.
 
-## Аудит соответствия
+## Compliance audit
 
-Пройди каждую область правил и собери нарушения:
+Walk every rule area and collect violations:
 
-| Область | Что проверяется |
+| Area | What is checked |
 | --- | --- |
-| Организация файлов | Нейминг (casing, суффиксы), границы каталогов (`types/`, `lib/`, `config/`, `hooks/`, `api/` или проектные эквиваленты), локальные типы/helpers вне закреплённых мест |
-| Типизация | Правила языка проекта из DEVELOPMENT.md (TS any/unknown, Rust unsafe, Python Any, Go error values) |
-| Поток данных | Зафиксированная модель: query-правила (одна query на файл, `data` без переименования, isLoading/isError/isFetching) или фоновые задачи (UI не блокируется, подписки на события) |
-| Стейт | Один источник истины, отсутствие дублирования между сторами, серверный стейт в query если применимо |
-| UI/UX | Реализованные loading/error/empty/disabled/stale состояния, focus-индикаторы, токены дизайна вместо хардкода, дубли компонентов |
-| Anti-slop / deslop | Комментарии-пересказы, debug-логи, мёртвый код, placeholder-данные, длинные тире в текстах, словарные теги в документации |
-| Тесты | Контракт тестирования: доменные правила покрыты, персистентность интеграционно, тесты живут вместе с фичей |
+| File organization | Naming (casing, suffixes), directory boundaries (`types/`, `lib/`, `config/`, `hooks/`, `api/` or project equivalents), local types/helpers outside pinned locations |
+| Typing | The project language rules from DEVELOPMENT.md (TS any/unknown, Rust unsafe, Python Any, Go error values) |
+| Data flow | The fixed model: query rules (one query per file, `data` without renaming, isLoading/isError/isFetching) or background tasks (UI never blocks, event subscriptions) |
+| State | Single source of truth, no duplication between stores, server state in queries where applicable |
+| UI/UX | Implemented loading/error/empty/disabled/stale states, focus indicators, design tokens instead of hardcoded values, duplicate components |
+| Anti-slop / deslop | Comment-parrots, debug logs, dead code, placeholder data, em/en dashes in texts, dictionary word tags in documentation |
+| Tests | Testing contract: domain rules covered, persistence integration-tested, tests shipped together with features |
 
-Формат отчёта:
+Report format:
 
 ```markdown
-| Правило | Статус | Нарушений | Файлы |
+| Rule | Status | Violations | Files |
 |---|---|---|---|
-| Нейминг компонентов camelCase+суффикс | FAIL | 7 | foo-bar.tsx, ... |
-| Без явного any | PASS | 0 | - |
-| Одна query на файл | WARN | 2 | lobby.api.ts (обосновано) |
+| Component names camelCase+suffix | FAIL | 7 | foo-bar.tsx, ... |
+| No explicit any | PASS | 0 | - |
+| One query per file | WARN | 2 | lobby.api.ts (justified) |
 ```
 
-Классифицируй каждую группу нарушений: Blocker (безопасность/потеря данных), Risk, Gap, Optimization, Cleanup.
+Classify every finding group: Blocker (safety/data loss), Risk, Gap, Optimization, Cleanup.
 
-## Disposition по пакетам работ
+## Disposition per work package
 
-Сгруппируй находки в пакеты (по областям или скоупу пользователя) и запроси disposition на каждый отдельно:
+Group findings into packages (by area or by user scope) and request a disposition for each separately:
 
-- **исправить сейчас** - выполняешь в этой задаче;
-- **отложить** - записываешь feature-файл с условиями возврата;
-- **отклонить** - записываешь в DECISIONS.md с причиной; правило при этом либо остаётся со статусом "известное исключение", либо правится через отдельное решение.
+- **fix now** - executed in this task;
+- **defer** - recorded as a feature file with return conditions;
+- **reject** - recorded in DECISIONS.md with a reason; the rule then either stays with a "known exception" status or changes via a separate decision.
 
-Не смешивай пакеты: один disposition - один связный набор правок.
+Never mix packages: one disposition covers one coherent set of changes.
 
-## Выполнение
+## Execution
 
-Для каждого одобренного пакета:
+For each approved package:
 
-1. Короткий план: затронутые файлы, ожидаемый эффект, стратегия тестов.
-2. Минимальные связные изменения; никакого поведения за пределами правила.
-3. Тесты вместе с изменениями там, где меняется логика.
-4. Верификация после пакета: lint, typecheck, релевантные тесты; повторный скан исправленного правила.
-5. Отчёт по каждому пакету отдельно, а не одним мегадиффом.
+1. A short plan: affected files, expected effect, test strategy.
+2. Minimal coherent changes; nothing beyond the rule.
+3. Tests alongside changes wherever logic is touched.
+4. Package verification: lint, typecheck, relevant tests; rescan of the fixed rule.
+5. Report each package separately, never as one mega-diff.
 
-Ограничения:
+Constraints:
 
-- Никаких несвязанных улучшений попутно; увидел лишнее - отдельная находка с disposition.
-- Массовые переименования файлов - только через инструменты с явной UTF-8 обработкой и верификацией содержимого после записи.
-- Blocker останавливает всё до решения пользователя.
-- Обнови `.docs/DECISIONS.md` принятыми решениями до финального отчёта; для крупных изменений предложи независимое ревью через `.docs/REVIEWER.md`.
+- No unrelated improvements along the way; anything extra becomes a separate finding with its own disposition.
+- Mass file renames only through tools with explicit UTF-8 handling and content verification after writing.
+- A Blocker stops everything until the user resolves it.
+- Update `.docs/DECISIONS.md` with accepted decisions before the final report; suggest independent review via `.docs/REVIEWER.md` for large campaigns.
 
-## Формат ответа
+## Response format
 
-Аудит (таблица соответствия) -> Пакеты и disposition -> Прогресс по пакетам -> Верификация (passed/failed/skipped/unavailable) -> Итог: что приведено к правилам, что отложено, оставшиеся риски.
+Audit (compliance table) -> Packages and dispositions -> Per-package progress -> Verification (passed/failed/skipped/unavailable) -> Final state: what was brought to compliance, what was deferred, remaining risks.
