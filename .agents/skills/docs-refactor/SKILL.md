@@ -38,7 +38,8 @@ Walk every rule area and collect violations:
 | State | Single source of truth, no duplication between stores, server state in queries where applicable |
 | UI/UX | Implemented loading/error/empty/disabled/stale states, focus indicators, design tokens instead of hardcoded values, duplicate components |
 | Anti-slop / deslop | Comment-parrots, debug logs, dead code, placeholder data, em/en dashes in texts, dictionary word tags in documentation |
-| Tests | Testing contract: domain rules covered, persistence integration-tested, tests shipped together with features |
+| Security | SECURITY.md contract: capability budget versus actual outbound calls, secrets hygiene, recorded audit commands runnable and current |
+| Tests | Testing contract: full testing-axis review with statuses, domain rules covered, persistence integration-tested, tests shipped together with features |
 
 Report format:
 

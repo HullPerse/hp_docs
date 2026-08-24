@@ -66,7 +66,7 @@ On Windows use PowerShell equivalents with explicit UTF-8-safe copy operations (
 Before continuing, confirm:
 
 1. `.agents/skills/hp-docs/templates/` directory exists and contains template files.
-2. All nine skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `test-architect`, `test-reviewer`, `security-audit`, `docs-init`.
+2. All ten skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, `docs-init`.
 3. Every installed `SKILL.md` has YAML frontmatter with `name` and `description`.
 
 Any miss - report what is broken and stop; a broken install must not bootstrap half-initialized docs.

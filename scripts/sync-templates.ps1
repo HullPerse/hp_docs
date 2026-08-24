@@ -8,6 +8,7 @@ $root = Split-Path -Parent $PSScriptRoot
 $pairs = @(
     @("AGENTS.md",                       "AGENTS.md"),
     @("first-run.md",                    "first-run.md"),
+    @("DOCUMENTATION_SPEC.md",           "DOCUMENTATION_SPEC.md"),
     @(".docs\AGENT_PROMPT.md",           "AGENT_PROMPT.md"),
     @(".docs\DEVELOPMENT.md",            "DEVELOPMENT.md"),
     @(".docs\TESTING.md",                 "TESTING.md"),

@@ -115,7 +115,7 @@ Do not change production code only to make a weak test pass. A minimal test seam
 
 Correctness tests, benchmarks, stress tests, and load tests are separate artifacts. Performance checks are required for every task as an analysis pass, and an executable benchmark or stress test is added when the changed path is performance-sensitive or has a stated budget.
 
-A benchmark records environment, workload, baseline, current result, difference, and regression threshold. Use throughput, latency percentiles, memory, or allocations as appropriate. A microbenchmark does not prove application-level performance.
+A benchmark records environment, workload, baseline, current result, difference, and regression threshold. Use throughput, latency percentiles, memory, or allocations as appropriate. A microbenchmark does not prove application-level performance. A number quoted anywhere outside the benchmark artifact must come from that artifact; publishing an unmeasured number is a Blocker-grade finding.
 
 Never hide a correctness failure inside a benchmark. Never set an arbitrary threshold without a baseline or an agreed budget.
 

@@ -77,6 +77,7 @@ Canonical templates are English. Which language should generated docs and agent 
 - pnpm - strict node_modules, disk efficiency, mature workspace support
 - npm - zero extra tooling, maximum compatibility
 - yarn - only if the project already uses it
+- cargo/pip/uv/go - for a non-JS stack this question resolves automatically
 
 The answer defines every command in the docs (`bun run lint`, `pnpm lint`, ...).
 
@@ -251,6 +252,7 @@ Bundled skills:
 - `test-architect` - design and implement behavior-focused tests across all testing axes, including existing-suite migration
 - `test-reviewer` - independently attack tests for false positives, weak assertions, missing behavior, flakiness, and unsupported evidence
 - `security-audit` - audit project security across all security axes and prove the absence of undeclared outbound channels for published packages (exfiltration proof)
+- `project-documentation` - generate product documentation from project knowledge (.docs, source, tests, benchmark artifacts) against DOCUMENTATION_SPEC, with readiness reporting
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 
 ### 6. Docs Health Check
@@ -361,7 +363,7 @@ Permanent project contract. Must contain ALL of these sections:
 1. **Source of truth hierarchy**: explicit user decision > this file > DECISIONS.md > design docs > existing code
 2. **Project description**: backend, frontend, DB schema location, docs location
 3. **Fixed decisions**: concrete technical choices already made (migrations, roles, rejected approaches)
-4. **Communication protocol**: 15-item list of what agent must/mustn't do
+4. **Communication protocol**: the must / must-not lists from the template's "Agent communication protocol" section
 5. **Critical mode**: rules for disagreeing with user
 6. **Disposition and destination**: full rules for feature disposition flow
 7. **Feature file format**: style rules (plain text, Idea/Comment/Pros/Cons, no decorative tables)
@@ -768,5 +770,5 @@ All rules from the template system apply at all times:
 - Critical mode (don't agree with bad ideas)
 - Decision logging in DECISIONS.md
 - `(recommended)` only with real justification
-- Russian language for questions, ASCII punctuation only
+- Questions in the user's language, ASCII punctuation only
 - Rule compliance checking during deep analysis

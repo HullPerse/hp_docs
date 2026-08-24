@@ -26,6 +26,8 @@ A root `AGENTS.md` (or equivalent: CLAUDE.md) references a filled `.docs/`. When
    - `.docs/AGENT_PROMPT.md` - session contract;
    - `.docs/DEVELOPMENT.md` - conventions, fixed decisions, typing by language, data-flow model;
    - `.docs/DECISIONS.md` - decision journal;
+   - `.docs/TESTING.md` - testing contract, before writing or reviewing tests;
+   - `.docs/SECURITY.md` - security contract, before trust-boundary or dependency work (when present);
    - `.docs/DESIGN.md` - when UI is affected;
    - `.docs/CHECKLIST.md` - before implementation;
    - feature files relevant to the user's task, when already known.

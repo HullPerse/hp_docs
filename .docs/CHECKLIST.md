@@ -17,7 +17,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Walk the ponytail ladder before writing your own solution: reuse neighboring code, then stdlib, then native platform, then installed dependencies; your own implementation is the last rung.
 - [ ] Check `package.json`, lockfile, versions, and existing usage of suitable packages before writing your own implementation.
 - [ ] Confirm the dependency is already used, or record why a new one is needed.
-- [ ] If no ready-made package exists, compare several modern candidates by support, license, size, and performance, and explicitly name the recommended one.
+- [ ] If no ready-made package exists, compare several modern candidates and explicitly name the recommended one. Comparison covers: purpose fit, activity/support, license, size, transitive dependency count, security surface, performance where relevant, and when NOT to use each candidate.
 - [ ] Check license and platform support for new dependencies.
 - [ ] For every new feature ask implementation disposition: implement now, defer, or reject.
 - [ ] For every new feature separately choose documentation destination: existing `.docs/features/*.md`, new `.docs/features/<slug>.md`, or only `.docs/DECISIONS.md`.

@@ -24,6 +24,7 @@ npx skills add HullPerse/hp_docs --skill scandinavian-design
 npx skills add HullPerse/hp_docs --skill test-architect
 npx skills add HullPerse/hp_docs --skill test-reviewer
 npx skills add HullPerse/hp_docs --skill security-audit
+npx skills add HullPerse/hp_docs --skill project-documentation
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -47,7 +48,7 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all nine skills landed with readable frontmatter.
+3. Verifies all ten skills landed with readable frontmatter.
 4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
@@ -149,6 +150,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 | `.docs/answers/` | Long research answers |
 | `.docs/features/` | Feature files (Idea / Comment / Pros / Cons) |
 | `.docs/reviews/` | Review issue files |
+| `DOCUMENTATION_SPEC.md` | Optional completeness contract for product documentation |
 | `product-spec.md` | Optional single source of truth for the feature set |
 
 ## Bundled Skills
@@ -185,11 +187,15 @@ Independently attacks tests for false positives, weak assertions, missing behavi
 
 One skill covering the whole security surface as modes: dependency supply chain, secrets, injection, prototype pollution, path traversal, filesystem, process execution, SSRF, auth, input validation, logging, crypto, races, DoS, config, build, CI, git, privacy. Its centerpiece is the exfiltration proof for published npm packages and loggers: a static channel inventory where every outbound capability (network calls, child processes, lifecycle scripts, obfuscation markers, transitive dependencies) must resolve against the declared budget or become a finding.
 
+### `project-documentation` - docs generated from project knowledge
+
+Turns what a project already knows into user-facing documentation: reads `.docs/` contracts, public API exports, tests, and benchmark result artifacts; builds a documentation map; generates pages against `DOCUMENTATION_SPEC.md`; validates that examples compile and links resolve; reports readiness percentage with named gaps. Numbers come only from recorded results - documentation is derived, never invented.
+
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all nine skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all ten skills landed, then hands off to the first-run flow which owns all initialization questions.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes nine bundled skills, including `test-architect`, `test-reviewer`, and `security-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes ten bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, and `project-documentation`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 

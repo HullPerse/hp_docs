@@ -140,7 +140,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), and `docs-init` (package installation). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), and `docs-init` (package installation). Install all of them: they are small and their triggers differ.
 
 ---
 
@@ -180,6 +180,7 @@ Create on demand, never upfront:
 - `.docs/ROADMAP.md` - with 5+ dispositioned features forming phases.
 - `.docs/answers/` - on user request for long research answers.
 - `product-spec.md` - if chosen in question 5.
+- `DOCUMENTATION_SPEC.md` - when the project maintains product documentation and will use the `project-documentation` skill.
 
 ---
 

@@ -11,11 +11,15 @@ All notable changes to the documentation template and skills. Keep a Changelog f
 - `.docs/SECURITY.md` template: security profile, trust boundaries and capability budget, full audit-axis review, static evidence protocol, exfiltration proof for published packages, npm-package/logger profile, threat model, and three review passes
 - Skill `security-audit`: one skill covering the whole security surface as modes, with the exfiltration-proof protocol for published npm packages and loggers
 - Initialization Question 7: security profile (published package / backend / internal tool / minimal) setting SECURITY.md depth
+- Skill `project-documentation`: generates product documentation from project knowledge (.docs, public API, tests, benchmark artifacts), validates examples compile and links resolve, reports readiness percentage with named gaps
+- Optional root template `DOCUMENTATION_SPEC.md`: provenance rule plus required sections for feature pages, API entries, benchmark records, and executable examples
 
 ### Changed
 
 - AGENT_PROMPT, CHECKLIST, REVIEWER, first-run, README, and rule-audit templates now reference the testing contract
 - AGENTS.md, AGENT_PROMPT (mandatory reading plus always-on reporting rule), CHECKLIST, REVIEWER, agents-audit, first-run, README, docs-init, and hp-docs skill now reference the security contract; DEVELOPMENT.md gained the always-on Security baseline section
+- Evidence rules tightened: performance and benchmark numbers may come only from executed commands and recorded artifacts; package comparisons must cover activity, transitive dependencies, security surface, and when-not-to-use; lint/type suppression requires a recorded reason
+- Cleanup: removed stale "Russian language" strict rule and drifted item counts in the hp-docs skill, aligned its Q2 with first-run non-JS options, docs-onboard minimum reading now includes TESTING/SECURITY contracts, docs-refactor compliance table gained a Security row, mini-project reading list references SECURITY.md
 - Template packaging now includes the hp-docs `templates/` directory
 
 ## [1.4.2] - 2026-08-22

@@ -189,6 +189,7 @@ Applied to code, documentation, UI copy, agent replies, commit messages.
 - No duplicated state or duplicated sources of truth.
 - Clear names, small modules, typed errors, tested domain logic.
 - No debug logs, dead code, placeholder success paths, or fake data in production.
+- Lint and type errors are fixed or argued; suppression without a recorded reason is not a solution.
 - No TODO comments instead of decisions; record unresolved items in `.docs/DECISIONS.md`.
 - Do not build a large abstraction for one hypothetical future case.
 

@@ -61,6 +61,7 @@ Check:
 
 - documentation consistency and decision priority;
 - current implementation, public APIs, state ownership, persistence;
+- before changing a module: its entry points, callers, dependencies, tests, related types, configuration, and side effects are identified first;
 - missing requirements and unclear acceptance criteria;
 - contradictions between the task, the rules, design rules, and the code;
 - likely bugs, races, stale state, cancellation problems, data loss paths;
@@ -202,6 +203,8 @@ Ladder rules:
 ## 7. Performance
 
 Never optimize blindly and never ship regressions. Before finishing a non-trivial feature, analyze: cold start, hot paths, allocations, IO, caches, cancellation, latency and perceived responsiveness, background load. For each opportunity give: current/expected bottleneck, simplest implementation, at least one alternative, trade-offs, and a metric. Prefer measurable improvements; never sacrifice correctness, recoverability, security, or explicit UX for an unmeasured micro-optimization.
+
+Numbers come only from executed commands and their recorded artifacts. Never write a metric, benchmark result, or performance claim that was not measured in this session; cite the artifact or omit the number.
 
 ## 8. Testing and verification contract
 

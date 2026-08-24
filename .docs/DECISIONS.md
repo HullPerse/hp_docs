@@ -17,6 +17,27 @@ User decision journal. The agent must check this file before any question and ap
 
 <!-- Appended by the agent as decisions are made -->
 
+### 2026-08-24: Developer-encyclopedia proposal rejected, kernel adopted as evidence rules
+
+- Decision: the proposed tool encyclopedia (hundreds of pages across docs/dev/security/testing/databases/frontend categories) is rejected: static tool facts rot faster than rules, duplicate the mandatory context7 documentation flow, and would ship into every consumer project's `.agents/skills/`. Adopted instead: a fixed package-comparison schema (purpose fit, activity/support, license, size, transitive dependencies, security surface, performance where relevant, when-not-to-use) in CHECKLIST; a no-invented-numbers rule in AGENT_PROMPT Performance and TESTING.md (metrics only from executed commands and recorded artifacts); a pre-change walk bullet in the AGENT_PROMPT audit checklist (entry points, callers, dependencies, tests, types, configuration, side effects); a suppression-requires-recorded-reason rule in DEVELOPMENT anti-slop. Proposals already covered verbatim by existing rules (ponytail ladder, typing rules, patterns-on-proof, security auto-reporting) were not duplicated.
+- Context: user shared an external "Developer Encyclopedia + Engineering Playbook" plan and delegated per-item decisions after audit.
+- Consequence: knowledge stays procedural and small; tool facts stay with live documentation sources.
+- Source: encyclopedia/playbook evaluation task, 2026-08-24.
+
+### 2026-08-24: Project-documentation generation adopted in reduced form
+
+- Decision: add skill `project-documentation` plus optional root template `DOCUMENTATION_SPEC.md`. The skill derives product documentation from project knowledge (.docs contracts, public exports, tests, benchmark artifacts), builds a manifest-based map, generates against the spec, validates examples compile and links resolve, and reports readiness percentage with named gaps. Rules baked in: numbers only from recorded results; no documenting behavior absent from code/tests; every claim traces to decision, source, test, or command output. Rejected from the original proposal: a parallel `docs-project/` catalog (duplicates `.docs/`), a permanent manifest file (the skill builds it during discovery), docs-site installation (renderers stay an advisory comparison table inside the skill). Activation is on-demand via trigger phrases, like ROADMAP.md - no initialization question added.
+- Context: user wants to generate coherent product documentation for projects such as hp_logger from existing knowledge rather than free-form writing.
+- Consequence: bundled skills grow to ten; sync scripts carry DOCUMENTATION_SPEC.md; first-run optional files list mentions it.
+- Source: documentation-generation task, 2026-08-24.
+
+### 2026-08-24: Light cleanup now, structural dedup deferred
+
+- Decision: fix stale content found by audit immediately (hp-docs skill: leftover "Russian language" strict rule, drifted protocol item count, Q2 missing non-JS manager options; docs-onboard minimum reading missing TESTING/SECURITY contracts; docs-refactor compliance table missing Security row; mini-project reading list missing SECURITY.md). Deferred as a separate dispositioned package: rewriting the hp-docs skill to single-source the initialization questions and template outlines (currently duplicated across first-run.md, the skill, and README) because it is the installer-critical master skill. Return condition: next drift incident in that skill or a dedicated cleanup session.
+- Context: user asked for repo cleanup ("фигня всякая"); triple duplication has caused drift twice already.
+- Consequence: drift sources documented; the risky rewrite is not silently mixed into feature work.
+- Source: documentation-generation task, 2026-08-24.
+
 ### 2026-08-24: One security skill plus always-on reporting instead of a skill family
 
 - Decision: expose one security skill, `security-audit`, with all specialist domains (dependency supply chain, secrets, injection, prototype pollution, path traversal, filesystem, process execution, SSRF, auth, input validation, output sanitization, logging security, crypto, races, DoS, serialization, config, build, CI, git, privacy, threat modeling) as modes. The proposed thirty-four-skill and five-skill splits are rejected for the same reason fourteen testing skills were consolidated: overlapping triggers and repeated repository analysis. Independently of the skill, every session must report security problems whenever found, even outside task scope; undeclared outbound channels and exposed live secrets are Blockers.

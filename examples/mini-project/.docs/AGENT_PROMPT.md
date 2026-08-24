@@ -13,8 +13,9 @@ Session contract for the agent in the todo-cli project.
 1. This file.
 2. `.docs/DEVELOPMENT.md` - conventions and anti-slop.
 3. `.docs/TESTING.md` - testing contract and migration flow.
-4. `.docs/DECISIONS.md` - check before audit, append after decisions.
-5. Relevant source code and tests.
+4. `.docs/SECURITY.md` - security contract, before dependency or storage changes.
+5. `.docs/DECISIONS.md` - check before audit, append after decisions.
+6. Relevant source code and tests.
 
 ### Strict DECISIONS.md gate
 
