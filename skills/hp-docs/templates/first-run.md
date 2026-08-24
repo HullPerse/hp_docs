@@ -119,6 +119,17 @@ Is there a large product scope worth tracking in a separate file?
 
 The recommendation status of this question is intentionally neutral until the canonical stack recommendation is revised.
 
+### Question 7: Security profile
+
+Which profile fits what this project ships? It sets the depth of `.docs/SECURITY.md`.
+
+- Published npm package - full contract: capability budget, exfiltration proof, supply-chain and lifecycle-script review before every release.
+- Backend with external input - trust boundaries, input validation, secrets, auth surfaces, dependency audit.
+- Internal tool / CLI - reduced set: secrets, dependencies, configuration; exfiltration proof skipped with a recorded reason.
+- Minimal - micro utility without external input: dependency audit command only.
+
+No `(recommended)` marker: the answer follows from what the project actually publishes. Unclear cases default to `backend` for servers and `internal-tool` otherwise. The duty to report security findings at any time does not depend on this choice.
+
 ---
 
 ## Step 2.6: Installing skills into the project
@@ -129,7 +140,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), and `docs-init` (package installation). Install all of them: they are small and their triggers differ.
 
 ---
 
@@ -142,14 +153,18 @@ Replace all `{{...}}` with real project data:
 | `{{PROJECT_NAME}}` | Name from package.json/name or README |
 | `{{PROJECT_CONTEXT}}` | Stack + description from README/package.json |
 | `{{PROJECT_OVERVIEW}}` | Description + directory tree |
-| `{{FIXED_DECISIONS}}` | Answers to questions 1-6: manager, lint preset, language, design preset, data-flow model, backend logging + base rules from README |
+| `{{FIXED_DECISIONS}}` | Answers to questions 1-7: manager, lint preset, language, design preset, data-flow model, backend logging, security profile + base rules from README |
 | `{{DIRECTORY_STRUCTURE}}` | Directory tree analysis |
 | `{{COMMANDS}}` | package.json scripts written through the chosen manager |
+| `{{TEST_RUNNER}}`, `{{TEST_COMMAND}}`, and related testing placeholders | Existing test framework, scripts, configuration, and available test tools |
+| `{{SECURITY_PROFILE}}`, `{{AUDIT_COMMAND}}`, and related security placeholders | Answer to question 7; audit, outdated, secrets-scan commands from package scripts and installed tools; trust boundaries and capability budget from code analysis |
 | `{{PRODUCT_DESCRIPTION}}` | If product-spec.md was created |
 
 Per-file actions:
 
 - **DEVELOPMENT.md**: fill "Typing by language" with the chosen variant (TS/Rust/Python/Go); fix the data-flow model (query library or background tasks) under "Fixed decisions".
+- **TESTING.md**: fill the test runner, commands, directories, isolation rules, external-service policy, and available coverage, mutation, benchmark, property, fuzz, and stress tools. Keep the full testing-axis review and adapt actual tests to the project contract.
+- **SECURITY.md**: fill the profile from question 7, audit commands from package scripts and available tools, trust boundaries, the capability budget from code analysis, assets, entry points, and the review date. Keep all axes listed; mark not-applicable ones with reasons instead of deleting them.
 - **DESIGN.md**: keep the chosen preset section, delete the other two (or mark "not used"). For a non-UI project keep sections 0 and 5 or delete the file.
 - **AGENT_PROMPT.md**: verify the "Data flow rules" subsection reflects the chosen model.
 - If Question 1 chose a non-English language: translate every generated `.docs/` file and AGENTS.md into that language now, keeping structure and section counts identical. Do not translate the deslop word-tag lists - they are bilingual reference content.
@@ -170,7 +185,7 @@ Create on demand, never upfront:
 
 ## Step 4: Verify commands
 
-Run each and record the result: `{{LINT_COMMAND}}`, `{{TYPECHECK_COMMAND}}`, `{{TEST_COMMAND}}`. Mark passed / failed / unavailable separately with reasons. For a fresh project it suffices that commands exist and do not fail on an empty suite.
+Run each and record the result: `{{LINT_COMMAND}}`, `{{TYPECHECK_COMMAND}}`, `{{TEST_COMMAND}}`. Also run every configured testing command from `TESTING.md`: coverage, mutation, property or fuzz, benchmark, stress, flake, and concurrency checks. Also run every recorded security command from `SECURITY.md`. Mark passed / failed / skipped / not applicable / unavailable separately with reasons. For a fresh project it suffices that commands exist and do not fail on an empty suite.
 
 ---
 
@@ -181,7 +196,9 @@ Verify every file contains all mandatory top-level sections:
 ```text
 Docs Health Check:
   AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Available tools)
-  DEVELOPMENT.md     [13/13 sections] OK
+  DEVELOPMENT.md     [14/14 sections] OK
+  TESTING.md         [14/14 sections] OK
+  SECURITY.md        [11/11 sections] OK
   DESIGN.md          [ 7/7 sections]  OK   (or deleted for non-UI)
   CHECKLIST.md       [ 5/5 sections]  OK
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
@@ -211,7 +228,7 @@ All strict rules apply. Check four areas:
 
 ### 7.1 Code
 
-Architecture (responsibility mixing, duplication, speculative abstractions), typing per language rules, error handling, states (loading/error/empty/disabled/dirty/stale/recovery), domain-rule tests, secrets, performance, anti-slop.
+Architecture (responsibility mixing, duplication, speculative abstractions), typing per language rules, error handling, states (loading/error/empty/disabled/dirty/stale/recovery), domain-rule tests, secrets, trust boundaries and undeclared outbound channels against the SECURITY.md capability budget, performance, anti-slop.
 
 ### 7.2 Dependencies
 
@@ -252,7 +269,7 @@ When initializing:
 
 ## Step 9: Recording decisions
 
-Add entries: template initialization, each answer to questions 1-6, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
+Add entries: template initialization, each answer to questions 1-7, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
 
 ---
 

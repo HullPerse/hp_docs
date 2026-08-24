@@ -7,6 +7,9 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] List available MCP servers and tools; for library questions use a documentation tool before answering from memory; apply task-relevant tools instead of workarounds.
 - [ ] Read `.docs/AGENT_PROMPT.md`.
 - [ ] Read `.docs/DEVELOPMENT.md`.
+- [ ] Read `.docs/TESTING.md` before writing or reviewing tests.
+- [ ] Read `.docs/SECURITY.md`; note the security profile, trust boundaries, and capability budget.
+- [ ] Identify which trust boundaries the change touches and which capabilities (network, processes, filesystem, environment, lifecycle scripts) it adds or alters.
 - [ ] Read and analyze `.docs/DECISIONS.md` before the audit: check accepted decisions, constraints, and conflicts.
 - [ ] Read `.docs/DESIGN.md` if UI/UX is affected.
 - [ ] Read module README and package.json.
@@ -28,6 +31,8 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Decide whether unanswered choices block implementation or a reversible safe default is acceptable.
 - [ ] Draft a short implementation plan.
 - [ ] Define tests for every new feature.
+- [ ] Define public behavior, accepted and rejected inputs, outputs, stable errors, side effects, invariants, and implementation details before writing tests.
+- [ ] Build a behavior matrix and record every testing axis as covered, not applicable with a reason, deferred with a return condition, or unavailable with a reason.
 
 ## During coding
 
@@ -44,13 +49,21 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Compliance with `.docs/DESIGN.md` (when applicable).
 - [ ] Data flow follows the project's fixed model (query library or background tasks); states come from it, not from duplicated manual state.
 - [ ] No secrets in source, logs, or workspace files.
+- [ ] No undeclared outbound capability introduced; every new channel lands in the SECURITY.md capability budget with a DECISIONS.md entry.
 - [ ] Add tests together with the feature, not after declaring it done.
+- [ ] Use strong observable assertions, meaningful names, deterministic fixtures, and real async completion signals instead of sleep.
+- [ ] Keep correctness tests, benchmarks, stress tests, mutation runs, and fuzz runs separate.
+- [ ] Run the adversarial test pass: ask what broken implementation would still pass.
+- [ ] For existing tests, record a baseline before migration and prove behavior coverage before removing duplicates.
 
 ## Verification
 
 - [ ] Run formatter/style: {{LINT_COMMAND}}.
 - [ ] Run typecheck: {{TYPECHECK_COMMAND}}.
 - [ ] Run relevant tests: {{TEST_COMMAND}}.
+- [ ] Run configured coverage, mutation, property/fuzz, benchmark, stress, flake, and concurrency checks, or record each as not applicable or unavailable with a reason.
+- [ ] Run recorded security commands from `.docs/SECURITY.md` ({{AUDIT_COMMAND}} and others), or record each as not applicable or unavailable with a reason.
+- [ ] Review the diff for accidental new outbound channels: network calls, child processes, filesystem writes, eval or dynamic imports.
 - [ ] Record an approved exception if a test layer cannot run.
 - [ ] Review the diff for unrelated changes.
 - [ ] Check for debug logs, placeholder data, dead code, stray comments.

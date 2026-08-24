@@ -12,8 +12,9 @@ Session contract for the agent in the todo-cli project.
 
 1. This file.
 2. `.docs/DEVELOPMENT.md` - conventions and anti-slop.
-3. `.docs/DECISIONS.md` - check before audit, append after decisions.
-4. Relevant source code and tests.
+3. `.docs/TESTING.md` - testing contract and migration flow.
+4. `.docs/DECISIONS.md` - check before audit, append after decisions.
+5. Relevant source code and tests.
 
 ### Strict DECISIONS.md gate
 
@@ -44,7 +45,7 @@ Mode full. Rungs: YAGNI -> neighboring code -> stdlib -> native platform -> inst
 
 ## 7. Testing contract
 
-Every feature ships with tests (`bun test`). Domain rules (argument parsing, filters) get unit tests; storage gets integration tests on a temp directory.
+Every feature ships with tests (`bun test`). Domain rules (argument parsing, filters) get unit tests; storage gets integration tests on a temp directory. The full testing contract and advanced-check results live in `.docs/TESTING.md`.
 
 ## 8. Documentation
 

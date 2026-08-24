@@ -7,7 +7,7 @@ Your task is to investigate, verify, document, and prioritize problems. Your tas
 ## Mandatory reviewer behavior
 
 1. Do not modify source code.
-2. Do not modify `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md`, `.docs/DESIGN.md`, `.docs/DECISIONS.md`, module READMEs.
+2. Do not modify `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md`, `.docs/TESTING.md`, `.docs/DESIGN.md`, `.docs/DECISIONS.md`, module READMEs.
 3. You may create or append only `reviews/` in `.docs/reviews/`, when findings exist.
 4. Never mark checkboxes or tasks as completed.
 5. Never claim tests, builds, benchmarks, or tools were run without their output.
@@ -27,12 +27,14 @@ Read in this order:
 2. this `.docs/REVIEWER.md`;
 3. `.docs/AGENT_PROMPT.md`;
 4. `.docs/DEVELOPMENT.md`;
-5. `.docs/DECISIONS.md`;
-6. `.docs/DESIGN.md` for UI/UX parts;
-7. `.docs/CHECKLIST.md`;
-8. README and package.json of affected modules;
-9. full relevant tree of sources, tests, configs, and generated interfaces;
-10. existing issue file, if any.
+5. `.docs/TESTING.md`;
+6. `.docs/SECURITY.md` for the security profile, trust boundaries, and capability budget;
+7. `.docs/DECISIONS.md`;
+8. `.docs/DESIGN.md` for UI/UX parts;
+9. `.docs/CHECKLIST.md`;
+10. README and package.json of affected modules;
+11. full relevant tree of sources, tests, configs, and generated interfaces;
+12. existing issue file, if any.
 
 The latest explicit user decision wins over older proposals. When documents contradict each other, record the contradiction as a finding; never fix it silently.
 
@@ -44,10 +46,12 @@ If the user did not specify scope - ask what to review (a specific file, module,
 
 1. Record the review entry: scope, target paths, date, revision/commit, reviewer model, areas examined, available/unavailable commands. Never invent commit/time - use `unavailable` when unknown.
 2. Claims audit: compare every statement (from task plan, agent report, README) against the repository. Labels: verified, partially verified, contradicted, not reproducible, not applicable, unverified. Check that no feature is claimed done while being a stub/mockup/doc item.
-3. Implementation and boundaries inspection: trace the feature from public entry point to domain state, persistence, background work, and UI. Inspect state ownership, single source of truth, typed commands/events/errors, persistence, async tasks/cancellation/stale results, network/filesystem boundaries, secrets, dead code, logic duplicates, speculative abstractions.
-4. Run checks: use existing module commands. Never install new tools just to look thorough. Never run destructive/production commands. Distinguish: passed, failed, skipped by scope, unavailable, not applicable.
-5. Performance analysis for non-trivial systems: cold start, hot paths, allocations, IO, caches, large data, cancellation, background tasks. Each finding comes with a proposed metric. Separate proven regressions from likely risks and opportunities.
-6. Code cleanliness analysis: duplicated sources of truth, oversized modules, unclear ownership, weak error context, ignored results, dead code, comment-parrots, misleading names, redundant public surface, missing invariant tests, hidden recovery. Never report stylistic preferences as bugs.
+3. Test attack: reconstruct the public behavior contract, map the test matrix, and ask what broken implementation would still pass. Check assertions, errors, boundaries, determinism, async coordination, concurrency, mocks, coverage, mutation, fuzzing, performance, flakiness, and maintenance.
+
+4. Implementation and boundaries inspection: trace the feature from public entry point to domain state, persistence, background work, and UI. Inspect state ownership, single source of truth, typed commands/events/errors, persistence, async tasks/cancellation/stale results, network/filesystem boundaries, secrets, dead code, logic duplicates, speculative abstractions. Compare actual outbound calls (network, child processes, filesystem writes, environment reads, lifecycle scripts) against the SECURITY.md capability budget; an undeclared channel is a Critical finding at minimum.
+5. Run checks: use existing module commands. Never install new tools just to look thorough. Never run destructive/production commands. Distinguish: passed, failed, skipped by scope, unavailable, not applicable.
+6. Performance analysis for non-trivial systems: cold start, hot paths, allocations, IO, caches, large data, cancellation, background tasks. Each finding comes with a proposed metric. Separate proven regressions from likely risks and opportunities.
+7. Code cleanliness analysis: duplicated sources of truth, oversized modules, unclear ownership, weak error context, ignored results, dead code, comment-parrots, misleading names, redundant public surface, missing invariant tests, hidden recovery. Never report stylistic preferences as bugs.
 
 ## Finding classification
 

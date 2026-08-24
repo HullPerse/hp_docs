@@ -21,6 +21,9 @@ npx skills add HullPerse/hp_docs --skill docs-refactor
 npx skills add HullPerse/hp_docs --skill docs-onboard
 npx skills add HullPerse/hp_docs --skill docs-init
 npx skills add HullPerse/hp_docs --skill scandinavian-design
+npx skills add HullPerse/hp_docs --skill test-architect
+npx skills add HullPerse/hp_docs --skill test-reviewer
+npx skills add HullPerse/hp_docs --skill security-audit
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -44,8 +47,8 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all six skills landed with readable frontmatter.
-4. Hands off to the first-run flow, which asks the six initialization questions and generates `AGENTS.md` + `.docs/`.
+3. Verifies all nine skills landed with readable frontmatter.
+4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
 ## Initialize .docs in Your Project
@@ -64,7 +67,7 @@ Then open any agent in the project. It finds `AGENTS.md` rules missing and runs 
 1. Determines the project state (existing code / empty repo / fresh agent in a documented project).
 2. Lists available MCP tools.
 3. Scans package files, lockfile, directory tree.
-4. Asks six questions: documentation language, package manager, lint preset, design preset, optional product spec, backend logging.
+4. Asks seven questions: documentation language, package manager, lint preset, design preset, optional product spec, backend logging, security profile.
 5. Generates the full `.docs/` from bundled templates with real project data.
 6. Runs the docs health check and verifies lint/typecheck/test commands.
 
@@ -86,6 +89,8 @@ Same flow - the agent picks it up on the next session start.
   .docs/
     AGENT_PROMPT.md          # session contract
     DEVELOPMENT.md           # permanent conventions
+    TESTING.md               # testing contract and migration flow
+    SECURITY.md              # security contract: profile, capability budget, audit axes
     DESIGN.md                # chosen design preset
     CHECKLIST.md             # implementation checklist
     REVIEWER.md              # independent review prompt
@@ -105,6 +110,8 @@ Documentation language follows Question 1: English canonical by default; pick an
 - **Disposition gate.** No new feature starts without two decisions: implementation disposition (now / defer / reject) and documentation destination (existing feature file / new one / DECISIONS.md only).
 - **Critical mode.** The agent does not agree with bad ideas. A direct verdict comes with the reason, consequences, an alternative, and the condition that would change it. Sharp language about a decision is allowed; attacks on the person are not.
 - **Decision journal.** Every significant decision lands in `.docs/DECISIONS.md` (Decision / Context / Consequence / Source). Conflicts stop and ask; nothing is silently overridden.
+- **Testing contract.** Every testing axis is evaluated against behavior: unit, integration, edges, errors, regression, async/concurrency, performance, properties, mutation, fuzzing, coverage, mocks, flakiness, and maintenance. Existing suites migrate from a baseline.
+- **Security contract.** Trust boundaries and a capability budget (every outbound channel declared and justified), full audit-axis review with static evidence, and exfiltration proof for published packages: no undeclared outbound channel. Security findings surface in every task, not only security ones.
 - **`(recommended)` discipline.** The marker appears only with real justification, never as filler.
 
 ### Text quality
@@ -119,7 +126,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 - **Stack-adaptive data flow**: query-library projects get TanStack Query rules; desktop/CLI projects get background-task rules (UI never blocks); anything else gets equivalent rules agreed at init.
 - **Typing by language**: TS (no `any`, boundary `unknown` narrowed via Zod), Rust (Option/Result, isolated `unsafe` FFI), Python (strict typing), Go (error values).
 - **Design presets**: Scandinavian (default: alpha ink ladder over white, Inter/system sans, 8px rhythm), neo-brutalism (radius 0, hard shadows), Zed dark (native tools). Custom style rewrites the preset section.
-- **Initialization questions**: documentation language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec, backend logging.
+- **Initialization questions**: documentation language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec, backend logging, security profile.
 
 ### Tools
 
@@ -132,6 +139,8 @@ Documentation language follows Question 1: English canonical by default; pick an
 | `AGENTS.md` | Entry point: reading list, key rules, quick start |
 | `.docs/AGENT_PROMPT.md` | Session contract: audit, questions, grill mode, ponytail ladder, response format |
 | `.docs/DEVELOPMENT.md` | Permanent contract: conventions, typing by language, anti-slop + deslop catalog |
+| `.docs/TESTING.md` | Behavior-first test strategy, migration, and verification contract |
+| `.docs/SECURITY.md` | Security contract: profile, trust boundaries, capability budget, audit axes |
 | `.docs/DESIGN.md` | Design presets and UI rules |
 | `.docs/CHECKLIST.md` | Before/during/after implementation checklist |
 | `.docs/REVIEWER.md` | Independent review prompt (read-only, evidence-based findings) |
@@ -164,11 +173,23 @@ Brings an existing codebase to compliance with its own `.docs/` rules. Runs a co
 
 Connects a fresh agent chat to a project that already has AGENTS.md and `.docs/`. Reads the entry point, follows its mandatory reading list, checks available MCP tools, and returns a compact contract summary (stack, hard rules, recent decisions) so the agent immediately works by project rules instead of guessing them.
 
+### `test-architect` - testing strategy and implementation
+
+Designs and writes tests across the full testing contract. Its modes cover unit, integration, edge cases, errors, regression, async/concurrency, performance, property, mutation, fuzzing, coverage, mocking, flakiness, and maintenance. It also migrates existing suites from a measured baseline.
+
+### `test-reviewer` - adversarial test review
+
+Independently attacks tests for false positives, weak assertions, missing behavior and error paths, mock abuse, flaky timing, and unsupported coverage claims. It does not modify source code.
+
+### `security-audit` - security review and exfiltration proof
+
+One skill covering the whole security surface as modes: dependency supply chain, secrets, injection, prototype pollution, path traversal, filesystem, process execution, SSRF, auth, input validation, logging, crypto, races, DoS, config, build, CI, git, privacy. Its centerpiece is the exfiltration proof for published npm packages and loggers: a static channel inventory where every outbound capability (network calls, child processes, lifecycle scripts, obfuscation markers, transitive dependencies) must resolve against the declared budget or become a finding.
+
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all six skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all nine skills landed, then hands off to the first-run flow which owns all initialization questions.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes nine bundled skills, including `test-architect`, `test-reviewer`, and `security-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 

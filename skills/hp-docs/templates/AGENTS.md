@@ -9,9 +9,11 @@ Full agent rules live in `.docs/`. Read them before working.
 3. Read `.docs/DESIGN.md` before any UI/UX work.
 4. Read `.docs/CHECKLIST.md` before implementation and review.
 5. Analyze `.docs/DECISIONS.md` at the start of every task and again before any question (the answer or constraint may already be recorded). After every significant decision or behavior change, append an entry to `.docs/DECISIONS.md` before finishing the task.
-6. Read module README and package.json before working in the respective directory.
-7. If `product-spec.md` exists in the root - it is the source of truth for the feature set; read it before dispositioning new features.
-8. Use `.docs/agents-audit.prompt.md` to verify that agent rules are not stale and still match the code.
+6. Read `.docs/TESTING.md` before writing or reviewing tests.
+7. Read `.docs/SECURITY.md` before work touching trust boundaries, dependencies, secrets, or published packages.
+8. Read module README and package.json before working in the respective directory.
+9. If `product-spec.md` exists in the root - it is the source of truth for the feature set; read it before dispositioning new features.
+10. Use `.docs/agents-audit.prompt.md` to verify that agent rules are not stale and still match the code.
 
 ## Key rules
 
@@ -26,6 +28,8 @@ Full agent rules live in `.docs/`. Read them before working.
 - **"You decide" = delegation.** The agent may pick a justified `(recommended)` option and record the delegated ownership.
 - **DECISIONS.md is mandatory.** The agent analyzes `.docs/DECISIONS.md` before audit and implementation, treats it as a source of truth, and appends every significant product, UX, architecture, or technical decision plus every behavior fix. Never finish a task with such a change left unlogged.
 - **Check packages first.** Before implementing a non-trivial task, inspect installed dependencies, their versions, existing usage sites, and documentation. If no ready-made solution exists in the project, propose several modern candidate packages with trade-offs and a recommendation instead of writing a replacement from scratch or adding a dependency silently.
+- **Testing is behavior-first.** Read `.docs/TESTING.md`, define the public contract before tests, run every testing axis, and record covered, not applicable, deferred, or unavailable results. Existing suites are migrated from a baseline; they are not rewritten blindly.
+- **Security is always on.** Report security problems whenever found, even outside the task scope: undeclared outbound channels and exposed live secrets are Blockers. The contract lives in `.docs/SECURITY.md`.
 
 ## First run
 

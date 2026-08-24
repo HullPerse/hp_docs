@@ -2,6 +2,22 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [Unreleased]
+
+### Added
+
+- `.docs/TESTING.md` template with behavior-first test design, full testing-axis review, regression-first workflow, and staged existing-suite migration
+- Skills `test-architect` and `test-reviewer`; specialist testing capabilities remain modes of the architect skill
+- `.docs/SECURITY.md` template: security profile, trust boundaries and capability budget, full audit-axis review, static evidence protocol, exfiltration proof for published packages, npm-package/logger profile, threat model, and three review passes
+- Skill `security-audit`: one skill covering the whole security surface as modes, with the exfiltration-proof protocol for published npm packages and loggers
+- Initialization Question 7: security profile (published package / backend / internal tool / minimal) setting SECURITY.md depth
+
+### Changed
+
+- AGENT_PROMPT, CHECKLIST, REVIEWER, first-run, README, and rule-audit templates now reference the testing contract
+- AGENTS.md, AGENT_PROMPT (mandatory reading plus always-on reporting rule), CHECKLIST, REVIEWER, agents-audit, first-run, README, docs-init, and hp-docs skill now reference the security contract; DEVELOPMENT.md gained the always-on Security baseline section
+- Template packaging now includes the hp-docs `templates/` directory
+
 ## [1.4.2] - 2026-08-22
 
 ### Added

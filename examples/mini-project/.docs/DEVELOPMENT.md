@@ -51,4 +51,4 @@ ASCII punctuation; rare purposeful comments; no speculative abstractions, debug 
 
 ## Documentation
 
-AGENT_PROMPT.md - session contract; DEVELOPMENT.md - this file; DECISIONS.md - journal; CHECKLIST.md omitted as redundant for a micro-project (decision in DECISIONS.md); DESIGN.md deleted: the project has no UI.
+AGENT_PROMPT.md - session contract; DEVELOPMENT.md - this file; TESTING.md - test contract; SECURITY.md - security contract (internal-tool profile); DECISIONS.md - journal; CHECKLIST.md omitted as redundant for a micro-project (decision in DECISIONS.md); DESIGN.md deleted: the project has no UI.

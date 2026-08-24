@@ -21,8 +21,10 @@ Example:
 3. `.docs/DESIGN.md` - before any UI/UX work.
 4. `.docs/CHECKLIST.md` - before implementation and review.
 5. `.docs/DECISIONS.md` - check it before the audit for already-recorded answers or constraints, and treat the journal as a source of truth.
-6. Module README and package.json before working in the respective directory.
-7. Relevant source code, tests, configs, and generated interfaces.
+6. `.docs/TESTING.md` before writing or reviewing tests.
+7. `.docs/SECURITY.md` before work touching trust boundaries, dependencies, secrets, published packages, or anything that sends data anywhere.
+8. Module README and package.json before working in the respective directory.
+9. Relevant source code, tests, configs, and generated interfaces.
 
 Do not assume a system does not exist because you have seen one file. Search for all related types, routes, services, state, persistence, tests, and mentions across the docs.
 
@@ -77,6 +79,10 @@ Report findings before implementing, classified as:
 If there is a Blocker or an unresolved architectural choice - explain and stop for the user's answer. Never pick a long-term direction silently.
 
 If there are no Blockers - say explicitly that the audit is clean and name the next implementation stage. A clean audit does not cancel planning, tests, or documentation.
+
+### Always-on security reporting
+
+Security problems found during any task are reported immediately, even outside the task scope: undeclared outbound channels (network calls, child processes, unexpected filesystem writes), secrets in code, logs, fixtures, or docs, unvalidated input at a trust boundary, vulnerable or suspicious dependencies. Small items enter the report as Risk or Gap; anything that lets data leave the project or lets an attacker reach in is a Blocker for the touched surface and gets a `.docs/DECISIONS.md` entry. The security contract lives in `.docs/SECURITY.md`.
 
 ### Direct critical mode
 
@@ -199,12 +205,17 @@ Never optimize blindly and never ship regressions. Before finishing a non-trivia
 
 ## 8. Testing and verification contract
 
-Every new feature includes tests in the same change. A feature is not done without coverage.
+Every new feature includes tests in the same change. The full testing contract lives in `.docs/TESTING.md`.
+
+Before writing tests, define public behavior, accepted and rejected inputs, outputs, stable errors, side effects, invariants, and implementation details that must stay private. Build a behavior matrix and evaluate every axis: unit, integration, edge cases, errors, regression, determinism, async/concurrency, performance, property, mutation, fuzzing, coverage, mocking, flakiness, and maintenance. Record `covered`, `not applicable` with a reason, `deferred` with a return condition, or `unavailable` with a reason.
+
+Tests use strong observable assertions, meaningful names, isolated fixtures, and real completion signals. They do not use private implementation details, fake coverage, or sleep-based synchronization. Existing test suites follow baseline, inventory, behavior mapping, strengthen or replace, safe duplicate removal, and re-verification.
 
 - Unit tests for domain rules and pure transformations.
-- Integration tests for persistence, filesystem, protocols.
-- Fake services for external dependencies.
-- Run typecheck, lint, relevant tests, and benchmarks where they exist.
+- Integration tests for persistence, filesystem, streams, and protocols.
+- Fake services for external dependencies; mock boundaries, not internal behavior.
+- Correctness tests, benchmarks, stress tests, mutation runs, and fuzz runs remain separate artifacts.
+- Run typecheck, lint, relevant tests, and configured advanced checks, and report exact results.
 
 <!-- Project commands filled at first run -->
 {{COMMANDS}}

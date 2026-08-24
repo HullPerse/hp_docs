@@ -1,7 +1,7 @@
 ---
 name: hp-docs
 version: 1.4.2
-description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec), stack comparison, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
+description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
 # HP-Docs Skill
@@ -39,6 +39,7 @@ Read these files and directories:
 - Directory structure (top 2-3 levels)
 - `README.md`
 - `.gitignore`
+- Existing tests, test configuration, and test scripts
 - Existing config files (eslint, prettier, vite, webpack, etc.)
 - `backend/` and `frontend/` if monorepo
 
@@ -57,6 +58,7 @@ Identify:
 - **Testing**: Vitest, Jest, pytest, cargo test, etc.
 - **Linting**: oxlint, eslint, biome, clippy, ruff, etc.
 - **Package manager**: Bun, npm, yarn, pnpm, cargo, pip
+- **Testing setup**: runner, test commands, isolation, coverage, mutation, benchmark, property, fuzz, and stress tooling
 
 ### 2.5 Initialization Questions
 
@@ -105,6 +107,17 @@ The answer defines every command in the docs (`bun run lint`, `pnpm lint`, ...).
 - None yet / not a backend project - skip; revisit when the backend appears
 
 Recommendation status intentionally neutral until the canonical stack recommendation is revised.
+
+**Q7: Security profile**
+
+Which profile fits what this project ships? It sets the depth of `.docs/SECURITY.md`.
+
+- Published npm package - full contract: capability budget, exfiltration proof, supply-chain and lifecycle-script review before every release
+- Backend with external input - trust boundaries, input validation, secrets, auth surfaces, dependency audit
+- Internal tool / CLI - reduced set: secrets, dependencies, configuration; exfiltration proof skipped with a recorded reason
+- Minimal - micro utility without external input: dependency audit command only
+
+No `(recommended)` marker: the answer follows from what the project publishes. The duty to report security findings at any time does not depend on this choice.
 
 ### 3. Stack Comparison
 
@@ -235,6 +248,9 @@ Bundled skills:
 - `scandinavian-design` - deep-dive visual system used by the default DESIGN.md preset; invoke for UI redesign work
 - `docs-refactor` - bring an existing codebase to compliance with its own `.docs/` rules (audit, disposition, fixes)
 - `docs-onboard` - connect a fresh agent chat to a project that already has AGENTS.md and `.docs/`; reads everything and returns the session contract summary
+- `test-architect` - design and implement behavior-focused tests across all testing axes, including existing-suite migration
+- `test-reviewer` - independently attack tests for false positives, weak assertions, missing behavior, flakiness, and unsupported evidence
+- `security-audit` - audit project security across all security axes and prove the absence of undeclared outbound channels for published packages (exfiltration proof)
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 
 ### 6. Docs Health Check
@@ -244,7 +260,9 @@ After generating all files, verify completeness. For EACH file, check that ALL r
 ```
 Docs Health Check:  (top-level ## sections)
   AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Available tools)
-  DEVELOPMENT.md     [13/13 sections] OK   (incl. Typing by language)
+  DEVELOPMENT.md     [14/14 sections] OK   (incl. Typing by language, Security baseline)
+  TESTING.md         [14/14 sections] OK
+  SECURITY.md        [11/11 sections] OK
   DESIGN.md          [ 7/7 sections]  OK   (# 0 presets + # 1..6; or deleted for non-UI)
   CHECKLIST.md       [ 5/5 sections]  OK
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
@@ -260,8 +278,9 @@ Run these commands to confirm they work:
 - `bun run typecheck` (or equivalent)
 - `bun run lint` (or equivalent)
 - `bun run test` (or equivalent)
+- every configured testing command from `TESTING.md`: coverage, mutation, property or fuzz, benchmark, stress, flake, and concurrency checks
 
-Report which commands work, which fail, and why.
+Report passed, failed, skipped, not applicable, and unavailable commands with reasons.
 
 ### 8. Ask User
 
@@ -299,6 +318,18 @@ Entry point for agents. Must contain:
 - Key rules summary (audit before code, anti-slop, disposition gate, critical mode)
 - Available MCP tools if any
 
+### .docs/TESTING.md
+
+Permanent testing contract. The generated file must define test setup, behavior discovery, an applicable test matrix, observable assertions and names, test levels and boundaries, edge cases and errors, async and concurrency, properties, fuzzing and mutation, regression-first work, performance and load, coverage quality, existing-suite migration, three review passes, and the final report.
+
+The project-specific test runner, commands, isolation rules, external-service policy, and available tools are filled from the project during first-run. Full details live in the generated `.docs/TESTING.md`; this skill must not invent a framework command.
+
+### .docs/SECURITY.md
+
+Security contract. The generated file must define the security setup (profile, recorded audit commands with unavailable-with-reason rule, profile list), trust boundaries and the capability budget with its declaration rules, the full audit-axis review with statuses, the static evidence protocol, exfiltration proof for published packages, the npm-package/logger profile, a lightweight threat model, finding classification and fix flow, regression and change discipline, three review passes, and the report format.
+
+The project-specific profile comes from initialization question 7; commands come from package scripts and installed tools. Full details live in the generated `.docs/SECURITY.md`.
+
 ### .docs/AGENT_PROMPT.md
 
 The main session contract. Must contain ALL of these sections:
@@ -317,8 +348,8 @@ The main session contract. Must contain ALL of these sections:
 12. **Type rules**: language variants in DEVELOPMENT.md "Typing by language" - TS (no `any`, `unknown` only in boundary narrowed via Zod/type guard), Rust (Option/Result boundaries, unsafe only in isolated FFI), Python (strict typing), Go (error values)
 13. **Directory boundaries**: where types, helpers, configs, hooks, API clients go
 14. **File naming**: project convention detected during first-run (see file naming analysis); preserve established patterns, service suffixes, and casing
-15. **Testing contract**: unit for domain rules, integration for persistence, fake services, typecheck + lint + test
-16. **Documentation**: update DECISIONS.md, features, DESIGN.md, README
+15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration
+16. **Documentation**: update DECISIONS.md, features, TESTING.md, DESIGN.md, README
 17. **Anti-slop rules**: ASCII punctuation only (no em/en dash), no template intros, no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of decision logging; deslop prose subsection (voice preservation, rule-of-three, parataxis, negative parallelism, significance inflation, vague attribution) pointing to the catalog in DEVELOPMENT.md
 18. **Response format**: Audit, Decisions needed, Scope+Plan, Progress, Verification, Final state
 19. **Available tools**: mandatory MCP check at session start - list available servers, use documentation tools (context7) for any library/API question before answering from memory, apply task-appropriate tools instead of workarounds
@@ -381,10 +412,10 @@ Implementation checklist. Must contain ALL of these sections with specific items
 Independent reviewer prompt. Must contain ALL of these sections:
 
 1. **Reviewer roles**: list of hats (Senior Engineer, Backend, Frontend, Performance, UX, A11y, Security, Test, Code Reviewer)
-2. **Mandatory behavior**: 13 rules (no code changes, no .docs/ changes except reviews/, no checkboxes, no claiming tests ran without output, etc.)
+2. **Mandatory behavior**: 12 rules (no code changes, no .docs/ changes except reviews/, no checkboxes, no claiming tests ran without output, etc.)
 3. **Source of truth**: ordered reading list
 4. **Review scope selection**: ask user what to review
-5. **Review workflow**: 6 steps (record, audit claims, inspect implementation, run checks, performance analysis, code cleanliness)
+5. **Review workflow**: 7 steps (record, audit claims, attack tests, inspect implementation, run checks, performance analysis, code cleanliness)
 6. **Finding classification**: severity levels (Blocker/Critical/High/Medium/Low/Gap/Optimization/Cleanup), categories (15 categories)
 7. **Remediation policy**: reviewer doesn't fix, provides plan with containment, minimal fix, affected files, tests, alternatives
 8. **Issue file rules**: create only when findings exist, single file per run, structure template
@@ -433,8 +464,8 @@ When user selects deep analysis, perform ALL of these checks:
 - Typing: `any`, hidden `unknown`, weak types
 - Error handling: boundaries, typed errors, graceful degradation
 - States: loading, error, empty, disabled, dirty, stale, recovery
-- Tests: domain rule coverage, integration tests
-- Security: secrets in code, XSS, injections
+- Tests: behavior contract, test matrix, domain and integration coverage, error paths, regression risks, test isolation, and available advanced checks
+- Security: secrets in code, XSS, injections, trust boundaries, undeclared outbound channels against the SECURITY.md capability budget
 - Performance: memory leaks, unoptimized renders, missing memoization
 
 ### 2. Dependency Analysis
@@ -610,9 +641,11 @@ When `.docs/` is already filled:
 
 1. Read `AGENTS.md` for entry point
 2. Read `.docs/AGENT_PROMPT.md` for session contract
-3. Read `.docs/DECISIONS.md` before audit
-4. Read relevant `.docs/features/*.md` for context
-5. Follow all rules from `AGENT_PROMPT.md`
+3. Read `.docs/TESTING.md` for the testing contract
+4. Read `.docs/SECURITY.md` before security-sensitive work
+5. Read `.docs/DECISIONS.md` before audit
+6. Read relevant `.docs/features/*.md` for context
+7. Follow all rules from `AGENT_PROMPT.md`
 
 ## Docs Migration
 

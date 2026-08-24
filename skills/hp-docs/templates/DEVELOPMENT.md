@@ -156,6 +156,19 @@ Do not rewrite old feature files wholesale just for style. Simplify a section wh
 - Entries are added before the final report. If the task produced none, say so explicitly.
 - On conflict with an existing entry, stop and ask the user; never choose silently.
 
+## Security baseline
+
+The security contract lives in `.docs/SECURITY.md`: profile, trust boundaries, capability budget, audit axes, and recorded commands. Baseline rules apply to every task:
+
+1. Report security problems whenever found, including outside the current task scope; undeclared outbound channels and exposed live secrets are Blockers.
+2. Every new way to reach outward (network call, child process, filesystem write, environment read, lifecycle script) is declared in the SECURITY.md capability budget with a DECISIONS.md entry before merge.
+3. Secrets never enter source, logs, fixtures, or docs; a suspected leaked credential rotates first, history cleanup comes second.
+4. External input is validated at the trust boundary it enters; internal representation stays typed per "Typing by language".
+5. Dependencies change only through the recorded commands from SECURITY.md: audit before adding, audit after bumping; lockfiles are committed.
+6. Published packages prove the absence of undeclared outbound channels per SECURITY.md before release.
+
+Security fixes follow the same evidence rules as tests: exact location, exact command output, regression coverage where technically possible.
+
 ## Anti-slop rules
 
 Applied to code, documentation, UI copy, agent replies, commit messages.
@@ -248,6 +261,8 @@ Docs in `.docs/`:
 
 - `AGENT_PROMPT.md` - primary session prompt: audit, questions, testing contract, response format.
 - `DEVELOPMENT.md` - this file: permanent contract, fixed decisions, anti-slop.
+- `TESTING.md` - behavior-first testing contract, test matrix, migration flow, and verification axes.
+- `SECURITY.md` - security contract: profile, trust boundaries, capability budget, audit axes, exfiltration proof.
 - `DECISIONS.md` - user decision journal (so nothing gets asked twice).
 - `DESIGN.md` - design system: presets, tokens, components, UI/UX rules (when applicable).
 - `CHECKLIST.md` - checklist before/during/after implementation.

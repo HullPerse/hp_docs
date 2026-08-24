@@ -18,6 +18,7 @@
     "url": "https://github.com/HullPerse/hp_docs.git"
   },
   "files": [
-    "SKILL.md"
+    "SKILL.md",
+    "templates"
   ]
 }

@@ -12,6 +12,8 @@ pairs=(
   "first-run.md first-run.md"
   ".docs/AGENT_PROMPT.md AGENT_PROMPT.md"
   ".docs/DEVELOPMENT.md DEVELOPMENT.md"
+  ".docs/TESTING.md TESTING.md"
+  ".docs/SECURITY.md SECURITY.md"
   ".docs/DESIGN.md DESIGN.md"
   ".docs/CHECKLIST.md CHECKLIST.md"
   ".docs/REVIEWER.md REVIEWER.md"

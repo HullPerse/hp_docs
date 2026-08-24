@@ -17,6 +17,62 @@ User decision journal. The agent must check this file before any question and ap
 
 <!-- Appended by the agent as decisions are made -->
 
+### 2026-08-24: One security skill plus always-on reporting instead of a skill family
+
+- Decision: expose one security skill, `security-audit`, with all specialist domains (dependency supply chain, secrets, injection, prototype pollution, path traversal, filesystem, process execution, SSRF, auth, input validation, output sanitization, logging security, crypto, races, DoS, serialization, config, build, CI, git, privacy, threat modeling) as modes. The proposed thirty-four-skill and five-skill splits are rejected for the same reason fourteen testing skills were consolidated: overlapping triggers and repeated repository analysis. Independently of the skill, every session must report security problems whenever found, even outside task scope; undeclared outbound channels and exposed live secrets are Blockers.
+- Context: user asked for security checking integrated like the testing extension; user chose one review skill plus always-important rules over multiple skills.
+- Consequence: `skills/security-audit/SKILL.md` added; AGENT_PROMPT gained the always-on reporting rule; AGENTS.md key rules gained the "Security is always on" bullet.
+- Source: security extension task, 2026-08-24.
+
+### 2026-08-24: Mandatory SECURITY.md template with capability budget
+
+- Decision: `.docs/SECURITY.md` joins the mandatory template set: security setup with recorded commands (unavailable-with-reason), trust boundaries, capability budget where every outbound channel is declared and justified, twenty-one audit axes with covered/not-applicable/deferred/unavailable statuses, static evidence protocol, exfiltration proof for published packages, npm-package/logger profile, lightweight threat model, findings and fix flow, regression discipline, three review passes, report format closing on "What data could leave this project without anyone noticing?".
+- Context: security needed its own contract file with placeholders like TESTING.md, not a section in DEVELOPMENT.md; the central requirement is proving an npm package cannot silently exfiltrate user data.
+- Consequence: health check gains SECURITY.md [11/11]; sync scripts carry the new pair; REVIEWER and agents-audit reference it; examples/mini-project demonstrates the reduced internal-tool profile.
+- Source: security extension task, 2026-08-24.
+
+### 2026-08-24: Initialization Question 7 sets the security profile
+
+- Decision: first-run asks question 7: which profile fits what the project ships - published npm package, backend with external input, internal tool / CLI, or minimal. No `(recommended)` marker because the answer follows from what the project publishes; unclear cases default to backend for servers and internal-tool otherwise. The duty to report findings never depends on the profile.
+- Context: depth must adapt like DESIGN.md adapts to non-UI projects, without letting projects skip the reporting duty.
+- Consequence: question counts updated to seven across README, docs-init, hp-docs SKILL.md; placeholder table and per-file actions cover security fields.
+- Source: security extension task, 2026-08-24.
+
+### 2026-08-24: Exfiltration evidence standard and logger specifics as embedded profile
+
+- Decision: the proof standard is static analysis plus mandatory recorded commands: channel inventory from the static sweep resolved against the budget, transitive dependency reachability check, manifest lifecycle-script audit, telemetry decision traceable to DECISIONS.md, and command output at the audited revision; dynamic sandbox probing stays optional and is not required by the contract. Logger-specific requirements (secret redaction before write, log-injection resistance, telemetry ban, least-privilege package boundary) live inside SECURITY.md section 6 and the `logger-package-boundary` mode rather than separate skills.
+- Context: user fixed "static + mandatory commands" as the evidence bar and chose the embedded profile over a dedicated logger skill.
+- Consequence: a claim without inventory and command output must not be reported as proof; six proposed logger-* skills collapse into one profile section and one mode.
+- Source: security extension task, 2026-08-24.
+
+### 2026-08-24: Add a full testing strategy and existing-suite migration flow
+
+- Decision: implement the testing extension now. Add a dedicated `.docs/TESTING.md`, a `test-architect` skill with specialist modes, and an independent `test-reviewer` skill. Require every testing axis to be evaluated and reported: behavior contract, unit, integration, edge cases, errors, determinism, async/concurrency, performance, property testing, mutation testing, regression, fuzzing, coverage, mocking, flakiness, and maintenance. Non-applicable or unavailable checks must carry an explicit reason instead of generating meaningless tests.
+- Context: the current template only requires unit tests for domain rules and integration tests for persistence. The user also needs a safe way to improve projects that already contain tests.
+- Consequence: new features receive a complete test-strategy pass, while existing suites migrate in stages: baseline, inventory, strengthen or replace, remove duplicates only after behavior coverage is preserved, and re-verify. The test contract is centralized in `TESTING.md`; other docs link to it.
+- Source: testing strategy task, 2026-08-24.
+
+### 2026-08-24: Use two testing skills instead of fourteen independent skills
+
+- Decision: expose two skills. `test-architect` owns test strategy and specialist modes; `test-reviewer` independently attacks the resulting tests. The proposed fourteen specialist names remain modes and triggers inside the architect skill rather than separate installed skills.
+- Context: fourteen overlapping skills would repeat repository analysis and create unclear ownership for a generic request to write tests.
+- Consequence: installation and activation stay small, while the requested capabilities remain available by explicit mode: unit, integration, edge-case, property, mutation, regression, flaky, concurrency, performance, fuzz, coverage, mocking, and maintenance.
+- Source: testing strategy task, 2026-08-24.
+
+### 2026-08-24: No second documentation task was provided
+
+- Decision: treat the current request as one testing documentation task. The user will provide no second task for this change.
+- Context: the user introduced the message as two tasks but supplied only the testing-plan text.
+- Consequence: implementation scope is limited to the testing extension and its template integration.
+- Source: testing strategy task, 2026-08-24.
+
+### 2026-08-24: Include hp-docs templates in package metadata
+
+- Decision: include the `templates/` directory in `skills/hp-docs/package.json` files so distribution metadata covers the generated documentation templates as well as `SKILL.md`.
+- Context: the testing extension adds a required template, while the package metadata previously listed only the skill prompt.
+- Consequence: package-based consumers can receive the template set required by hp-docs initialization.
+- Source: testing strategy task, 2026-08-24.
+
 ### 2026-08-22: Skills canonically live in .docs/skills/ [translated from RU]
 
 - Decision: canonical copies of all skills live in `.docs/skills/<name>/`; at initialization they are copied into the target project's `.agents/skills/` for auto-discovery. Working copies under this repo's `.agents/skills/` sync from canonical.

@@ -14,7 +14,7 @@ description: >
 
 Installs the hp_docs package into a project and initializes its documentation. End state: skills discoverable in `.agents/skills/`, root `AGENTS.md` present, full `.docs/` generated with real project data and all initialization questions answered.
 
-This skill handles installation only. The questions about documentation language, package manager, lint preset, design preset, and product spec belong to the first-run flow - never ask them here.
+This skill handles installation only. The questions about documentation language, package manager, lint preset, design preset, product spec, backend logging, and the security profile belong to the first-run flow - never ask them here.
 
 ## Step 1: Detect the installation state
 
@@ -66,7 +66,7 @@ On Windows use PowerShell equivalents with explicit UTF-8-safe copy operations (
 Before continuing, confirm:
 
 1. `.agents/skills/hp-docs/templates/` directory exists and contains template files.
-2. All six skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `docs-init`.
+2. All nine skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `test-architect`, `test-reviewer`, `security-audit`, `docs-init`.
 3. Every installed `SKILL.md` has YAML frontmatter with `name` and `description`.
 
 Any miss - report what is broken and stop; a broken install must not bootstrap half-initialized docs.
@@ -78,7 +78,7 @@ Read the installed files and execute the full first-run flow from them:
 - `.agents/skills/hp-docs/SKILL.md` - the master flow description;
 - `.agents/skills/hp-docs/templates/first-run.md` - the step-by-step procedure.
 
-From this point the docs-init skill is done: first-run performs the MCP check, project scan, asks the six initialization questions in one batch, generates `AGENTS.md` + `.docs/` from templates, runs the health check. Do not duplicate or pre-answer its questions here.
+From this point the docs-init skill is done: first-run performs the MCP check, project scan, asks the seven initialization questions in one batch, generates `AGENTS.md` + `.docs/` from templates, runs the health check. Do not duplicate or pre-answer its questions here.
 
 ## Step 5: Report
 

@@ -11,6 +11,8 @@ Rules files:
 - `AGENTS.md` (root)
 - `.docs/AGENT_PROMPT.md`
 - `.docs/DEVELOPMENT.md`
+- `.docs/TESTING.md`
+- `.docs/SECURITY.md`
 - `.docs/CHECKLIST.md`
 - `.docs/DECISIONS.md`
 - `.docs/DESIGN.md`
@@ -23,8 +25,10 @@ Rules files:
 3. **Accepted decisions**: did anything change in code contradicting `.docs/DECISIONS.md` entries.
 4. **Technologies**: are there new dependencies/patterns not covered by the rules.
 5. **Design system**: do tokens and components in `.docs/DESIGN.md` match real ones (when applicable).
-6. **Coverage gaps**: are there scenarios in current work not covered by any rule.
-7. **Staleness**: are there rules describing things no longer present in the code.
+6. **Testing contract**: do commands, test levels, isolation, migration rules, and advanced testing axes in `.docs/TESTING.md` match the project.
+7. **Security contract**: does the SECURITY.md profile match what the project ships; do the capability budget and recorded commands match real outbound calls and available tools.
+8. **Coverage gaps**: are there scenarios in current work not covered by any rule.
+9. **Staleness**: are there rules describing things no longer present in the code.
 
 ## Response format
 

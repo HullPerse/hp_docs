@@ -28,3 +28,10 @@ Decision journal. The agent reads the file before the audit and appends decision
 - Context: for a micro-CLI the checklist duplicates AGENT_PROMPT and raises contract reading cost.
 - Consequence: revisit via disposition when the project grows past ~10 commands.
 - Source: project initialization.
+
+### 2026-08-24: TESTING.md added to the example
+
+- Decision: keep a filled `.docs/TESTING.md` in this example even though CHECKLIST.md and DESIGN.md remain omitted.
+- Context: testing is a project-wide contract and the example must demonstrate how commands, isolation, advanced checks, and existing-suite migration are recorded.
+- Consequence: the example shows the generated testing document for a small CLI without claiming unavailable tools exist.
+- Source: testing strategy task, 2026-08-24.

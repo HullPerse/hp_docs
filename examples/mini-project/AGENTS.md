@@ -8,8 +8,10 @@ Full rules live in `.docs/`. Read them before working.
 
 1. Read `.docs/AGENT_PROMPT.md` - the session contract (audit before code, response format).
 2. Read `.docs/DEVELOPMENT.md` - conventions, typing, anti-slop.
-3. Read `.docs/DECISIONS.md` before the audit and append decisions as you go.
-4. Read module README before working in the respective directory.
+3. Read `.docs/TESTING.md` before writing or reviewing tests.
+4. Read `.docs/SECURITY.md` before touching dependencies or anything that reads or writes outside the project.
+5. Read `.docs/DECISIONS.md` before the audit and append decisions as you go.
+6. Read module README before working in the respective directory.
 
 ## Key rules
 
@@ -18,6 +20,7 @@ Full rules live in `.docs/`. Read them before working.
 - Do not rubber-stamp bad ideas: a direct verdict with reason and alternative.
 - Every answer to a question is recorded in `.docs/DECISIONS.md`.
 - No dependency is added silently: check installed packages first.
+- Tests protect public CLI behavior and storage integration; existing suites start with a baseline before migration.
 
 ## Commands
 
