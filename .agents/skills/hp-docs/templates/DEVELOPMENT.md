@@ -155,6 +155,7 @@ Do not rewrite old feature files wholesale just for style. Simplify a section wh
 - Every significant product, UX, architecture, technical, security, or persistence decision, plus every behavior fix, gets recorded in `.docs/DECISIONS.md` within the same task.
 - Entries are added before the final report. If the task produced none, say so explicitly.
 - On conflict with an existing entry, stop and ask the user; never choose silently.
+- Several agents may work in parallel sessions. The journal plus the rest of `.docs/` plus current code are the coordination medium; follow the four sync points from `AGENT_PROMPT.md` ("Parallel sessions") and never resolve a collision silently.
 
 ## Security baseline
 

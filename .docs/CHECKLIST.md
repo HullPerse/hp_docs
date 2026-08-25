@@ -11,6 +11,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Read `.docs/SECURITY.md`; note the security profile, trust boundaries, and capability budget.
 - [ ] Identify which trust boundaries the change touches and which capabilities (network, processes, filesystem, environment, lifecycle scripts) it adds or alters.
 - [ ] Read and analyze `.docs/DECISIONS.md` before the audit: check accepted decisions, constraints, and conflicts.
+- [ ] Check `git status` and recent commits for another parallel session's fresh or uncommitted changes; treat foreign dirty files as active work, not noise.
 - [ ] Read `.docs/DESIGN.md` if UI/UX is affected.
 - [ ] Read module README and package.json.
 - [ ] Search existing code and project conventions.
@@ -41,6 +42,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Component file basenames written in camelCase without hyphens, service suffix preserved.
 - [ ] Minimal coherent change, no unrelated refactors.
 - [ ] Bug fix made at the shared root, not on the one named path; callers verified via grep.
+- [ ] Re-read target files right before editing when they were loaded earlier in the session; no stale-read overwrites of concurrent changes.
 - [ ] Deliberate simplifications with a known ceiling marked with a `ponytail:` comment naming the upgrade path.
 - [ ] Do not change existing behavior without a task.
 - [ ] No speculative abstractions or dead extension points.

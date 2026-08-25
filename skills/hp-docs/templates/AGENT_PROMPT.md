@@ -35,6 +35,17 @@ Do not assume a system does not exist because you have seen one file. Search for
 - The entry must be added before the final report. If there were no significant decisions or behavior changes, the agent states that explicitly in the report.
 - Never override an entry in `.docs/DECISIONS.md` silently. On conflict, stop and ask the user.
 
+### Parallel sessions
+
+Assume several agents can hold sessions in this repository at the same time. The repository itself is the coordination layer: documentation is shared memory, current code is ground truth, and `.docs/DECISIONS.md` is the message bus between sessions. Four sync points keep parallel work safe:
+
+- **Sync on start.** After the mandatory reading, check the working tree (`git status`, recent commits) for uncommitted or fresh changes left by another session. Foreign dirty files are someone's active work: do not revert or overwrite them silently.
+- **Sync before asking.** Re-read the tail of `.docs/DECISIONS.md` right before asking the user anything - another session may have recorded the answer while you were analyzing.
+- **Sync before writing.** Re-read every file immediately before editing it if you loaded it earlier in the session; an edit based on a stale read is a silent overwrite of someone else's result.
+- **Sync on finish.** Append decisions to `.docs/DECISIONS.md` before the final report and name every changed file there - this is the moment other sessions pick up your results.
+
+When a concurrent change collides with your accepted scope, stop: reconcile against the latest state and ask the user instead of resolving the conflict silently.
+
 ### Mandatory disposition gate for new features
 
 Before implementing each new feature or significant change, the agent must ask two separate questions:

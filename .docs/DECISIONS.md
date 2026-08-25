@@ -17,6 +17,13 @@ User decision journal. The agent must check this file before any question and ap
 
 <!-- Appended by the agent as decisions are made -->
 
+### 2026-08-25: Parallel sessions protocol added
+
+- Decision: template gains a "Parallel sessions" subsection in AGENT_PROMPT section 2 next to the DECISIONS gate. Assumption: several agents may hold sessions in the same repository concurrently; the repository is the coordination layer - documentation is shared memory, current code is ground truth, DECISIONS.md is the message bus between sessions. Four mandatory sync points: on start (check working tree for foreign dirty files), before asking (re-read the DECISIONS.md tail - another session may have recorded the answer), before writing (re-read files loaded earlier; a stale-read edit is a silent overwrite), on finish (append decisions and list changed files before the final report). Collisions stop for the user instead of silent resolution. Mirrored into DEVELOPMENT.md ("Mandatory decision journal"), CHECKLIST.md (git-status check before coding, no stale-read overwrites during coding), and the root AGENTS.md key rule "Agents run in parallel".
+- Context: user requested a rule forcing agents to cross-check DECISIONS.md, other docs, and current code so parallel sessions stay consistent.
+- Consequence: every project initialized from the template assumes multi-agent work by default. Added as a subsection, not a numbered section, so health-check counters (AGENT_PROMPT 12) stay unchanged.
+- Source: parallel-agents rule task, 2026-08-25.
+
 ### 2026-08-24: Developer-encyclopedia proposal rejected, kernel adopted as evidence rules
 
 - Decision: the proposed tool encyclopedia (hundreds of pages across docs/dev/security/testing/databases/frontend categories) is rejected: static tool facts rot faster than rules, duplicate the mandatory context7 documentation flow, and would ship into every consumer project's `.agents/skills/`. Adopted instead: a fixed package-comparison schema (purpose fit, activity/support, license, size, transitive dependencies, security surface, performance where relevant, when-not-to-use) in CHECKLIST; a no-invented-numbers rule in AGENT_PROMPT Performance and TESTING.md (metrics only from executed commands and recorded artifacts); a pre-change walk bullet in the AGENT_PROMPT audit checklist (entry points, callers, dependencies, tests, types, configuration, side effects); a suppression-requires-recorded-reason rule in DEVELOPMENT anti-slop. Proposals already covered verbatim by existing rules (ponytail ladder, typing rules, patterns-on-proof, security auto-reporting) were not duplicated.
@@ -261,3 +268,10 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user wanted every shipped skill properly described in README.
 - Consequence: skill discovery for humans now matches SKILL.md frontmatter depth.
 - Source: session of EN completion 2026-08-22.
+
+### 2026-08-24: History rewrite - Codebuff co-author trailers stripped
+
+- Decision: rewrote the full commit history with git-filter-repo to remove Co-Authored-By: Codebuff <noreply@codebuff.com> and ?? Generated with Codebuff trailers from the first six commits, because GitHub counted Codebuff as a repository contributor through co-authorship. All 14 commits rehashed (HEAD 9c63908 -> 94f7414); tree hash unchanged (5762a4e), so no file content changed. Force-pushed to origin/main.
+- Context: user asked to find any codebuff/codebuff-team traces after seeing it listed in contributors; file content, authors, issues, and code search were already clean - only commit-message trailers remained.
+- Consequence: contributor graph on GitHub updates asynchronously (cache may lag hours). Old SHAs stay reachable by direct link until GitHub garbage-collects; forks would keep them alive (none known). Pre-rewrite backup: %TEMP%\hp_docs-backup.bundle.
+- Source: 2026-08-24 cleanup session.
