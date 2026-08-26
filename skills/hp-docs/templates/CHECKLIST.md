@@ -77,6 +77,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Verify no em/en dashes were introduced.
 - [ ] Run the deslop self-check on texts (catalog in `.docs/DEVELOPMENT.md`): word tags, rule-of-three, hedging, throat-clearing, participle tails, invented specifics; author's voice preserved.
 - [ ] Mass text-file edits were performed with explicit UTF-8 encoding ([IO.File]::ReadAllText/WriteAllText), content spot-read after writing; PS 5.1 Get-Content/Set-Content without explicit encoding corrupts Cyrillic.
+- [ ] Verify commit messages contain no AI agent credits, co-author trailers, or similar mentions.
 - [ ] Never substitute critique of an idea with insulting the user; every harsh verdict carries reasons, consequences, and an alternative.
 
 ## Feature files

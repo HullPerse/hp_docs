@@ -275,3 +275,24 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user asked to find any codebuff/codebuff-team traces after seeing it listed in contributors; file content, authors, issues, and code search were already clean - only commit-message trailers remained.
 - Consequence: contributor graph on GitHub updates asynchronously (cache may lag hours). Old SHAs stay reachable by direct link until GitHub garbage-collects; forks would keep them alive (none known). Pre-rewrite backup: %TEMP%\hp_docs-backup.bundle.
 - Source: 2026-08-24 cleanup session.
+
+### 2026-08-26: Three new rules added from hp_logger experience
+
+- Decision: (1) "No bare catch {}" in DEVELOPMENT.md anti-slop: every catch must use Result helpers, log with prefix, record observable state, or carry a comment naming the protected invariant. (2) "Prefer lookup maps over switch/if-else chains" where the value set is stable. Both rules ported from hp_logger's DEVELOPMENT.md where they proved useful during the redaction and performance optimization work. (3) "No AI agent co-author" rule in DEVELOPMENT.md ("must not" section) and CHECKLIST.md (verification pass): the agent never adds AI credits, co-author trailers, or any mention of itself in git commit messages, push annotations, or GitHub PR descriptions.
+- Context: user asked to (a) find unique rules in hp_logger and hp_logger_site that the hp_docs template lacks, and (b) add a universal rule forbidding AI co-author attribution in commits, motivated by the earlier Codebuff history rewrite.
+- Consequence: template consumers get the catch-safety and lookup-map rules automatically; the co-author ban prevents GitHub contributor graph contamination from any AI agent.
+- Source: template rule additions task, 2026-08-26.
+
+### 2026-08-26: Lint toolchain installation step added to first-run flow
+
+- Decision: added Step 3.1 "Install lint/format toolchain" to the first-run flow and the hp-docs SKILL.md. Ships four config templates (`templates/lint/oxlint.library.config.ts`, `oxlint.frontend.config.ts`, `oxfmt.library.config.ts`, `oxfmt.frontend.config.ts`) with full rule sets from hp_logger and hp_logger_site. Covers all lint presets: Ultracite + oxlint/oxfmt (with library/frontend split), Ultracite + Biome, plain oxlint + oxfmt, ESLint + Prettier, and non-JS stacks.
+- Context: Q3 in the first-run flow recommended Ultracite + oxlint/oxfmt and documented what configs should exist, but never actually installed packages or created config files for existing projects. The user wanted their hp_logger configs shipped as defaults.
+- Consequence: initialization now installs and configures the lint toolchain end-to-end; new projects get working lint/format out of the box instead of documentation-only guidance.
+- Source: hp_docs template update, 2026-08-26.
+
+### 2026-08-26: Benchmark-first package comparison rule
+
+- Decision: added "Benchmark-first package comparison" section to DEVELOPMENT.md (section 11) and SKILL.md dependency analysis. When comparing 2+ packages in a performance-sensitive category, the agent writes and runs a minimal micro-benchmark instead of relying solely on documentation claims. Covers HTTP frameworks, parsers, serialization, ORM, bundlers, test runners. Skips for utility libraries where perf is not the differentiator.
+- Context: user wanted package recommendations backed by real numbers from the project's own runtime, not external benchmarks that may be outdated or measured on different hardware/workloads.
+- Consequence: deep analysis and ad-hoc package comparisons now include actual benchmark results alongside size/support/license metrics; section count in DEVELOPMENT.md increases from 14 to 15.
+- Source: hp_docs template update, 2026-08-26.

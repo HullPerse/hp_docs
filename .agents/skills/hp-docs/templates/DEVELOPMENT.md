@@ -68,6 +68,21 @@ Base typing rules are fixed at initialization for the project language. Template
 
 For another language the agent formulates an equivalent in the same spirit and agrees on it with the user.
 
+## Benchmark-first package comparison
+
+When comparing 2+ competing packages in the same category, write and run a minimal micro-benchmark before recommending. Do not rely solely on documentation claims or external benchmarks that may be outdated.
+
+**When to benchmark:** packages that directly affect hot paths (HTTP frameworks, parsers, serialization, ORM query builders, bundlers, test runners). The agent decides based on whether performance is a meaningful differentiator for the category.
+
+**When to skip:** utility libraries where performance is not the primary concern (lodash vs ramda, date formatters, color converters).
+
+**Benchmark rules:**
+1. Write a tiny script that exercises the specific operation the project needs (not a generic hello-world).
+2. Run it with the project's runtime (Bun, Node, etc.) and report actual numbers.
+3. Include the benchmark script in the comparison table alongside documentation claims.
+4. If numbers are close (within 10%), mark as "equivalent" and recommend based on other criteria (API, bundle size, maintenance).
+5. If numbers differ significantly, note the gap and weigh it against ergonomics, bundle size, and ecosystem.
+
 ## Project commands
 
 {{COMMANDS}}
@@ -111,7 +126,8 @@ The agent must not:
 - hide trade-offs behind vague wording;
 - do unrelated refactors while implementing a feature;
 - use `any` or leak `unknown` from boundary code into domain/UI logic;
-- silently leave local types or helpers outside the pinned directories.
+- silently leave local types or helpers outside the pinned directories;
+- add AI agent credits, co-author trailers, or any other mention of the AI agent in git commit messages, push annotations, or GitHub PR descriptions.
 
 ## Direct critical mode
 
@@ -192,6 +208,8 @@ Applied to code, documentation, UI copy, agent replies, commit messages.
 - No debug logs, dead code, placeholder success paths, or fake data in production.
 - Lint and type errors are fixed or argued; suppression without a recorded reason is not a solution.
 - No TODO comments instead of decisions; record unresolved items in `.docs/DECISIONS.md`.
+- No bare `catch {}`. Every catch either (1) uses the Result helpers when the failure is normal flow, (2) surfaces via a `console.error`/`warn`, (3) writes observable state (a counter, a fallback marker), or (4) carries a comment naming the protected invariant and why silence is safe.
+- Prefer lookup maps over switch/if-else chains where the value set is stable and the map is built once; keep switches on genuinely hot branches only with a benchmark delta that justifies them.
 - Do not build a large abstraction for one hypothetical future case.
 
 ### UI and UX

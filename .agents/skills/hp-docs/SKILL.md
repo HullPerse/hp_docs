@@ -233,6 +233,49 @@ If inconsistencies exist, list them and ask user whether to fix now or defer.
 
 Generate ALL of the following files with full content adapted to the detected stack. Do NOT use placeholders like `{{...}}` -- fill everything with real data from the project. Canonical copies of every template live in `templates/` next to this SKILL.md; copy them into the project rather than writing from memory.
 
+### 5.1 Install lint/format toolchain
+
+If Question 3 chose a preset that requires packages, install and configure it now. Skip this step for "None".
+
+**Ultracite + oxlint/oxfmt (recommended):**
+
+1. `bun add -D ultracite`
+2. Detect project type:
+   - **Library / CLI / backend** (no React/Vue/Svelte): use `templates/lint/oxlint.library.config.ts` and `templates/lint/oxfmt.library.config.ts`.
+   - **Frontend** (React/Vue/Svelte): use `templates/lint/oxlint.frontend.config.ts` and `templates/lint/oxfmt.frontend.config.ts`.
+3. Copy the matching config files into the project root. Adapt:
+   - `ignorePatterns`: add project-specific globs (dist/, build/, generated/).
+   - `overrides`: adjust file paths to match the project's test and integration dirs.
+   - Framework extends: add `ultracite/oxlint/react`, `ultracite/oxlint/tanstack`, etc. when the project uses them.
+4. Add scripts to `package.json`:
+   - Library: `"lint": "oxlint --type-aware --deny-warnings src/"`, `"format": "oxfmt --write src/"`, `"format:check": "oxfmt --check src/"`
+   - Frontend: `"check": "ultracite check"`, `"fix": "ultracite fix"`
+5. Run the lint command and confirm it passes (or fails only on expected issues).
+
+**Ultracite + Biome:**
+
+1. `bun add -D ultracite`
+2. `npx ultracite init --linter biome`
+3. Verify `biome.json` extends the ultracite preset.
+4. Verify `package.json` has `check` and `fix` scripts.
+
+**Plain oxlint + oxfmt:**
+
+1. `bun add -D oxlint oxfmt`
+2. Create `oxlint.config.ts` with a minimal ruleset.
+3. Create `oxfmt.config.ts` with default settings.
+4. Add `lint` and `format` scripts to `package.json`.
+
+**ESLint + Prettier:**
+
+1. `bun add -D eslint prettier` plus framework plugins as needed.
+2. Create config files.
+3. Add `lint` and `format` scripts to `package.json`.
+
+**cargo clippy/fmt, ruff, gofmt:**
+
+For non-JS stacks, verify the built-in toolchain is available. No installation needed.
+
 ### 5.5 Skills Distribution
 
 This skill ships inside a repository as part of the docs package:
@@ -262,7 +305,7 @@ After generating all files, verify completeness. For EACH file, check that ALL r
 ```
 Docs Health Check:  (top-level ## sections)
   AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Available tools)
-  DEVELOPMENT.md     [14/14 sections] OK   (incl. Typing by language, Security baseline)
+  DEVELOPMENT.md     [15/15 sections] OK   (incl. Typing by language, Benchmark-first, Security baseline)
   TESTING.md         [14/14 sections] OK
   SECURITY.md        [11/11 sections] OK
   DESIGN.md          [ 7/7 sections]  OK   (# 0 presets + # 1..6; or deleted for non-UI)
@@ -370,8 +413,9 @@ Permanent project contract. Must contain ALL of these sections:
 8. **Decision journal rules**: mandatory logging, conflict resolution
 9. **Anti-slop rules**: text/punctuation, code/architecture, UI/UX subsections; plus the deslop prose catalog (EN and RU word tags, structural patterns, punctuation limits, accuracy rules, voice preservation, self-check)
 10. **Minimalism**: ponytail ladder summary and pointer to AGENT_PROMPT.md section 6
-11. **File naming convention**: detected or chosen pattern with examples (casing, suffixes, prefix rules, exceptions)
-12. **Documentation index**: what each .docs/ file contains
+11. **Benchmark-first package comparison**: when to run micro-benchmarks during package evaluation, when to skip, benchmark rules
+12. **File naming convention**: detected or chosen pattern with examples (casing, suffixes, prefix rules, exceptions)
+13. **Documentation index**: what each .docs/ file contains
 
 ### .docs/DESIGN.md
 
@@ -479,6 +523,8 @@ When user selects deep analysis, perform ALL of these checks:
 - Unused dependencies
 
 For each package: current status, alternative (if exists), comparison (size, speed, support, license), `(recommended)` only with real justification.
+
+When 2+ packages compete in a performance-sensitive category, run a minimal benchmark (see DEVELOPMENT.md "Benchmark-first package comparison") and include actual numbers in the comparison.
 
 ### 3. Tooling Analysis
 
