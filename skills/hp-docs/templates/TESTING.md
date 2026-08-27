@@ -177,3 +177,13 @@ What behavior could be broken while these tests still pass?
 ```
 
 A test is valuable only when it can fail for a meaningful regression.
+
+### Reference patterns (condensed from external agent-skills)
+
+These patterns supplement the matrix - they do not replace it:
+
+- **DAMP over DRY in tests**: tests repeat setup to stay readable; shared helpers only for true fixture complexity. A DRY test that hides the cause of failure is a maintenance risk.
+- **Beyonce Rule**: if you liked it then you should have tested it; any observed behavior worth keeping deserves a test that fails when it regresses.
+- **Definition of done for a feature**: behavior matrix complete, tests prove the matrix rows, verification passes 1-3 recorded, security and performance checks evaluated, docs updated, DECISIONS.md entry added.
+- **Anti-patterns to avoid**: `toBeTruthy` where exact value matters, asserting call counts instead of observable outcome, testing private fields, coupling to internal buffers, snapshot of large objects without intent, sleep-based async sync, mocking the system under test.
+- **Test pyramid (rough)**: many unit tests for domain rules, fewer integration tests for filesystem/persistence/protocol, minimal end-to-end for critical user paths only. Do not invert the pyramid to hide missing unit coverage.

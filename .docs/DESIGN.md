@@ -85,9 +85,11 @@ Dark compact editor-grade theme for native tools. One neutral scale carries surf
 
 Regardless of preset, every component is described before implementation:
 
-- Variants, sizes, props (loading, disabled, rendered).
+- Variants, sizes, props (loading, disabled, rendered). For React/Tailwind stacks prefer shadcn-style variant API (cva/variants object, size + variant props) over ad-hoc class toggles; reuse it when already present, do not introduce it as a new dependency.
 - States: normal, hover, active/pressed, focus-visible, disabled, error.
 - Real surface states: loading, empty, error, dirty, stale, recovery.
+- Touch targets: at least 44x44px for controls that ship on touch; tabular numbers for data tables (see ui-skills playbook).
+- Text handling: `text-balance` for headings, `text-pretty` for body, `aspect-ratio` reserves space for media to prevent layout shift.
 
 ## 5. A11y and required states
 
@@ -96,9 +98,54 @@ Regardless of preset, every component is described before implementation:
 - Color is never the only state signal: duplicate with text or shape.
 - Interface language is fixed at initialization.
 
+### Design review rubric (quick critique pass)
+
+Use before calling a surface done; borrowed from taste review practice:
+
+- contrast: body text reaches 7:1 on canvas, supporting text 4.5:1, optional metadata may fail by intent; tertiary 44% is for glyphs only, lift to 56%+ for real reading;
+- rhythm: 8px base, 4px nudge only; one chapter rule per viewport, space before lines;
+- typography: one family, 3-4 styles per screen, weight 500-600 headings, no all-caps;
+- iconography: one family, one stroke, monochrome ink ladder;
+- density: primary task and next action obvious at a glance; least-used control never heaviest;
+- states: focus, hover, pressed, disabled, loading, empty, error all visible and distinguishable.
+
+A surface fails the rubric when any check above is missed, not when it lacks decoration.
+
 ## 6. Rules
 
 - Never create a second component when an analog exists in shared directories.
 - Never hardcode colors, radii, or spacing; use the preset's tokens only.
 - Never change the preset or its global rules without an explicit user decision recorded in `.docs/DECISIONS.md`.
 - Every visual choice must be defensible by product benefit: comprehension, hierarchy, task speed, or accessibility - not "it looks nice".
+
+### System completeness checklist (condensed from designsystemchecklist.com)
+
+Use before calling a system done. Checklist is a supplement, not a full copy:
+
+- tokens: color (light/dark), typography, spacing, radii, shadows, motion tokens defined and documented;
+- components: each has variants/sizes/props, states, a11y, usage guidance, and one code example;
+- patterns: layout (grid, chapters), forms (validation, errors), navigation, empty/loading/error, data display;
+- documentation: install, usage, theming, changelog, contribution guide;
+- governance: versioning, breaking-change policy, review process for new components.
+
+A missing row is a Gap, not a nice-to-have.
+
+### Component sources (reference, no dependency)
+
+When a new block is needed, prefer existing primitives in the project. External catalogs below are inspiration only - copy patterns, not code or branding:
+
+- shadcn/ui (ui.shadcn.com) - base for React variant API;
+- coss.com/ui (Base UI) - modern accessible primitives;
+- beautifului.dev / beui.dev / rareui.com / reui.io - curated animated blocks (motion, agent interfaces, chat, tables).
+
+Evaluate each candidate per DEVELOPMENT.md packages-first rule before adopting.
+
+### Motion policy (purposeful motion, from transitions.dev + emilkowal.ski)
+
+Motion has a purpose or it does not ship:
+
+- purpose: explains (agent thinking, streaming text), provides feedback (press 100-160ms scale 0.97), or maintains spatial continuity (toast/modal from same direction). Delight-only motion ships only when seen rarely (feedback morph, not daily toolbar).
+- frequency: never animate keyboard-initiated or high-frequency (>dozens/day) actions; Raycast-style command palettes stay instant. Hover motion is fine only for rarely repeated surfaces.
+- speed: UI motion <300ms, dropdowns ~180ms (not 400ms), spinners fast to improve perceived performance; tooltips: delay before first show, instant switching between siblings, no animation.
+- respect prefers-reduced-motion: keep color/opacity feedback, remove transform/blur motion.
+- transitions.dev catalog (card resize, skeleton reveal, toast, tabs pill, tooltip, modal scale) is a vocabulary, not a requirement - pick only what matches the purpose above.

@@ -58,6 +58,7 @@ Always evaluate these modes and record their result:
 - `mocking-strategy`: boundary isolation and mock abuse;
 - `flaky-test-hunter`: order, timing, environment, and race dependence;
 - `test-maintenance`: duplication, brittle assertions, obsolete tests;
+- `browser-verification`: for UI claims, capture DOM snapshot, console errors, and network trace via Playwright MCP or equivalent browser tool; verify focus, hover, pressed, and responsive states via computed style, not only screenshots (borrowed pattern, no runtime dep; tool is optional and reported as unavailable with reason when absent);
 - `test-reviewer`: independent adversarial pass after writing.
 
 Correctness tests, benchmarks, stress tests, fuzz runs, and mutation runs remain separate artifacts. A missing tool is reported, not hidden. A not-applicable axis still receives a short reason.

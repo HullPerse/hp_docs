@@ -56,6 +56,8 @@ Open dispositions / roadmap tails: ... or "none".
 Unverified areas: ... or "everything read".
 ```
 
+4.5 **Memory tail** - when DECISIONS.md is long, keep active decisions verbatim in the summary and compress closed phases to one line each (title + date + consequence). Do not drop the tail of the file without reading it; the parallel-sessions protocol requires a fresh tail read before asking or writing. This consolidation is borrowed from Mem0/Pensyve-style memory, but stays as plain text summarization with no vector DB dependency.
+
 5. **Ready**: ask for the task if the user has not named one yet. From now on work by the full contract without re-reading in this session.
 
 ## Constraints

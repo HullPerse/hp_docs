@@ -273,9 +273,11 @@ For marketing, editorial, and product pages:
 
 Motion should feel quiet, immediate, and purposeful. Add it only for feedback, spatial continuity, state indication, or preventing a jarring change.
 
-- Do not animate keyboard-initiated or extremely frequent actions.
+- Every animation needs a purpose: explains (agent thinking, streaming text, Linear-style product demo), gives feedback (press scale 0.97 for 100-160ms, Sonner toast spatial continuity), or delights only when seen rarely (feedback morph). If none applies, ship no motion (emilkowal.ski: the best animation is often none).
+- Do not animate keyboard-initiated or extremely frequent actions. Raycast opened hundreds of times a day stays instant; command palette arrow navigation, list hover on frequently used screens, and any repeated dozen-times-a-day control stay static.
 - Reduce motion on interactions users perform tens of times per day.
-- Keep ordinary UI motion under 300ms; use longer motion only for rare explanatory moments.
+- Keep ordinary UI motion under 300ms; dropdowns ~180ms (not 400ms), fast spinners improve perceived performance even at same load time.
+- Tooltips: delay before first show to prevent accidental activation, instant switch between siblings with no animation.
 - Use `ease-out` for entrances and exits, `ease-in-out` for movement already on screen, and `ease` for color or hover transitions. Avoid `ease-in` for responsive UI.
 - Prefer `transform` and `opacity`; avoid animating layout properties when a composited alternative exists.
 - Never animate entrances from `scale(0)`. Use a subtle `scale(0.95–0.98)` with opacity when scale is appropriate.
@@ -284,6 +286,7 @@ Motion should feel quiet, immediate, and purposeful. Add it only for feedback, s
 - Make rapidly triggered and gesture-driven motion interruptible.
 - Honor `prefers-reduced-motion`, keeping useful color or opacity feedback while removing unnecessary movement.
 - Gate hover-only motion behind `(hover: hover) and (pointer: fine)`.
+- Catalog from transitions.dev (card resize, skeleton reveal, toast rise with blur+scale, tabs pill with spring layoutId, tooltip appear-only delay) is a vocabulary, not a mandate - pick only what serves the purpose above.
 
 Do not add animation merely to make a static interface feel polished. When uncertain, remove or reduce it.
 
@@ -389,6 +392,19 @@ Inspect the result at realistic desktop and mobile sizes with realistic content.
 - The console is clean and existing checks still pass.
 
 If visual inspection reveals ambiguity, excessive emptiness, or reduced efficiency, restore the necessary context or density and inspect again.
+
+## Design review rubric (quick critique, taste-inspired)
+
+Before calling a surface done, run this condensed check (borrowed from taste review practice, no dependency):
+
+- contrast and ink ladder: body 7:1, support 4.5:1, tertiary 44% only for glyphs; dense screens lift tertiary to 56%+ for real reading;
+- rhythm and grouping: 8px base, chapter spacing 96-144px, space before lines, proximity groups without extra rules;
+- typography: one family, 3-4 styles, weight 500-600 headings, no all-caps;
+- iconography: one family, one stroke, monochrome, no emoji as icons;
+- density and hierarchy: primary task and next action obvious, least-used control never heaviest;
+- states: focus >=2px, hover/pressed/disabled/loading/empty/error all distinguishable.
+
+Fail the surface when any line above is missed.
 
 ## Guardrails
 

@@ -41,6 +41,17 @@ Build an in-memory manifest of everything documentable:
 
 Record where each item's ground truth lives (file paths). An item without locatable ground truth is marked undocumented-source, not invented.
 
+#### Legacy docs ingestion (optional, no dependency)
+
+If the project has non-markdown sources (docx, pdf, html, slides), inventory them separately:
+
+1. List legacy files and their purpose; mark which are still authoritative vs outdated.
+2. Convert via a local tool such as MarkItDown when the user requests it; do not install it silently and report unavailable with a reason when absent.
+3. Treat converted content as draft input to the manifest, not as truth: every claim still needs a code, test, or decision source before it enters generated docs.
+4. Validate encoding after conversion (reference the 2026-08-22 encoding incident: explicit UTF-8, no PS 5.1 Get-Content without encoding).
+
+Skip this subsection when no legacy docs exist.
+
 ### 2. Map
 
 Diff the manifest against existing documentation (`README.md`, `docs/`). Output the map: covered, outdated, missing. Outdated means the doc claims something code, tests, or decisions contradict.

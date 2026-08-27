@@ -46,6 +46,17 @@ Rules:
 2. A new capability enters this file together with a `.docs/DECISIONS.md` entry before it merges.
 3. A capability that stops being used leaves this file in the same task.
 
+Annotated examples (remove if not used; keep as format reference):
+
+```text
+- network: fetch to api.github.com via GitHub MCP Server (src/api/github.api.ts) - release notes sync; rate-limited, no auth token in query
+- network: HTTPS to notion.so via Notion MCP (scripts/notion-sync.ts) - docs export; write-only, no secrets in body
+- process: spawn playwright (test/e2e/*.test.ts) - browser verification of UI claims; headless only, no shell
+- filesystem: write to docs/api/ (project-documentation skill) - generated docs; does not overwrite .docs/
+```
+
+Any of the above that the project does not actually use is deleted, not left as a placeholder. Examples exist only to show the required fields: capability, location, and justification.
+
 ## 3. Audit axes
 
 Every axis is evaluated on each security pass and marked `covered` with evidence, `not applicable` with a reason, `deferred` with a return condition, or `unavailable` with a reason. Full-axis review is mandatory; invented findings are not.
@@ -71,6 +82,15 @@ Every axis is evaluated on each security pass and marked `covered` with evidence
 - `ci-workflows`: workflow permissions, secret exposure to forks and pull requests, untrusted input in run expressions.
 - `git-hygiene`: .gitignore coverage, committed credentials or archives, hook integrity.
 - `privacy-data`: what user data is collected, stored, sent; retention and deletion paths.
+
+### Checklist supplement (quick pre-commit checks)
+
+Borrowed as a supplement to the axes, not a replacement:
+
+- headers present where the stack serves HTTP: Content-Security-Policy, Strict-Transport-Security, X-Content-Type-Options, Referrer-Policy; CORS allowlist explicit, no wildcard with credentials;
+- auth: login throttling, session expiry, token storage not in URL, privilege check at every boundary, not only at UI;
+- input: reject unexpected shape at the boundary that receives it, validate length and charset before use, do not rely on client validation;
+- dependencies: lockfile committed, `{{AUDIT_COMMAND}}` clean, no lifecycle script in direct deps unless justified in section 2.
 
 ## 4. Static evidence protocol
 

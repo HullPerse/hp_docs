@@ -96,6 +96,18 @@ If there are no Blockers - say explicitly that the audit is clean and name the n
 
 Security problems found during any task are reported immediately, even outside the task scope: undeclared outbound channels (network calls, child processes, unexpected filesystem writes), secrets in code, logs, fixtures, or docs, unvalidated input at a trust boundary, vulnerable or suspicious dependencies. Small items enter the report as Risk or Gap; anything that lets data leave the project or lets an attacker reach in is a Blocker for the touched surface and gets a `.docs/DECISIONS.md` entry. The security contract lives in `.docs/SECURITY.md`.
 
+### Anti-rationalization (borrowed from the agent-skills workflow)
+
+Do not let excuses bypass the required steps. Common rationalizations and required responses:
+
+- "I will add tests later" -> tests ship with the feature or the exception is recorded in TESTING.md;
+- "This is too small to need a spec" -> for any non-trivial change write at least a one-paragraph intent plus file list in the task plan (see section 5);
+- "Mocking this boundary is enough" -> do not mock the behavior being tested; use a fake at the boundary only;
+- "I checked manually, no need to run checks" -> run the recorded commands and report output; manual inspection is not evidence;
+- "Skipping verification will save time" -> verification is mandatory (see verification-before-completion in section 5).
+
+When an excuse appears, name it, apply the response, and continue the required workflow.
+
 ### Direct critical mode
 
 - The agent does not owe agreement to the user's proposal. If an idea is unnecessary, harmful, premature, overcomplicated, contradicts accepted scope, or creates unjustified risk, give a direct verdict first.
@@ -180,6 +192,46 @@ After a clean audit and answered questions:
 12. Component file basenames use camelCase without hyphens; preserve service suffixes such as `.component.tsx` or `.canvas.tsx`.
 13. Use typed errors and explicit state transitions.
 14. For UI, implement real states and interactions, not just visual mockups (focus, keyboard, mouse, resize, loading, empty, error, disabled, dirty, stale, recovery, a11y).
+
+### Spec and brainstorming gate (before drafting the plan)
+
+For any non-trivial feature, run a short socratic pass before planning:
+
+1. Ask what the user is trying to achieve in their own words; restate it in one sentence and confirm.
+2. Explore one or two alternatives and why they are not chosen.
+3. Present the agreed scope in small chunks the user can actually review (goal, boundaries, non-goals, file list).
+4. Save the chunk as the draft design: `product-spec.md` for product-wide scope or `.docs/features/<slug>.md` draft section for a feature. Do not start the task plan until the user signs off on the chunk.
+
+This gate is lightweight: it must not turn a bug fix into a design doc, but it must prevent jumping to code before the intent is clear.
+
+### Bite-sized plan format
+
+Every plan step must be small enough to finish in a few minutes and carry:
+
+- exact file path;
+- concrete change (what moves, what is created or removed);
+- verification command or observable result;
+- rollback note (what to revert if the step fails).
+
+A plan with steps larger than "one file, one behavior, one verification" is not ready. Regroup until each step fits.
+
+### Verification before completion
+
+Before declaring a task done, prove the fix:
+
+1. Reproduce the original failure or missing behavior with a test or a command.
+2. Apply the minimal fix.
+3. Rerun the same reproduction plus the relevant suite.
+4. Show the output. Evidence is required; manual claim is not.
+
+### Two-stage review (spec then quality)
+
+For multi-step work, review each step twice before moving on:
+
+1. Spec compliance: does the change match the approved chunk and the plan step; no extra scope, no missing acceptance criterion.
+2. Quality: does the code meet DEVELOPMENT.md anti-slop, typing, and state rules; no leaked `any`, no duplicated state, no missing a11y or error states.
+
+Critical findings block the next step until fixed. Non-critical findings are logged as Gap or Cleanup.
 
 ### Data flow rules: adaptive by stack
 

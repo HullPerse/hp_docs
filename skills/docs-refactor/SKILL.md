@@ -67,11 +67,12 @@ Never mix packages: one disposition covers one coherent set of changes.
 
 For each approved package:
 
-1. A short plan: affected files, expected effect, test strategy.
+1. A short bite-sized plan: file path, concrete change, verification command, rollback note; one file, one behavior, one verification per step.
 2. Minimal coherent changes; nothing beyond the rule.
 3. Tests alongside changes wherever logic is touched.
-4. Package verification: lint, typecheck, relevant tests; rescan of the fixed rule.
-5. Report each package separately, never as one mega-diff.
+4. Two-stage review per step: spec compliance first (does the change match the rule and plan), then quality (typing, anti-slop, states). Critical findings block the next step.
+5. Package verification: lint, typecheck, relevant tests; rescan of the fixed rule; verification-before-completion (reproduce, fix, rerun, show output).
+6. Report each package separately, never as one mega-diff.
 
 Constraints:
 

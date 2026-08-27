@@ -83,6 +83,22 @@ When comparing 2+ competing packages in the same category, write and run a minim
 4. If numbers are close (within 10%), mark as "equivalent" and recommend based on other criteria (API, bundle size, maintenance).
 5. If numbers differ significantly, note the gap and weigh it against ergonomics, bundle size, and ecosystem.
 
+### Performance checklist (when a budget or suspicion exists)
+
+- Core Web Vitals targets defined before optimization: LCP, INP, CLS with thresholds;
+- measure before optimizing: profile, benchmark, or trace; no unmeasured claim;
+- check bundle size and import cost for every new dependency;
+- audit hot paths for allocations, IO, caches, and cancellation.
+
+### Observability checklist (when the project runs in production)
+
+- structured logging: level, message, context object; no secrets or PII in logs;
+- metrics: RED (rate, errors, duration) or USE (utilization, saturation, errors) with named thresholds;
+- tracing: boundary spans for external calls where relevant;
+- symptom-based alerts, not noise; every alert has an owner and a runbook pointer.
+
+Both lists are supplements, not replacements for the benchmark rule.
+
 ## Project commands
 
 {{COMMANDS}}

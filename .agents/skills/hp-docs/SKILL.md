@@ -298,6 +298,20 @@ Bundled skills:
 - `project-documentation` - generate product documentation from project knowledge (.docs, source, tests, benchmark artifacts) against DOCUMENTATION_SPEC, with readiness reporting
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 
+### 5.6 Skill anatomy (borrowed pattern, condensed)
+
+Every skill in this repo follows a consistent anatomy to stay small and composable (inspired by external agent-skills structure, paraphrased):
+
+```text
+SKILL.md = Frontmatter (name, description, when to use) + Overview + When to Use + Process (steps) + Rationalizations (excuses -> rebuttals) + Red Flags + Verification
+```
+
+Keep skills isolated and focused: one skill per concern, load only when activated, shared references via `references/` or template files. Do not copy prompts from external repos.
+
+### 5.7 When to split (wshobson-inspired, deferred)
+
+If bundled skills grow beyond about 12, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. For now keep the flat `skills/` layout; document the threshold here rather than splitting prematurely. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
+
 ### 6. Docs Health Check
 
 After generating all files, verify completeness. For EACH file, check that ALL required sections from "Template Files" below are present. Report missing sections:
@@ -365,13 +379,13 @@ Entry point for agents. Must contain:
 
 ### .docs/TESTING.md
 
-Permanent testing contract. The generated file must define test setup, behavior discovery, an applicable test matrix, observable assertions and names, test levels and boundaries, edge cases and errors, async and concurrency, properties, fuzzing and mutation, regression-first work, performance and load, coverage quality, existing-suite migration, three review passes, and the final report.
+Permanent testing contract. The generated file must define test setup, behavior discovery, an applicable test matrix, observable assertions and names, test levels and boundaries, edge cases and errors, async and concurrency, properties, fuzzing and mutation, regression-first work, performance and load, coverage quality, existing-suite migration, three review passes, the final report, and a reference patterns appendix (DAMP over DRY, Beyonce Rule, definition of done, anti-patterns, pyramid).
 
 The project-specific test runner, commands, isolation rules, external-service policy, and available tools are filled from the project during first-run. Full details live in the generated `.docs/TESTING.md`; this skill must not invent a framework command.
 
 ### .docs/SECURITY.md
 
-Security contract. The generated file must define the security setup (profile, recorded audit commands with unavailable-with-reason rule, profile list), trust boundaries and the capability budget with its declaration rules, the full audit-axis review with statuses, the static evidence protocol, exfiltration proof for published packages, the npm-package/logger profile, a lightweight threat model, finding classification and fix flow, regression and change discipline, three review passes, and the report format.
+Security contract. The generated file must define the security setup (profile, recorded audit commands with unavailable-with-reason rule, profile list), trust boundaries and the capability budget with its declaration rules and annotated examples (GitHub MCP, Notion MCP, Playwright as write/network/process examples), the full audit-axis review with statuses plus a checklist supplement (headers, CORS, auth, input, lockfile), the static evidence protocol, exfiltration proof for published packages, the npm-package/logger profile, a lightweight threat model, finding classification and fix flow, regression and change discipline, three review passes, and the report format.
 
 The project-specific profile comes from initialization question 7; commands come from package scripts and installed tools. Full details live in the generated `.docs/SECURITY.md`.
 
@@ -384,16 +398,16 @@ The main session contract. Must contain ALL of these sections:
 3. **DECISIONS.md gate**: must read before audit, must write after decisions
 4. **Disposition gate**: two separate questions before each new feature (implementation disposition + documentation destination)
 5. **`(recommended)` rules**: when to use, single-select vs multi-select, when NOT to use
-6. **Mandatory first stage: audit**: what to check, classification (Blocker/Risk/Gap/Optimization/Clear), when to stop
+6. **Mandatory first stage: audit**: what to check, classification (Blocker/Risk/Gap/Optimization/Clear), when to stop; plus anti-rationalization table (excuse -> required response) and always-on security reporting
 7. **Critical mode**: don't agree with bad ideas, direct verdict format, allowed sharp language
 8. **Questions and decisions**: hierarchy of truth sources, when to ask, question lifecycle (10 steps), grill mode (one question at a time, recommended answer per question, depth-first decision tree, codebase before asking)
-9. **Planning and implementation**: scope, plan, affected files, test strategy, minimal changes, no speculative abstractions, existing code reuse
+9. **Planning and implementation**: scope, plan, affected files, test strategy, minimal changes, no speculative abstractions, existing code reuse; plus spec and brainstorming gate (socratic pass, chunked scope saved and approved), bite-sized plan format (file + change + verification + rollback), verification-before-completion, and two-stage review (spec compliance then quality, critical blocks next step)
 10. **Minimalism ladder (ponytail, mode full)**: 7 rungs (skip YAGNI -> reuse project code -> stdlib -> native platform -> installed dependency -> one line -> minimal code), root-cause bug fixes via caller grep, no unrequested abstractions, `ponytail:` comments for deliberate ceilings, laziness forbidden at trust boundaries/error handling/security/a11y/explicit requests
 11. **Data flow rules (stack-adaptive)**: if a server query library is used - TanStack Query rules (one query per file preferred, `data` naming, explicit `isLoading`/`isError`, separate `isFetching`); otherwise project data-flow rules fixed at init (background threads + UI event subscription for desktop, per hpClean pattern); equivalent rules formulated per stack and agreed with the user
 12. **Type rules**: language variants in DEVELOPMENT.md "Typing by language" - TS (no `any`, `unknown` only in boundary narrowed via Zod/type guard), Rust (Option/Result boundaries, unsafe only in isolated FFI), Python (strict typing), Go (error values)
 13. **Directory boundaries**: where types, helpers, configs, hooks, API clients go
 14. **File naming**: project convention detected during first-run (see file naming analysis); preserve established patterns, service suffixes, and casing
-15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration
+15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration; plus reference patterns (DAMP over DRY, Beyonce Rule, definition of done, anti-patterns)
 16. **Documentation**: update DECISIONS.md, features, TESTING.md, DESIGN.md, README
 17. **Anti-slop rules**: ASCII punctuation only (no em/en dash), no template intros, no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of decision logging; deslop prose subsection (voice preservation, rule-of-three, parataxis, negative parallelism, significance inflation, vague attribution) pointing to the catalog in DEVELOPMENT.md
 18. **Response format**: Audit, Decisions needed, Scope+Plan, Progress, Verification, Final state
@@ -413,7 +427,7 @@ Permanent project contract. Must contain ALL of these sections:
 8. **Decision journal rules**: mandatory logging, conflict resolution
 9. **Anti-slop rules**: text/punctuation, code/architecture, UI/UX subsections; plus the deslop prose catalog (EN and RU word tags, structural patterns, punctuation limits, accuracy rules, voice preservation, self-check)
 10. **Minimalism**: ponytail ladder summary and pointer to AGENT_PROMPT.md section 6
-11. **Benchmark-first package comparison**: when to run micro-benchmarks during package evaluation, when to skip, benchmark rules
+11. **Benchmark-first package comparison**: when to run micro-benchmarks during package evaluation, when to skip, benchmark rules; plus performance checklist (Core Web Vitals, measure before optimize, bundle size) and observability checklist (structured logging, RED/USE metrics, tracing, symptom alerts) as supplements
 12. **File naming convention**: detected or chosen pattern with examples (casing, suffixes, prefix rules, exceptions)
 13. **Documentation index**: what each .docs/ file contains
 
@@ -425,9 +439,9 @@ Design system documentation with three built-in presets. Must contain ALL of the
 1. **Preset "Scandinavian" (default)**: alpha ink ladder (100%/64%/44% black over white, no gray casts), typography (Inter Variable/system sans, weight 500-600 headings, no all-caps), 8px rhythm, chapters-not-card-stacks, left alignment, one icon family, dark theme alpha recalculation rules, contrast validation
 2. **Preset "Neo-brutalism"**: radius 0, 2px borders, hard shadows, monospace font, `:root` token set, component list
 3. **Preset "Zed dark"**: dark desktop/GPUI theme tokens, compact sizes, no decorative gradients
-4. **Components (common requirements)**: variants, sizes, props, states for every component
-5. **A11y and required states**: focus indicators >= 2px, sr-only labels, keyboard navigation, color never the only signal
-6. **Rules**: no duplicate components, no hardcoded values, preset changes require a decision
+4. **Components (common requirements)**: variants, sizes, props, states for every component; variant API via shadcn cva when React/Tailwind present; touch targets 44x44, tabular numbers, text-balance/pretty, aspect-ratio reserve
+5. **A11y and required states**: focus indicators >= 2px, sr-only labels, keyboard navigation, color never the only signal; plus design review rubric (contrast, rhythm, typography, iconography, density, states)
+6. **Rules**: no duplicate components, no hardcoded values, preset changes require a decision; plus system completeness checklist (tokens, components, patterns, docs, governance), component sources note (shadcn, coss, beautifului/beui/rareui/reui as reference only), and purposeful motion policy (purpose/frequency/speed, prefers-reduced-motion, transitions.dev vocabulary)
 
 At initialization keep only the chosen preset section, remove or mark the others as unused. For non-UI projects keep sections 0 and 5 only, or delete the file.
 

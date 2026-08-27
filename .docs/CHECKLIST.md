@@ -30,7 +30,9 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] In multi-select, mark `(recommended)` only on individually justified options and explain that the marker does not mean selecting all of them.
 - [ ] Include consequences, reversibility, security/privacy, performance, tests.
 - [ ] Decide whether unanswered choices block implementation or a reversible safe default is acceptable.
-- [ ] Draft a short implementation plan.
+- [ ] Draft a short implementation plan split into bite-sized steps: each step names exact file path, concrete change, verification command or observable result, and rollback note. Large steps are regrouped before coding.
+- [ ] Run the socratic brainstorm gate for non-trivial work: restated intent confirmed, alternatives considered, scope presented in small reviewable chunks and saved to product-spec or feature draft.
+- [ ] Check the anti-rationalization table: name any excuse for skipping steps and apply the required response (AGENT_PROMPT.md).
 - [ ] Define tests for every new feature.
 - [ ] Define public behavior, accepted and rejected inputs, outputs, stable errors, side effects, invariants, and implementation details before writing tests.
 - [ ] Build a behavior matrix and record every testing axis as covered, not applicable with a reason, deferred with a return condition, or unavailable with a reason.
@@ -56,6 +58,8 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Use strong observable assertions, meaningful names, deterministic fixtures, and real async completion signals instead of sleep.
 - [ ] Keep correctness tests, benchmarks, stress tests, mutation runs, and fuzz runs separate.
 - [ ] Run the adversarial test pass: ask what broken implementation would still pass.
+- [ ] Apply two-stage review per step (spec compliance then quality); critical findings block the next step.
+- [ ] Run verification-before-completion: reproduce failure or missing behavior, apply fix, rerun reproduction plus suite, show output.
 - [ ] For existing tests, record a baseline before migration and prove behavior coverage before removing duplicates.
 
 ## Verification
