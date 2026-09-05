@@ -1,6 +1,6 @@
 {
   "name": "hp-docs",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Universal .docs template system for AI agents - first-run analysis, deep project review, and new project initialization",
   "keywords": [
     "ai",

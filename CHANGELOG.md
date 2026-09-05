@@ -4,6 +4,8 @@ All notable changes to the documentation template and skills. Keep a Changelog f
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-09-05
+
 ### Added
 
 - `.docs/TESTING.md` template with behavior-first test design, full testing-axis review, regression-first workflow, and staged existing-suite migration
@@ -13,9 +15,18 @@ All notable changes to the documentation template and skills. Keep a Changelog f
 - Initialization Question 7: security profile (published package / backend / internal tool / minimal) setting SECURITY.md depth
 - Skill `project-documentation`: generates product documentation from project knowledge (.docs, public API, tests, benchmark artifacts), validates examples compile and links resolve, reports readiness percentage with named gaps
 - Optional root template `DOCUMENTATION_SPEC.md`: provenance rule plus required sections for feature pages, API entries, benchmark records, and executable examples
+- Skill `hp-docs-update`: update-only migration of template-generated `.docs/` files to a newer hp_docs template, driven by `.docs/hp-docs.meta.json` with a dry-run ADD/KEEP/CONFLICT plan and approval; DECISIONS.md entries, features/, reviews/, README, and code are never touched
+- Template `.docs/hp-docs.meta.json`: written at first-run with package version, template revision, language, design preset, and generated file list
+- Terse chat answer style (caveman adapted) in AGENT_PROMPT section 11: answer first, no openers/closers/filler, required report structure kept for tasks
+- Duplication rule from slopo as a pure documentation principle in AGENT_PROMPT/DEVELOPMENT/CHECKLIST: search the project by concept before writing new logic, reuse or record why not, report semantic duplicates in touched code
+- deslop skill extended: three rule tiers (hard gate / purpose gate / quality lock), During and After modes, Delivery Gate evidence report, code-comment audit mode, provenance checks
+- UX and WCAG number classification in DESIGN.md: normative WCAG values, heuristic UX values, reference-only frame timings and the dated Jeff Dean latency table
+- Naming and ownership rules: directory = domain, basename = one concept (camelCase, no hyphens), suffix = role; local code stays local until a second consumer; module types move from `types/*.d.ts` to `types/*.types.ts`
 
 ### Changed
 
+- first-run, docs-init, README, and the hp-docs skill updated to the eleven-skill set; DEVELOPMENT.md health count corrected from 14 to 15 in first-run
+- Duplication-audit feature file rewritten from a docs-refactor mode over slopo to the pure duplication rule, superseding the earlier tooling-mode decision
 - AGENT_PROMPT, CHECKLIST, REVIEWER, first-run, README, and rule-audit templates now reference the testing contract
 - AGENTS.md, AGENT_PROMPT (mandatory reading plus always-on reporting rule), CHECKLIST, REVIEWER, agents-audit, first-run, README, docs-init, and hp-docs skill now reference the security contract; DEVELOPMENT.md gained the always-on Security baseline section
 - Evidence rules tightened: performance and benchmark numbers may come only from executed commands and recorded artifacts; package comparisons must cover activity, transitive dependencies, security surface, and when-not-to-use; lint/type suppression requires a recorded reason

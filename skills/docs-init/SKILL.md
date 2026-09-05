@@ -66,7 +66,7 @@ On Windows use PowerShell equivalents with explicit UTF-8-safe copy operations (
 Before continuing, confirm:
 
 1. `.agents/skills/hp-docs/templates/` directory exists and contains template files.
-2. All ten skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, `docs-init`.
+2. All eleven skills present: `hp-docs`, `deslop`, `scandinavian-design`, `docs-refactor`, `docs-onboard`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, `docs-init`, `hp-docs-update`.
 3. Every installed `SKILL.md` has YAML frontmatter with `name` and `description`.
 
 Any miss - report what is broken and stop; a broken install must not bootstrap half-initialized docs.
@@ -86,7 +86,7 @@ Finish with:
 
 - what was installed (method, runner, target directory);
 - what was created during initialization (file tree);
-- how to update later: `<runner> skills update hp-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills`);
+- how to update later: `<runner> skills update hp-docs` (or reinstall for a pinned version via a tag tree URL: `<runner> skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills`); after the skill update, run the `hp-docs-update` skill to migrate the generated `.docs/` files to the new template;
 - next concrete action for the user.
 
 ## Rules

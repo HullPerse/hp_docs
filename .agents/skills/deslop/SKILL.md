@@ -1,15 +1,16 @@
 ---
 name: deslop
-version: 1.0.0
+version: 1.1.0
 description: >
   Remove machine-writing tells from prose while preserving the author's voice.
   Consolidated catalog merged from ten upstream anti-slop skills (anti-ai-slop-writing,
   humanize/soundshuman, anti-slop, deslop, humanizer, slopbeth, unslop, blader/humanizer,
-  no-ai-slop, stop-slop). Applies to documentation, README files, feature files, agent
-  answers, UI copy, and commit messages - NOT to source code structure. Use when drafting,
-  editing, or reviewing any text that must not read as AI-generated, when auditing a docs
-  folder for slop, or on triggers like "deslop", "sounds like AI", "make it human",
-  "remove slop".
+  no-ai-slop, stop-slop) and structured with the anti-slop mechanism (rule tiers,
+  During/After modes, Delivery Gate). Applies to documentation, README files, feature
+  files, agent answers, UI copy, and commit messages - NOT to source code structure.
+  Use when drafting, editing, or reviewing any text that must not read as AI-generated,
+  when auditing a docs folder for slop, or on triggers like "deslop", "sounds like AI",
+  "make it human", "remove slop".
 ---
 
 # Deslop
@@ -25,6 +26,42 @@ fragment after a long sentence, a load-bearing contrast, one deliberate tricolon
 strong closing line: these are voice. Cut filler and formula. Keep earned rhythm.
 When unsure, leave it in. A false positive that flattens good prose is worse than one
 surviving tell. Make surgical phrasing edits; do not restructure arguments.
+
+## Rule tiers
+
+Classify every check before applying it:
+
+- **Hard gate**: never acceptable. Fabricated facts or quotes, invented numbers, false
+  claims, broken trust signals.
+- **Purpose gate**: allowed only with a written reason. Kept metaphor, a single
+  deliberate tricolon, a strong closing line, an exception the author would defend.
+- **Quality lock**: consistency across the piece. One voice, no mixed registers, no
+  list forced to a round number.
+
+A hard-gate hit fails the text. A purpose-gate hit needs its reason written down next
+to it. A quality-lock hit is fixed for consistency, not deleted for style.
+
+## Usage modes
+
+Pick a mode before starting:
+
+- **During**: apply the catalog while producing the text. Prevents slop from appearing.
+  End with the Delivery Gate.
+- **After**: audit already-finished text. Produce a numbered findings list; each
+  finding cites the rule and why it is a problem. Do not edit anything until the user
+  approves specific numbers. Fix approved items, then report the follow-up.
+
+## Delivery Gate
+
+Before delivering text, run the gate and report PASS/FAIL per item with evidence:
+
+1. No hard-gate hits: no invented facts, quotes, numbers, or claims.
+2. Every purpose-gate technique carries its written reason.
+3. Quality locks hold: one voice, true list counts, no forced patterns.
+4. Word-tag and structural-tell self-check passed.
+5. Voice survived: the text still sounds like its author.
+
+A FAIL means fix and re-run the gate. Never deliver with a known FAIL.
 
 ## Scope
 
@@ -75,6 +112,20 @@ the sentence.
 | Quotables written for pull-quote effect | Rewrite for meaning |
 | Uniform sentence lengths (three consecutive same-length sentences) | Mix 4-word and 30-word sentences; the most measurable detection signal |
 
+## Provenance checks
+
+Hard gate for any text that states facts:
+
+- Never invent numbers, studies, quotes, anecdotes, or sources. Fabricated specificity
+  kills trust faster than honest vagueness.
+- No fabricated testimonials, customer names, statistics, security claims, compliance
+  claims, or performance claims. A claim without a source is removed, not softened.
+- Realistic placeholders are marked as placeholders ("[REAL DATA]", "Coming soon"),
+  never disguised as final. Empty is better than fabricated.
+- Hypotheticals stay hypothetical: mark them ("представим", "imagine").
+- Prefer verifiable names, dates, places over generic references.
+- Be specific by default: "34 users in week one, 12 returned" beats "significant growth".
+
 ## Punctuation limits
 
 - Em/en dash: forbidden outright by project rules (ASCII punctuation only).
@@ -83,14 +134,6 @@ the sentence.
 - Colons: what follows the colon must deliver on the promise set up before it.
 - Semicolons: fine to use where two clauses are truly joined.
 
-## Accuracy and honesty
-
-- Never invent numbers, studies, quotes, anecdotes, or sources. Fabricated specificity
-  kills trust faster than honest vagueness.
-- Hypotheticals stay hypothetical: mark them ("представим", "imagine").
-- Prefer verifiable names, dates, places over generic references.
-- Be specific by default: "34 users in week one, 12 returned" beats "significant growth".
-
 ## Formatting tells
 
 - No markdown headers in social posts, emails, DMs, plain-text contexts.
@@ -98,6 +141,13 @@ the sentence.
 - No emoji as bullet points; no "Thread:" openers; no hashtag stacks beyond two.
 - Bullets sparingly and unevenly; if it fits a sentence, write the sentence.
 - No signposted conclusions ("In conclusion...", "Итак, подведём итог").
+
+## Chat answers and UI copy
+
+- Agent chat answers: answer first, no polite openers or closers ("I can help",
+  "Let me know if..."), short sentences, no recap. Task reports keep their mandatory
+  structure; brevity never hides a decision or a verification result.
+- UI copy: short, direct labels; error messages say what happened and what to do next.
 
 ## Voice calibration
 
@@ -109,6 +159,30 @@ informal, contractions, trusts the reader, occasionally starts with "And"/"But".
 For encyclopedic, technical, legal, reference text, neutral and plain IS the correct
 voice: do not inject personality there.
 
+## Comment mode (code comments only)
+
+Use when the task writes or audits code comments. Scope guardrail: never modify
+executable code, identifiers, imports, formatting, or logic; only comments.
+
+Remove:
+
+- decorative separators and ALL CAPS banners ("// ===== Auth =====");
+- comments that restate the code, signature echo in JSDoc;
+- step-by-step workflow narration ("// Step 1: validate input");
+- empty labels ("// Main logic", "// Error handling");
+- vague TODOs that name no task;
+- decorative emoji and end markers ("} // end if").
+
+Keep comments that explain:
+
+- business logic and intent, architectural decisions;
+- security considerations, performance trade-offs, concurrency behavior;
+- protocol details, API contracts, workarounds;
+- edge cases, assumptions, non-obvious behavior;
+- licensing and legal notices.
+
+Good comments are short, sentence-case, and explain why, not what.
+
 ## Process
 
 Drafting: write first, then run the audit pass on your own draft. Do not self-censor
@@ -117,12 +191,14 @@ into blandness mid-draft.
 Auditing a text:
 
 1. Read the whole piece; note the voice you are preserving.
-2. Collect candidate tells against the tables above; do not edit yet.
-3. Validate each candidate: slop or voice? Discard false positives.
-4. Apply surviving edits one at a time, each a minimal phrasing change.
-5. Re-read edited passages for rhythm; fix anything now choppy or flat.
-6. Preserve all information: every claim survives into the rewrite even when shape
+2. Pick the usage mode (During or After) and the applicable tiers.
+3. Collect candidate tells against the tables above; do not edit yet.
+4. Validate each candidate: slop or voice? Discard false positives.
+5. Apply surviving edits one at a time, each a minimal phrasing change.
+6. Re-read edited passages for rhythm; fix anything now choppy or flat.
+7. Preserve all information: every claim survives into the rewrite even when shape
    changes. Depth may be redistributed, facts may not be added.
+8. Run the Delivery Gate and report PASS/FAIL with evidence.
 
 Scoring before delivery (1-10 each): directness, rhythm variety, reader trust,
 authenticity, density. Below 35/50: revise. One pass of edits is usually enough;
@@ -141,11 +217,15 @@ endless polishing is its own form of slop.
 9. Could any model have produced this text for any person? Add something only this
    context knows.
 10. Voice flattened by edits? Restore one earned rhythm.
+11. Purpose-gate techniques carry their written reason? Add or cut.
+12. Delivery Gate clean? Fix every FAIL and re-run.
 
 ## Lineage
 
 Merged and deduplicated from: jalaalrd/anti-ai-slop-writing, aashaexo/soundshuman
 (humanize), elithrar/dotfiles (anti-slop), stephenturner/skills (deslop),
 aboudjem/humanizer-skill (humanizer), ehmo/slopkit (slopbeth), cursor/plugins (unslop),
-blader/humanizer, petergyang/no-ai-slop, hardikpandya/stop-slop. The Russian tag list
+blader/humanizer, petergyang/no-ai-slop, hardikpandya/stop-slop. The tier and
+mode structure, provenance rules, and comment mode come from the anti-slop mechanism
+(miqdadbadjuber/anti-slop) reworked to fit this repository's rules. The Russian tag list
 and project-specific punctuation bans come from this repository's rules.

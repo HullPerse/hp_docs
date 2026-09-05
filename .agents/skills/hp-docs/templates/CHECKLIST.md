@@ -15,6 +15,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Read `.docs/DESIGN.md` if UI/UX is affected.
 - [ ] Read module README and package.json.
 - [ ] Search existing code and project conventions.
+- [ ] Search for existing similar implementations by concept (synonyms, related terms, similar shapes), not only by name, before writing new logic.
 - [ ] Walk the ponytail ladder before writing your own solution: reuse neighboring code, then stdlib, then native platform, then installed dependencies; your own implementation is the last rung.
 - [ ] Check `package.json`, lockfile, versions, and existing usage of suitable packages before writing your own implementation.
 - [ ] Confirm the dependency is already used, or record why a new one is needed.
@@ -41,7 +42,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 
 - [ ] Single source of truth for state.
 - [ ] New shared types, helpers, configs, hooks, and API clients live in their pinned directories with the accepted suffix.
-- [ ] Component file basenames written in camelCase without hyphens, service suffix preserved.
+- [ ] Component file basenames written in camelCase without hyphens, one concept, service suffix preserved.
 - [ ] Minimal coherent change, no unrelated refactors.
 - [ ] Bug fix made at the shared root, not on the one named path; callers verified via grep.
 - [ ] Re-read target files right before editing when they were loaded earlier in the session; no stale-read overwrites of concurrent changes.
@@ -75,11 +76,11 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Check for debug logs, placeholder data, dead code, stray comments.
 - [ ] Verify typing per the project language rules ("Typing by language" in DEVELOPMENT.md): TS - no explicit `any`, `unknown` only at boundary with narrowing; Rust - Option/Result boundaries, unsafe isolated; Python - no silent Any on public boundaries.
 - [ ] Verify data flow per the fixed model: query rules (one query per file, `data` naming, explicit isLoading/isError/isFetching) or background-task pattern.
-- [ ] Check file locations: shared types in `types/*.d.ts`, helpers in `lib/*.utils.ts`, configs in `config/*.config.ts`, hooks in `hooks/**/*.hook.ts`, API clients in `api/**/*.api.ts`.
-- [ ] Check component file names: camelCase without hyphens before the service suffix.
+- [ ] Check file locations: shared types in `types/*.types.ts` (`.d.ts` only for ambient declarations), helpers in `lib/*.utils.ts`, configs in `config/*.config.ts`, hooks in `hooks/**/*.hook.ts`, API clients in `api/**/*.api.ts`.
+- [ ] Check component file names: camelCase without hyphens, one concept, before the service suffix.
 - [ ] If a local type/helper is needed outside those directories, agree on the exact path with the user before creating the file.
 - [ ] Verify no em/en dashes were introduced.
-- [ ] Run the deslop self-check on texts (catalog in `.docs/DEVELOPMENT.md`): word tags, rule-of-three, hedging, throat-clearing, participle tails, invented specifics; author's voice preserved.
+- [ ] Run the deslop self-check on texts (catalog in `.docs/DEVELOPMENT.md` and the deslop skill): word tags, rule-of-three, hedging, throat-clearing, participle tails, invented specifics; tiers, During/After mode, and the Delivery Gate applied where relevant; author's voice preserved.
 - [ ] Mass text-file edits were performed with explicit UTF-8 encoding ([IO.File]::ReadAllText/WriteAllText), content spot-read after writing; PS 5.1 Get-Content/Set-Content without explicit encoding corrupts Cyrillic.
 - [ ] Verify commit messages contain no AI agent credits, co-author trailers, or similar mentions.
 - [ ] Never substitute critique of an idea with insulting the user; every harsh verdict carries reasons, consequences, and an alternative.

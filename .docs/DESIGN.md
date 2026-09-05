@@ -88,10 +88,20 @@ Regardless of preset, every component is described before implementation:
 - Variants, sizes, props (loading, disabled, rendered). For React/Tailwind stacks prefer shadcn-style variant API (cva/variants object, size + variant props) over ad-hoc class toggles; reuse it when already present, do not introduce it as a new dependency.
 - States: normal, hover, active/pressed, focus-visible, disabled, error.
 - Real surface states: loading, empty, error, dirty, stale, recovery.
-- Touch targets: at least 44x44px for controls that ship on touch; tabular numbers for data tables (see ui-skills playbook).
+- Touch targets: at least 44x44px for controls that ship on touch (comfort target; the WCAG 2.2 minimum is 24x24 CSS px where it applies); tabular numbers for data tables (see ui-skills playbook).
 - Text handling: `text-balance` for headings, `text-pretty` for body, `aspect-ratio` reserves space for media to prevent layout shift.
 
 ## 5. A11y and required states
+
+Normative values (WCAG 2.2):
+
+- Contrast 4.5:1 minimum for normal text, 3:1 for large text and for non-text UI components and states. "Large text" follows the WCAG definition (about 18 pt / 24 px regular, 14 pt bold), not a project-specific pixel cutoff.
+- Target size: 24x24 CSS px minimum where WCAG applies; 44x44 px stays the comfort target for touch-first controls.
+- Check contrast across the whole area the text passes over, not at one sample point.
+
+Heuristics (not acceptance thresholds): 45-90 characters comfortable body line length; body line-height 1.5-1.6, tighter for headings and dense UI. Apply them as judgment aids, never as a pass/fail gate without measured evidence.
+
+Rules:
 
 - Every interactive element has a visible focus indicator of at least 2px.
 - Icon-only controls get `sr-only` labels; keyboard navigation is mandatory.
@@ -102,7 +112,7 @@ Regardless of preset, every component is described before implementation:
 
 Use before calling a surface done; borrowed from taste review practice:
 
-- contrast: body text reaches 7:1 on canvas, supporting text 4.5:1, optional metadata may fail by intent; tertiary 44% is for glyphs only, lift to 56%+ for real reading;
+- contrast: body text reaches 7:1 on canvas, supporting text 4.5:1 (WCAG AA minimum for normal text), large text at least 3:1, optional metadata may fail by intent; tertiary 44% is for glyphs only, lift to 56%+ for real reading;
 - rhythm: 8px base, 4px nudge only; one chapter rule per viewport, space before lines;
 - typography: one family, 3-4 styles per screen, weight 500-600 headings, no all-caps;
 - iconography: one family, one stroke, monochrome ink ladder;

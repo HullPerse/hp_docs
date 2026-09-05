@@ -140,7 +140,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), and `docs-init` (package installation). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), `docs-init` (package installation), and `hp-docs-update` (update-only migration of generated template files). Install all of them: they are small and their triggers differ.
 
 ---
 
@@ -168,6 +168,8 @@ Per-file actions:
 - **DESIGN.md**: keep the chosen preset section, delete the other two (or mark "not used"). For a non-UI project keep sections 0 and 5 or delete the file.
 - **AGENT_PROMPT.md**: verify the "Data flow rules" subsection reflects the chosen model.
 - If Question 1 chose a non-English language: translate every generated `.docs/` file and AGENTS.md into that language now, keeping structure and section counts identical. Do not translate the deslop word-tag lists - they are bilingual reference content.
+
+After the per-file actions, write `.docs/hp-docs.meta.json` from `templates/hp-docs.meta.json` with real values: the hp-docs version, template revision, documentation language (Question 1), design preset (Question 4), and the list of generated template files. The `hp-docs-update` skill reads this file later to detect template drift.
 
 Never delete placeholders you could not fill - mark them `<!-- TODO: fill manually -->`.
 
@@ -197,7 +199,7 @@ Verify every file contains all mandatory top-level sections:
 ```text
 Docs Health Check:
   AGENT_PROMPT.md    [12/12 sections] OK   (# 1..11 + Available tools)
-  DEVELOPMENT.md     [14/14 sections] OK
+  DEVELOPMENT.md     [15/15 sections] OK
   TESTING.md         [14/14 sections] OK
   SECURITY.md        [11/11 sections] OK
   DESIGN.md          [ 7/7 sections]  OK   (or deleted for non-UI)
@@ -205,6 +207,8 @@ Docs Health Check:
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
   DECISIONS.md       [ 2/2 sections]  OK
 ```
+
+Confirm `.docs/hp-docs.meta.json` was written with the current version, template revision, language, preset, and generated file list.
 
 Add missing sections before continuing. After template edits recount manually.
 

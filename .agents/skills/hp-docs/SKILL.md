@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.4.2
+version: 1.5.0
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
@@ -198,7 +198,7 @@ Pattern: `<domain>.<suffix>.<ext>` (camelCase basename, dot separator)
 | Contracts | `.contract.ts` | `replay.contract.ts` |
 | Configs | `.config.ts` | `api.config.ts` |
 | API clients | `.api.ts` | `user.api.ts` |
-| Types | `.d.ts` | `auth.d.ts` |
+| Types | `.types.ts` | `auth.types.ts` |
 | Tests | `.test.ts` | `canvas.test.ts` |
 | Backend services | `.service.ts` | `user.service.ts` |
 | Backend plugins | `.plugin.ts` | `auth.plugin.ts` |
@@ -232,6 +232,8 @@ If inconsistencies exist, list them and ask user whether to fix now or defer.
 ### 5. Generate .docs/ Files
 
 Generate ALL of the following files with full content adapted to the detected stack. Do NOT use placeholders like `{{...}}` -- fill everything with real data from the project. Canonical copies of every template live in `templates/` next to this SKILL.md; copy them into the project rather than writing from memory.
+
+After generating the set, write `.docs/hp-docs.meta.json` (from `templates/hp-docs.meta.json`) with the real package version, template revision, language, design preset, and the list of generated template files. The `hp-docs-update` skill later reads this file to detect template drift safely.
 
 ### 5.1 Install lint/format toolchain
 
@@ -297,6 +299,7 @@ Bundled skills:
 - `security-audit` - audit project security across all security axes and prove the absence of undeclared outbound channels for published packages (exfiltration proof)
 - `project-documentation` - generate product documentation from project knowledge (.docs, source, tests, benchmark artifacts) against DOCUMENTATION_SPEC, with readiness reporting
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
+- `hp-docs-update` - update-only migration of generated template `.docs/` files to a newer hp_docs template version, driven by `.docs/hp-docs.meta.json` and a dry-run ADD/KEEP/CONFLICT plan with approval; never touches DECISIONS.md entries, features/, reviews/, README, or code
 
 ### 5.6 Skill anatomy (borrowed pattern, condensed)
 
@@ -410,7 +413,7 @@ The main session contract. Must contain ALL of these sections:
 15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration; plus reference patterns (DAMP over DRY, Beyonce Rule, definition of done, anti-patterns)
 16. **Documentation**: update DECISIONS.md, features, TESTING.md, DESIGN.md, README
 17. **Anti-slop rules**: ASCII punctuation only (no em/en dash), no template intros, no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of decision logging; deslop prose subsection (voice preservation, rule-of-three, parataxis, negative parallelism, significance inflation, vague attribution) pointing to the catalog in DEVELOPMENT.md
-18. **Response format**: Audit, Decisions needed, Scope+Plan, Progress, Verification, Final state
+18. **Response format**: Audit, Decisions needed, Scope+Plan, Progress, Verification, Final state; plus the terse chat style for ordinary turns (answer first, no polite filler, structure kept for task reports)
 19. **Available tools**: mandatory MCP check at session start - list available servers, use documentation tools (context7) for any library/API question before answering from memory, apply task-appropriate tools instead of workarounds
 
 ### .docs/DEVELOPMENT.md
@@ -425,7 +428,7 @@ Permanent project contract. Must contain ALL of these sections:
 6. **Disposition and destination**: full rules for feature disposition flow
 7. **Feature file format**: style rules (plain text, Idea/Comment/Pros/Cons, no decorative tables)
 8. **Decision journal rules**: mandatory logging, conflict resolution
-9. **Anti-slop rules**: text/punctuation, code/architecture, UI/UX subsections; plus the deslop prose catalog (EN and RU word tags, structural patterns, punctuation limits, accuracy rules, voice preservation, self-check)
+9. **Anti-slop rules**: text/punctuation, code/architecture, UI/UX subsections; plus the deslop prose catalog (EN and RU word tags, structural patterns, punctuation limits, accuracy rules, voice preservation, self-check) and the enforcement mechanism: tier classification (hard gate / purpose gate / quality lock), During/After modes, Delivery Gate evidence report, comment mode, provenance checks; brief excerpts in DEVELOPMENT.md, full procedure in the deslop skill
 10. **Minimalism**: ponytail ladder summary and pointer to AGENT_PROMPT.md section 6
 11. **Benchmark-first package comparison**: when to run micro-benchmarks during package evaluation, when to skip, benchmark rules; plus performance checklist (Core Web Vitals, measure before optimize, bundle size) and observability checklist (structured logging, RED/USE metrics, tracing, symptom alerts) as supplements
 12. **File naming convention**: detected or chosen pattern with examples (casing, suffixes, prefix rules, exceptions)
@@ -552,7 +555,7 @@ When 2+ packages compete in a performance-sensitive category, run a minimal benc
 Check the codebase against the rules defined in `.docs/DEVELOPMENT.md` and `.docs/AGENT_PROMPT.md`. For each rule, verify compliance:
 
 **File organization:**
-- Are common types in `types/*.d.ts`?
+- Are shared types in `types/*.types.ts` (`.d.ts` stays reserved for ambient declarations)?
 - Are helpers in `lib/*.utils.ts`?
 - Are configs in `config/*.config.ts`?
 - Are hooks in `hooks/**/*.hook.ts` (or equivalent)?
@@ -710,6 +713,8 @@ When `.docs/` is already filled:
 7. Follow all rules from `AGENT_PROMPT.md`
 
 ## Docs Migration
+
+For an already-initialized project, the `hp-docs-update` skill owns migration: it reads `.docs/hp-docs.meta.json`, compares current files with the new template, and produces a dry-run ADD/KEEP/CONFLICT plan that is applied only after approval. The manual procedure below is the fallback when that skill is not installed.
 
 When the skill is updated and existing `.docs/` files need to align with the new template:
 

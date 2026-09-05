@@ -72,6 +72,7 @@ Check:
 
 - documentation consistency and decision priority;
 - current implementation, public APIs, state ownership, persistence;
+- existing similar implementations elsewhere in the codebase (by concept, not only by name) before writing new logic;
 - before changing a module: its entry points, callers, dependencies, tests, related types, configuration, and side effects are identified first;
 - missing requirements and unclear acceptance criteria;
 - contradictions between the task, the rules, design rules, and the code;
@@ -185,11 +186,11 @@ After a clean audit and answered questions:
 5. Implement the minimal coherent change satisfying the scope.
 6. Preserve existing behavior unless the task explicitly changes it.
 7. Avoid speculative abstractions, duplicated state, fake data, placeholder success paths, and unrelated refactors.
-8. Before adding a component/helper, search shared directories and reuse what exists.
+8. Before adding a component/helper, search shared directories and reuse what exists. Before writing new logic, search the whole codebase by concept (synonyms, related terms, similar shapes), not only by name; an existing similar implementation means reuse or a recorded justification in DECISIONS.md.
 9. For non-trivial tasks, inspect `package.json`, lockfile, installed versions, and existing usage of suitable libraries. If no ready-made solution exists in the project, propose several modern candidates with support, license, size, and expected performance compared. Never add a dependency or write a large replacement from scratch without justification and approval.
 10. Typing follows the project language (variants in "Typing by language", `.docs/DEVELOPMENT.md`). TypeScript: no explicit `any`; `unknown` only in boundary code (JSON parsing, `catch`, external libraries, transport adapters), narrowed via Zod or a type guard before entering domain or UI logic. Rust: explicit Option/Result at boundaries, `unsafe` only in isolated documented FFI. Python: strict typing, no silent Any on public boundaries.
-11. Shared types and interfaces live in `types/*.d.ts`, shared helpers and micro-functions in `lib/*.utils.ts`, static configs and hardcoded data in `config/*.config.ts`, hooks in `hooks/**/*.hook.ts`, API clients and server communication classes in `api/**/*.api.ts`. Keep a local type/helper next to its owner only after agreeing on the exact path with the user.
-12. Component file basenames use camelCase without hyphens; preserve service suffixes such as `.component.tsx` or `.canvas.tsx`.
+11. Shared types and interfaces live in `types/*.types.ts` (`.d.ts` only for ambient declarations), shared helpers and micro-functions in `lib/*.utils.ts`, static configs and hardcoded data in `config/*.config.ts`, hooks in `hooks/**/*.hook.ts`, API clients and server communication classes in `api/**/*.api.ts`. A local type/helper stays next to its owner; it moves to a shared directory only after a second real consumer appears. The directory carries the domain, the basename one concept, the suffix the role.
+12. Component file basenames use camelCase without hyphens and express one concept (`button.component.tsx`, `user.api.ts`, `api.config.ts`); preserve service suffixes such as `.component.tsx` or `.canvas.tsx`.
 13. Use typed errors and explicit state transitions.
 14. For UI, implement real states and interactions, not just visual mockups (focus, keyboard, mouse, resize, loading, empty, error, disabled, dirty, stale, recovery, a11y).
 
@@ -246,7 +247,7 @@ The data model is fixed at initialization in `.docs/DEVELOPMENT.md` and depends 
 Applies to every implementation, mode `full` by default. Laziness means effectiveness, not carelessness: the best code is the code never written. Stop at the first rung that holds:
 
 1. Should this exist at all? Speculative need = skip it, say so in one line (YAGNI).
-2. Already in the project? Reuse the helper, type, utility, or pattern living nearby. Search before writing: reinventing neighboring code is the most common slop.
+2. Already in the project? Reuse the helper, type, utility, or pattern living nearby. Search before writing by concept, not only by name: a similar implementation elsewhere (different names, far away module) still counts as reuse. Reinventing neighboring code is the most common slop.
 3. Does the standard library cover it? Use it.
 4. Does a native platform feature cover it? Native `<input type="date">` over a picker library, CSS over JS, DB constraint over application code.
 5. Does an installed dependency solve it? Use it. Never add a new one for what a few lines can do.
@@ -268,6 +269,8 @@ Ladder rules:
 Never optimize blindly and never ship regressions. Before finishing a non-trivial feature, analyze: cold start, hot paths, allocations, IO, caches, cancellation, latency and perceived responsiveness, background load. For each opportunity give: current/expected bottleneck, simplest implementation, at least one alternative, trade-offs, and a metric. Prefer measurable improvements; never sacrifice correctness, recoverability, security, or explicit UX for an unmeasured micro-optimization.
 
 Numbers come only from executed commands and their recorded artifacts. Never write a metric, benchmark result, or performance claim that was not measured in this session; cite the artifact or omit the number.
+
+Reference values in documentation are classified: normative accessibility values (WCAG 2.2 contrast 4.5:1 and 3:1, target minimum 24x24 CSS px where applicable), UX heuristics (about 100 ms, 1 s and 10 s response boundaries; 44x44 px comfort target; 45-90 character line length; transition timings), and educational reference (frame envelopes 8.3 ms at 120 Hz and 16.7 ms at 60 Hz; the Jeff Dean latency table as a dated historical reference). Heuristics and educational values are not acceptance thresholds: a real budget or claim still requires an executed measurement.
 
 ## 8. Testing and verification contract
 
@@ -380,6 +383,17 @@ Exact results of typecheck, build, tests, benchmarks, manual checks. Separate pa
 
 ### Final state
 What changed, known limitations, remaining risks, doc updates, next concrete action. Never claim done with missing checks or tests.
+
+### Chat answer style
+
+Ordinary turns (not task-end reports) use a terse style:
+
+- answer first: the result is the first sentence, context comes after;
+- no polite openers or closers ("I can help", "Let me know if...", "No problem");
+- short sentences; cut filler words (actually, basically, just);
+- no recap or signposted summary; end at the last useful fact or the next question.
+
+Task reports keep the mandatory structure above, with the same padding removed inside sections. Brevity never deletes a decision, a verification result, or a reason the user asked for.
 
 Communicate briefly, concretely, in the user's language. Ask when a real decision is needed and continue after the answer.
 

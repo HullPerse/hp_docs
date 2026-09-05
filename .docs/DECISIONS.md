@@ -310,3 +310,80 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user supplied 10 URLs (beautifului.dev, beui.dev, rareui.com, transitions.dev, ui.shadcn.com, ui-skills.com, coss.com/ui, designsystemchecklist.com, reui.io, emilkowal.ski) and asked to review for design improvements.
 - Consequence: DESIGN.md stays 7 top-level sections (additions are subsections); health checks stable; templates and mirrors synced via scripts/sync-templates.ps1. Background/remaining: ui-skills.com and ui.shadcn broader playbooks available for future deep dive when UI work is active; beautifulUI/beui/docs marginalia remain as visual inspiration, not contract.
 - Source: design-references task, plan at C:/Users/Kocherga/.opencode/plan/hp_docs-design-references.plan.md, 2026-08-27.
+
+### 2026-09-05: luhaanime naming evidence collected
+
+- Decision: the audit comparison against D:\Projects\dev\iluhaAnime is done from its real files (allowed by the user). Its conventions: `{name}.{category}.{ext}` camelCase without hyphens, max two dots in a source basename, single-word lowercase stems inside domain folders (`search/score.utils.ts`), domain folders under `src/lib/` and `src/config/`, `src/types/*.d.ts` for shared types, tests mirroring sources as `{source}.test.ts`, no barrel files.
+- Context: the user pointed at luhaanime as the reference for strict folder and naming discipline during the audit.
+- Consequence: luhaanime confirms the folder/role naming model and adds the max-two-dots rule; it also shows that module types currently live in `*.d.ts` files there, which the `.types.ts` decision below will change in the template and later in consumers.
+- Source: hp_docs audit session 2026-09-05.
+
+### 2026-09-05: File naming and folder ownership rules revised
+
+- Decision: (1) naming rule is "directory carries the domain, basename carries one concept (camelCase, no hyphens), suffix carries the role" (`button.component.tsx`, `user.api.ts`, `api.config.ts`), not literal single-word enforcement; (2) shared-folder model becomes owner-first: local types/helpers/constants stay next to their owner until a second real consumer appears, then move to `types/`, `lib/`, `config/`, `hooks/`, `api/`; (3) module types move from `types/*.d.ts` to `types/*.types.ts`; `.d.ts` stays reserved for ambient declarations.
+- Context: user accepted the audit recommendation over the current strict always-global placement and over the `*.d.ts` convention for ordinary exported types.
+- Consequence: DEVELOPMENT.md, AGENT_PROMPT.md directory-boundary text, CHECKLIST.md checks, hp-docs SKILL naming table, and docs-refactor compliance rows need updating in a later implementation pass; luhaanime and risovach-style consumers inherit the change on their next template update.
+- Source: hp_docs audit session 2026-09-05, questions 1-3.
+
+### 2026-09-05: slopo adopted as docs-refactor mode, not a bundle
+
+- Decision: slopo itself is not added to hp_docs (AGPL-3.0-or-later, sends source to external embedding APIs on non-local providers). Its idea enters as a duplication-check mode inside the docs-refactor skill: when a real project wants semantic-duplicate review, the mode runs an installed slopo CLI and produces a short decision report (files, symbols, the actual problem, no premature refactor design), with ignore handling for false positives. Unavailable tool is reported as unavailable.
+- Context: user chose "mode in docs-refactor" plus the short decision-report format over a separate duplication-audit skill.
+- Consequence: no new bundled skill and no slopo dependency now; capability and AGPL/data-boundary caveats are recorded in the feature file.
+- Source: hp_docs audit session 2026-09-05, questions 4-5.
+
+### 2026-09-05: deslop extended with anti-slop structure
+
+- Decision: extend the single deslop skill (not new skills) with: three rule tiers (hard gate / purpose gate / quality lock), During and After usage modes, a Delivery Gate evidence report, a code-comment audit mode, and provenance checks for numbers, testimonials, names, and security or performance claims (no fabrication; placeholders marked). The Python contrast checker from anti-slop is rejected.
+- Context: user accepted the anti-slop borrowings by multi-select and chose to keep everything inside the deslop skill with brief excerpts in DEVELOPMENT.md.
+- Consequence: deslop SKILL.md and the deslop sections of DEVELOPMENT.md/AGENT_PROMPT.md get updated in the implementation pass; UI landing-page patterns from anti-slop stay out of the universal contract.
+- Source: hp_docs audit session 2026-09-05, questions 6-7.
+
+### 2026-09-05: UX and performance numbers classified in three levels
+
+- Decision: UX/WCAG numbers enter documentation in three levels: normative (WCAG 2.2: 4.5:1 normal text, 3:1 large text, 24x24 px minimum target where applicable; 44x44 px documented as the comfort target, not the WCAG minimum), heuristics (about 100 ms, 1 s and 10 s response boundaries; 45-90 characters line length; transition timings), and reference (frame envelopes 8.3 ms at 120 Hz and 16.7 ms at 60 Hz with a note that they are not guaranteed JS budgets). Jeff Dean's latency table is kept only as a dated educational reference with a disclaimer, never as a project threshold.
+- Context: user chose the three-level split and the reference-with-disclaimer for the Jeff Dean numbers.
+- Consequence: DESIGN.md and the performance notes in AGENT_PROMPT/TESTING gain the split; no number becomes a pass/fail acceptance metric without an executed measurement.
+- Source: hp_docs audit session 2026-09-05, questions 8-9.
+
+### 2026-09-05: hp-docs-update skill approved
+
+- Decision: add a separate skill `hp-docs-update` that only migrates generated template files in an initialized project to a newer hp_docs template: it reads project metadata, produces a dry-run ADD/KEEP/CONFLICT plan, applies changes only after approval, and never edits DECISIONS.md entries, feature files, reviews, README, or source code. Initialization writes a small metadata file (`.docs/hp-docs.meta.json`: package version, language, preset, generated file list) so the update can compare old template, current file, and new template.
+- Context: user approved a new skill with project metadata and a dry-run plus approval flow, scoped to template `.docs` files only.
+- Consequence: hp-docs first-run flow and skill list gain the metadata write; update documentation and this feature file become the migration contract.
+- Source: hp_docs audit session 2026-09-05, questions 10-13.
+
+### 2026-09-05: Documentation destination for audit decisions
+
+- Decision: accepted audit changes are documented in new `.docs/features/*.md` files (file-organization, deslop-modes, duplication-audit, hp-docs-update, ux-performance-numbers) and mirrored as short entries in this journal; implementation itself is deferred until the user approves the work packages.
+- Context: user chose DECISIONS plus feature files over journal-only recording.
+- Consequence: five feature files now carry the accepted scope and open the implementation disposition.
+- Source: hp_docs audit session 2026-09-05, question 14.
+
+### 2026-09-05: slopo decision overridden - pure doc rule replaces the docs-refactor mode
+
+- Decision: the earlier decision to run duplication review as a docs-refactor mode over an installed slopo CLI is superseded. slopo now enters hp_docs as a plain documentation rule with no scripts and no tooling: before writing any new logic, the agent searches the whole project by concept, reuses an existing implementation when one fits, or records why not; during and after changes it reports semantic duplicates in the code it touched (files, symbols, the actual problem, no refactor sketch).
+- Context: the user asked to add "just the slopo principle" to the documentation, without scripts or tooling, overriding the previously chosen mode. This removes the AGPL and external-embedding-API concerns that motivated the tooling-mode guards.
+- Consequence: the duplication-audit feature file was rewritten; the rule text landed in AGENT_PROMPT.md, DEVELOPMENT.md, and CHECKLIST.md; no docs-refactor mode and no slopo dependency exists.
+- Source: hp_docs audit session 2026-09-05, follow-up on slopo.
+
+### 2026-09-05: Terse chat answer style (caveman adapted)
+
+- Decision: agent chat replies gain a terse style layer, adapted from caveman-style prompts: answer first, no polite openers or closers, no filler words, no recaps and re-statements, every reply as short as the content allows. It layers on top of the required response structure for tasks (Audit / Decisions needed / Scope+Plan / Progress / Verification / Final state) and never replaces it; it never shortens warnings, security findings, hard rules, test evidence, or explicitly requested depth. Documented in AGENT_PROMPT.md section 11 (Response format) only.
+- Context: the user proposed caveman-style response rules on top of the existing agent rules and chose the terse-on-structure variant over full telegraphic speech.
+- Consequence: chat turns shorten; structured task reports keep their required shape. No new skill and no AGENTS.md rule change beyond the existing format.
+- Source: hp_docs audit session 2026-09-05, follow-up on response style.
+
+### 2026-09-05: Audit batch implemented
+
+- Decision: implemented the accepted 2026-09-05 work packages in one pass: naming and folder-ownership rules (owner-first, `types/*.types.ts` for module types) into the contract docs and the hp-docs skill naming table; the slopo pure duplication rule and the terse chat style into AGENT_PROMPT/DEVELOPMENT/CHECKLIST; deslop extended with tiers, During/After modes, Delivery Gate, comment mode, and provenance checks; WCAG/UX/reference number classification into DESIGN.md; new skill `hp-docs-update` plus the `.docs/hp-docs.meta.json` template written by first-run; first-run, docs-init, README, and sync pairs updated for the eleven-skill set and the meta file; six feature files mark the scope implemented (file-organization, deslop-modes, duplication-audit rewritten as the pure rule, hp-docs-update, ux-performance-numbers, chat-answer-style); changelog updated.
+- Context: the user answered the follow-up questions and chose "everything now".
+- Consequence: sync script run and verified; health check counters unchanged (AGENT_PROMPT 12, DEVELOPMENT 15, TESTING 14, SECURITY 11, DESIGN 7, CHECKLIST 5, REVIEWER 8); DEVELOPMENT count in first-run corrected from 14 to 15.
+- Source: hp_docs audit session 2026-09-05, implementation pass.
+
+### 2026-09-05: hp-docs 1.5.0 released
+
+- Decision: the 2026-09-05 batch ships as version 1.5.0: hp-docs skill and package.json bumped from 1.4.2, the meta template example updated, Unreleased changelog content moved to the `[1.5.0] - 2026-09-05` section, commit tagged `v1.5.0`.
+- Context: the user asked to release the implemented audit batch as a versioned tag.
+- Consequence: installs of main and tag-pinned consumers get the naming/ownership rules, the slopo duplication rule, the terse chat style, the extended deslop, and the hp-docs-update skill.
+- Source: release task, 2026-09-05.

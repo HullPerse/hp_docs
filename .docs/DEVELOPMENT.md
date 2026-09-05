@@ -49,12 +49,13 @@ Example:
 
 <!--
 Example:
-- Shared types and interfaces: `types/*.d.ts`
+- Shared types and interfaces: `types/*.types.ts` (`.d.ts` only for ambient declarations)
 - Shared helpers and micro-functions: `lib/*.utils.ts`
 - Static configs and hardcoded data: `config/*.config.ts`
 - Hooks: `hooks/**/*.hook.ts`
 - API clients and server communication classes: `api/**/*.api.ts`
-- Components: camelCase basenames without hyphens, service suffixes `.component.tsx`, `.canvas.tsx`
+- Components: camelCase basenames without hyphens, one concept, service suffixes `.component.tsx`, `.canvas.tsx`
+- Ownership: local types/helpers/constants stay next to their owner until a second real consumer appears, then move to the shared directories above
 -->
 
 ## Typing by language
@@ -220,6 +221,7 @@ Applied to code, documentation, UI copy, agent replies, commit messages.
 - No comment-parrots restating code; no giant doc-comments.
 - No speculative abstractions, empty extension points, unused interfaces, fake plugin systems.
 - No duplicated state or duplicated sources of truth.
+- No reimplementation of existing logic: before writing new code, search the codebase by concept (synonyms, related terms, similar shapes), not only by name; reuse a similar implementation or record in DECISIONS.md why a new one is justified.
 - Clear names, small modules, typed errors, tested domain logic.
 - No debug logs, dead code, placeholder success paths, or fake data in production.
 - Lint and type errors are fixed or argued; suppression without a recorded reason is not a solution.
@@ -239,6 +241,8 @@ Applied to code, documentation, UI copy, agent replies, commit messages.
 ### Deslop prose: template-pattern catalog
 
 Applies to documentation, feature files, README, agent replies, commit messages, and UI copy. Goal: remove patterns by which readers detect machine-written text without killing the author's voice.
+
+Checks are classified before applying: hard gate (never acceptable), purpose gate (allowed only with a written reason), quality lock (consistency across the piece). Use During mode (apply while writing) or After mode (audit finished text with numbered findings and approval before edits), and close with the Delivery Gate report. Code comments get their own audit mode: remove decoration, restatements, narration, and vague TODOs; keep comments carrying causes, invariants, security, and workarounds. Provenance is mandatory: no fabricated numbers, quotes, testimonials, names, or security and performance claims; placeholders are marked. Full procedure lives in the deslop skill.
 
 Word tags (EN): delve, tapestry, realm, landscape (figurative), underscore (figurative), leverage, seamless, robust, crucial, pivotal, testament, foster, elevate, unlock, navigate (figurative), comprehensive, state-of-the-art, vibrant, rich (figurative), groundbreaking, renowned, breathtaking, stunning, world-class, boasts.
 

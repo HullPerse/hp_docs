@@ -25,6 +25,7 @@ npx skills add HullPerse/hp_docs --skill test-architect
 npx skills add HullPerse/hp_docs --skill test-reviewer
 npx skills add HullPerse/hp_docs --skill security-audit
 npx skills add HullPerse/hp_docs --skill project-documentation
+npx skills add HullPerse/hp_docs --skill hp-docs-update
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -48,7 +49,7 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all ten skills landed with readable frontmatter.
+3. Verifies all eleven skills landed with readable frontmatter.
 4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
@@ -96,6 +97,7 @@ Same flow - the agent picks it up on the next session start.
     CHECKLIST.md             # implementation checklist
     REVIEWER.md              # independent review prompt
     DECISIONS.md             # decision journal
+    hp-docs.meta.json        # template provenance, read by hp-docs-update
     ROADMAP.md               # optional, 5+ features
     agents-audit.prompt.md   # rule freshness audit
     features/ reviews/ answers/
@@ -146,6 +148,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 | `.docs/CHECKLIST.md` | Before/during/after implementation checklist |
 | `.docs/REVIEWER.md` | Independent review prompt (read-only, evidence-based findings) |
 | `.docs/DECISIONS.md` | Decision journal |
+| `.docs/hp-docs.meta.json` | Template provenance (version, preset, generated files); read by `hp-docs-update` |
 | `.docs/ROADMAP.md` | Optional phased feature roadmap |
 | `.docs/answers/` | Long research answers |
 | `.docs/features/` | Feature files (Idea / Comment / Pros / Cons) |
@@ -193,9 +196,13 @@ Turns what a project already knows into user-facing documentation: reads `.docs/
 
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all ten skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all eleven skills landed, then hands off to the first-run flow which owns all initialization questions.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes ten bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, and `project-documentation`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+### `hp-docs-update` - template migration
+
+Updates only the template-generated files of an already-initialized project when a newer hp_docs template ships. It reads the project's `.docs/hp-docs.meta.json`, compares current files with the new template, and produces a dry-run ADD/KEEP/CONFLICT plan that is applied only after approval. DECISIONS.md entries, feature files, reviews, README, and source code are never touched; project edits inside merged files are preserved.
+
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes eleven bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, and `project-documentation`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 
