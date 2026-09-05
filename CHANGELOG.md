@@ -4,6 +4,10 @@ All notable changes to the documentation template and skills. Keep a Changelog f
 
 ## [Unreleased]
 
+### Changed
+
+- README: new "Update .docs in an Existing Project" section with a copy-paste prompt that migrates already-generated docs via the hp-docs-update skill (dry-run ADD/KEEP/CONFLICT plan, approval before writes, conflict questions)
+
 ## [1.5.0] - 2026-09-05
 
 ### Added

@@ -387,3 +387,10 @@ User decision journal. The agent must check this file before any question and ap
 - Context: the user asked to release the implemented audit batch as a versioned tag.
 - Consequence: installs of main and tag-pinned consumers get the naming/ownership rules, the slopo duplication rule, the terse chat style, the extended deslop, and the hp-docs-update skill.
 - Source: release task, 2026-09-05.
+
+### 2026-09-05: README update prompt for existing projects
+
+- Decision: README gained an "Update .docs in an Existing Project" section with a copy-paste prompt for migrating already-generated docs, separate from first-time install: it runs the hp-docs-update skill, limits changes to the template-generated files, requires a dry-run ADD/KEEP/CONFLICT plan with approval before writes, and instructs the agent to ask whenever a new template rule conflicts with an existing project rule or decision or a merge would drop project content. Prerequisite note: refresh skills first (`npx skills update hp-docs`) and projects need `.docs/hp-docs.meta.json`, which the skill asks about when missing.
+- Context: the README covered first-time install only; users with docs generated from an older template had no agent prompt for the update path.
+- Consequence: docs-only change - no skill or template edits, nothing to sync; changelog Unreleased entry added.
+- Source: README update-prompt task, 2026-09-05.

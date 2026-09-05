@@ -53,6 +53,39 @@ The `docs-init` skill handles everything end to end:
 4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
+## Update .docs in an Existing Project
+
+Already have `.docs/` generated from an older template version? Update it in place. This is not a fresh install: skills and `AGENTS.md` stay, only the template-generated files migrate.
+
+First refresh the installed skill so the new templates are on disk:
+
+```bash
+npx skills update hp-docs   # or: bunx skills update hp-docs / pnpm dlx skills update hp-docs
+```
+
+Then open your agent in the project and paste:
+
+```text
+The hp_docs documentation in this project was generated from an older template version.
+Run the hp-docs-update skill (or read its SKILL.md from the repo and follow it) to migrate
+the generated .docs files to the current hp_docs template.
+
+Scope: only template-generated files may change - AGENT_PROMPT.md, DEVELOPMENT.md,
+TESTING.md, SECURITY.md, DESIGN.md, CHECKLIST.md, REVIEWER.md, ROADMAP.md. Never edit
+DECISIONS.md entries, features/, reviews/, answers/, README, AGENTS.md, or source code.
+
+First show me a dry-run plan with one action per file (ADD / KEEP / CONFLICT) and wait
+for my approval before writing anything.
+
+Ask me, do not guess, whenever a new template rule conflicts with a rule or decision this
+project already made, and whenever a merge would drop content the project added.
+```
+
+Notes:
+
+- Requires the project's `.docs/hp-docs.meta.json` (written automatically since hp-docs 1.5.0). Older projects lack it: the skill detects that and asks whether to adopt the current files as the baseline before updating.
+- Nothing is written without an approved plan, and every conflict goes back to you as a question instead of being silently resolved.
+
 ## Initialize .docs in Your Project
 
 The full package initializes through one skill install - templates travel inside the `hp-docs` skill itself (`skills/hp-docs/templates/`), so nothing else needs downloading.
