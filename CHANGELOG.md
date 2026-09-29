@@ -2,10 +2,20 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
-## [Unreleased]
+## [1.6.0] - 2026-09-29
+
+### Added
+
+- Skill `review-audit`: read-only general audit of a selected scope against all project rules (compliance table, ponytail over-engineering lens, duplication by concept, security/test spot-checks); per-package disposition, no fixes, no file writes
+- AGENT_PROMPT: interview-me exit for Grill mode, constraint bar, doubt pass, source grounding (all paraphrased borrows, no dependency); compact-result rule in section 11 mirrored in the root AGENTS.md terse bullet
+- DESIGN.md: resilient-text rules plus pre-delivery checklist, AI-slop detector checklist with the Inter exception, product-truth vs visual-direction split, review vocabulary (audit/critique/polish/distill/harden/onboard/animate/typeset/layout/colorize)
+- project-documentation: optional diagram mode (archify contract without the renderer; output never in `.docs/`)
+- docs-refactor: over-engineering row in the compliance table plus a pointer to `review-audit` for read-only runs
 
 ### Changed
 
+- Skill set eleven to twelve (`review-audit` added); README, docs-init, and hp-docs skill updated; flat `skills/` layout kept per the 5.7 note
+- README references record borrowed upstreams (superpowers, agent-skills, ponytail, ui-ux-pro-max, impeccable, archify) and rejected-for-vendoring ones (graphify, understand-anything, awesome-claude-skills, caveman runtime)
 - README: new "Update .docs in an Existing Project" section with a copy-paste prompt that migrates already-generated docs via the hp-docs-update skill (dry-run ADD/KEEP/CONFLICT plan, approval before writes, conflict questions)
 
 ## [1.5.0] - 2026-09-05

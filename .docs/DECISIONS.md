@@ -394,3 +394,17 @@ User decision journal. The agent must check this file before any question and ap
 - Context: the README covered first-time install only; users with docs generated from an older template had no agent prompt for the update path.
 - Consequence: docs-only change - no skill or template edits, nothing to sync; changelog Unreleased entry added.
 - Source: README update-prompt task, 2026-09-05.
+
+### 2026-09-29: External skills batch 2 - review-audit, addy borrows, design excerpts, diagram mode
+
+- Decision: implement the accepted 2026-09-29 dispositions as paraphrase-only borrows with no new dependencies: (1) new skill `review-audit` (read-only general audit, compliance table, ponytail over-engineering lens, duplication by concept, security/test spot-checks, per-package disposition, no fixes); docs-refactor gains the over-engineering row and points to it for read-only runs; (2) AGENT_PROMPT gains interview-me exit for Grill mode, constraint bar, doubt pass, source grounding (section 4/5 subsections), and the compact-result rule (section 11) mirrored in the root AGENTS.md terse bullet; CHECKLIST gains three matching items; (3) DESIGN.md gains resilient-text plus pre-delivery checklist, an AI-slop detector checklist with the Inter exception (Inter stays allowed as preset default), product-truth vs visual-direction split, and the review vocabulary; (4) project-documentation gains an optional diagram mode (archify contract, no renderer; output never in `.docs/`); (5) rejected for vendoring: Graphify, Understand Anything, Awesome catalog, Caveman proxy/middleware, Superpowers and Addy packs, UI/UX Pro Max catalog. Skill set grows eleven to twelve; flat `skills/` layout stays per the hp-docs 5.7 note. No CONSTRAINTS.md file (bar lives in plan plus DECISIONS.md).
+- Context: user supplied 10 external skills, chose per-skill dispositions via questions, and ordered implementation with a docs-update prompt for another project at the end.
+- Consequence: README, docs-init, and hp-docs skill updated to the twelve-skill set; references list records borrowed and rejected upstreams; health-check counters unchanged (AGENT_PROMPT 12, DEVELOPMENT 15, DESIGN 7, CHECKLIST 5, REVIEWER 8) since additions are subsections; sync script run and verified.
+- Source: external-skills batch 2 task, feature file `.docs/features/external-skills-batch-2.md`, 2026-09-29.
+
+### 2026-09-29: hp-docs 1.6.0 released
+
+- Decision: the 2026-09-29 batch ships as version 1.6.0: hp-docs skill and package.json bumped from 1.5.0, the meta template example updated, Unreleased changelog content moved to the `[1.6.0] - 2026-09-29` section, commit tagged `v1.6.0`.
+- Context: the user asked to bump the version and commit with push after implementing the batch.
+- Consequence: installs of main and tag-pinned consumers get the review-audit skill, the addy borrows, the compact-result rule, the design excerpts, and the diagram mode.
+- Source: release task, 2026-09-29.

@@ -175,6 +175,10 @@ Activated when the user asks to stress-test a plan: `grill`, `stress-test`, `pok
 - After closing a branch, restate the outcome in one sentence and how it constrains remaining branches.
 - Done means: every material branch has a recorded decision or an explicitly accepted unknown with an owner and a resolution point. Close with: "what did we assume but never write down?"
 
+### Interview mode (borrowed from interview-me)
+
+Activated when the user asks to be interviewed ("interview me") or the task is underspecified: ask one question at a time, wait for each answer, converge toward what the user actually wants instead of what they first said they want. Exit when the remaining uncertainty no longer changes the scope (about 95% confidence), then restate the intent in one sentence and confirm before planning.
+
 ## 5. Planning and implementation
 
 After a clean audit and answered questions:
@@ -241,6 +245,18 @@ The data model is fixed at initialization in `.docs/DEVELOPMENT.md` and depends 
 - Server data through a query library (TanStack Query, SWR, etc.): server state lives only in queries and API clients; usually one `useQuery`/`useSuspenseQuery` per file, a composite typed DTO is fine for related data; multiple requests only for genuinely independent data with a named reason; keep the result in `data` without renaming, access by actual response shape (`data?.count`, `data?.object1.value`); handle `isLoading`/`isError` explicitly and track background refresh separately via `isFetching`; take loading/error states from the query, never duplicate them manually.
 - Background work without a server (desktop, CLI): heavy work runs on background threads/processes; the UI subscribes to progress and result events and never blocks the interface thread; state lives in the minimal scope; loading, error, empty, disabled states are mandatory for every async operation (native app pattern).
 - For other stacks the agent formulates equivalent rules by analogy and agrees on them with the user before recording them. If both models fit - ask, do not choose silently.
+
+### Constraint bar (borrowed from constraint-driven development)
+
+For any non-trivial feature, record the quality bar once before implementing: which checks must pass (typecheck, lint, tests, security axes), where each check runs (pre-commit, CI, manual), and what "done" means for this change. The bar lives in the task plan and, when it outlives the task, in `.docs/DECISIONS.md`. Never silence a check to get green: a failing check is fixed, scoped out with a recorded reason, or escalated to the user.
+
+### Doubt pass (borrowed from doubt-driven development)
+
+For high-stakes changes (production behavior, security, persistence, irreversible actions, unfamiliar code), run one adversarial pass in flight before committing to the approach: state the claim, extract the evidence for it, doubt it (what would prove it wrong, what was assumed but never verified), reconcile, then stop. One pass is enough; endless second-guessing is its own slop.
+
+### Source grounding (borrowed from source-driven development)
+
+Every framework, library, or API claim that affects the implementation must ground in official documentation via the documentation tool before use: verify, cite the source, and flag what stays unverified. Training memory is never a citation.
 
 ## 6. Minimalism: ponytail ladder
 
@@ -391,6 +407,8 @@ Ordinary turns (not task-end reports) use a terse style:
 - answer first: the result is the first sentence, context comes after;
 - no polite openers or closers ("I can help", "Let me know if...", "No problem");
 - short sentences; cut filler words (actually, basically, just);
+- compact result: deliver the most important content first and stop there; no oversized dumps, no full-file pastes, no restating what the user already knows unless asked; full detail only on explicit request;
+- when recommending an action, mark the single recommended one `(recommended)` with its reason, per section 4 rules; never mark equivalent options;
 - no recap or signposted summary; end at the last useful fact or the next question.
 
 Task reports keep the mandatory structure above, with the same padding removed inside sections. Brevity never deletes a decision, a verification result, or a reason the user asked for.

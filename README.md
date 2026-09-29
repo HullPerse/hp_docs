@@ -26,6 +26,7 @@ npx skills add HullPerse/hp_docs --skill test-reviewer
 npx skills add HullPerse/hp_docs --skill security-audit
 npx skills add HullPerse/hp_docs --skill project-documentation
 npx skills add HullPerse/hp_docs --skill hp-docs-update
+npx skills add HullPerse/hp_docs --skill review-audit
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -49,7 +50,7 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all eleven skills landed with readable frontmatter.
+3. Verifies all twelve skills landed with readable frontmatter.
 4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
@@ -229,13 +230,17 @@ Turns what a project already knows into user-facing documentation: reads `.docs/
 
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all eleven skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all twelve skills landed, then hands off to the first-run flow which owns all initialization questions.
 
 ### `hp-docs-update` - template migration
 
 Updates only the template-generated files of an already-initialized project when a newer hp_docs template ships. It reads the project's `.docs/hp-docs.meta.json`, compares current files with the new template, and produces a dry-run ADD/KEEP/CONFLICT plan that is applied only after approval. DECISIONS.md entries, feature files, reviews, README, and source code are never touched; project edits inside merged files are preserved.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes eleven bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, and `project-documentation`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+### `review-audit` - read-only general audit
+
+Runs a general audit of a selected scope (whole project, module, feature, commit range) against all project rules: compliance table plus ponytail over-engineering lens, duplication by concept, and security/test spot-checks. Reports findings with exact evidence and asks a disposition per package (fix now via docs-refactor, defer, reject). Makes no fixes and writes no files.
+
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes twelve bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, and `review-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 
@@ -247,7 +252,12 @@ Built from real production usage and these upstream sources:
 - Anti-slop lineage: [anti-ai-slop-writing](https://github.com/jalaalrd/anti-ai-slop-writing), [soundshuman](https://github.com/aashaexo/soundshuman), [elithrar/dotfiles anti-slop](https://github.com/elithrar/dotfiles), [stephenturner/skills deslop](https://github.com/stephenturner/skills), [humanizer-skill](https://github.com/aboudjem/humanizer-skill), [slopkit](https://github.com/ehmo/slopkit), [cursor/plugins unslop](https://github.com/cursor/plugins), [blader/humanizer](https://github.com/blader/humanizer), [no-ai-slop](https://github.com/petergyang/no-ai-slop), [stop-slop](https://github.com/hardikpandya/stop-slop)
 - Design: [scandinavian-design](https://github.com/ericzakariasson/scandinavian-design)
 - Interview format: [mattpocock/skills grill-me](https://github.com/mattpocock/skills)
-- Minimalism: ponytail (local skill)
+- Minimalism: ponytail (ladder in AGENT_PROMPT, `review-audit` skill for the over-engineering pass)
+- Senior-engineer workflows (paraphrased, no dependency): [obra/superpowers](https://github.com/obra/superpowers), [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
+- Ponytail: [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)
+- Design intelligence (paraphrased excerpts): [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [pbakaus/impeccable](https://github.com/pbakaus/impeccable)
+- Diagram contract (paraphrased, no renderer): [tt-a1i/archify](https://github.com/tt-a1i/archify)
+- Rejected for vendoring, search index only: [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify), [Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything), [ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills), [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (proxy/middleware; terse style already adapted)
 - Tooling presets: [ultracite](https://ultracite.ai), oxlint/oxfmt
 - Skills distribution: [vercel-labs/skills](https://github.com/vercel-labs/skills)
 

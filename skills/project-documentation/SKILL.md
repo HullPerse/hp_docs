@@ -94,6 +94,16 @@ Next concrete action: ...
 
 The percentage is documented items over manifest items by the spec definition. State the denominator. Never round up enthusiasm.
 
+### 6. Diagram mode (optional, no dependency; contract borrowed from archify)
+
+When the user asks for an architecture, workflow, sequence, data-flow, or lifecycle map:
+
+1. Pick one diagram type from the request; one bounded view per artifact.
+2. Artifact first: write a small typed source (nodes with stable ids, directed relationships, no coordinates) before discussing layout.
+3. Validate before delivery: schema shape, no crossing-by-default routes the author did not intend, every label readable, at most 12 primary nodes. Only a passing artifact replaces the previous one.
+4. No invented topology: every node and edge traces to code, docs, or a stated assumption marked as such. Source evidence (file paths, pinned revision) is opt-in and only for repositories the user approved; never serialize absolute local paths of private repos.
+5. Generated diagrams live with the product docs (`docs/` or equivalent), never inside `.docs/`. Self-contained HTML is preferred for sharing; PNG/SVG export on request.
+
 ## Tool guidance
 
 Recommendations only; compare before installing, respect the packages-first rule:

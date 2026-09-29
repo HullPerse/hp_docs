@@ -91,6 +91,16 @@ Regardless of preset, every component is described before implementation:
 - Touch targets: at least 44x44px for controls that ship on touch (comfort target; the WCAG 2.2 minimum is 24x24 CSS px where it applies); tabular numbers for data tables (see ui-skills playbook).
 - Text handling: `text-balance` for headings, `text-pretty` for body, `aspect-ratio` reserves space for media to prevent layout shift.
 
+### Resilient text and pre-delivery checklist (borrowed)
+
+- Headings wrap naturally across widths, fonts, and locales; never depend on a specific word staying on the last line.
+- Essential text reflows without clipping at narrow widths, zoom, and text scaling; long identifiers may wrap.
+- Chip and tag collections wrap or use an operable `+n` disclosure; truncation needs an accessible full-value path.
+- Badge meaning never relies on color alone; interactive chips carry native semantics, visible focus, and programmatic state.
+- Rapid interactions may cancel animation, but final state, focus, and content stay correct.
+
+Pre-delivery pass for every surface: no emoji as icons (SVG only); clickable elements show pointer affordance; contrast 4.5:1 for body text; visible focus states; `prefers-reduced-motion` respected; responsive check at 375/768/1024/1440px.
+
 ## 5. A11y and required states
 
 Normative values (WCAG 2.2):
@@ -120,6 +130,12 @@ Use before calling a surface done; borrowed from taste review practice:
 - states: focus, hover, pressed, disabled, loading, empty, error all visible and distinguishable.
 
 A surface fails the rubric when any check above is missed, not when it lacks decoration.
+
+### AI-slop detector checklist (condensed, paraphrased from impeccable)
+
+Run this pass when a surface looks "generated": default sans with no typographic decision behind it, purple-to-blue gradient without product meaning, cards nested in cards, gray text on colored backgrounds, bounce or elastic easing, dark glow decoration, side-tab borders as ornament, icon tile above every heading. Each hit is a finding with a concrete fix, not a style preference.
+
+Note the Inter exception: the Scandinavian preset defaults to Inter Variable or the system stack, which stays allowed. Flag the font only combined with other telltales above showing that no product decision was made.
 
 ## 6. Rules
 
@@ -159,3 +175,11 @@ Motion has a purpose or it does not ship:
 - speed: UI motion <300ms, dropdowns ~180ms (not 400ms), spinners fast to improve perceived performance; tooltips: delay before first show, instant switching between siblings, no animation.
 - respect prefers-reduced-motion: keep color/opacity feedback, remove transform/blur motion.
 - transitions.dev catalog (card resize, skeleton reveal, toast, tabs pill, tooltip, modal scale) is a vocabulary, not a requirement - pick only what matches the purpose above.
+
+### Product truth vs visual direction (borrowed from impeccable init)
+
+Durable product truth (audience, purpose, operating context, constraints, voice, evidence) lives in `product-spec.md` when it exists, otherwise in `.docs/features/*.md`. Surface-level visual direction lives in this file. Never confuse the two: a new page inherits product truth and chooses its own visual direction; changing the direction never rewrites the truth without a recorded decision.
+
+### Review vocabulary
+
+Use these verbs for design passes so requests stay precise: `audit` (technical quality: a11y, performance, responsive), `critique` (hierarchy, clarity, resonance), `polish` (final alignment before shipping), `distill` (strip to essence), `harden` (errors, i18n, overflow, edge cases), `onboard` (first-run and empty states), `animate` (purposeful motion only), `typeset` / `layout` / `colorize` (targeted fixes).

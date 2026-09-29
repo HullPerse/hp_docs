@@ -33,6 +33,9 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Decide whether unanswered choices block implementation or a reversible safe default is acceptable.
 - [ ] Draft a short implementation plan split into bite-sized steps: each step names exact file path, concrete change, verification command or observable result, and rollback note. Large steps are regrouped before coding.
 - [ ] Run the socratic brainstorm gate for non-trivial work: restated intent confirmed, alternatives considered, scope presented in small reviewable chunks and saved to product-spec or feature draft.
+- [ ] Record the constraint bar for the change: which checks must pass, where each runs, what "done" means; never silence a check to get green.
+- [ ] For high-stakes changes (production, security, persistence, irreversible, unfamiliar code) run the doubt pass before committing to the approach.
+- [ ] Ground framework/library/API claims in official documentation via the documentation tool; cite the source and flag what stays unverified.
 - [ ] Check the anti-rationalization table: name any excuse for skipping steps and apply the required response (AGENT_PROMPT.md).
 - [ ] Define tests for every new feature.
 - [ ] Define public behavior, accepted and rejected inputs, outputs, stable errors, side effects, invariants, and implementation details before writing tests.

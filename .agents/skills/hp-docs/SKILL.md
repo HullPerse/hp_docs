@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.5.0
+version: 1.6.0
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
@@ -300,6 +300,7 @@ Bundled skills:
 - `project-documentation` - generate product documentation from project knowledge (.docs, source, tests, benchmark artifacts) against DOCUMENTATION_SPEC, with readiness reporting
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 - `hp-docs-update` - update-only migration of generated template `.docs/` files to a newer hp_docs template version, driven by `.docs/hp-docs.meta.json` and a dry-run ADD/KEEP/CONFLICT plan with approval; never touches DECISIONS.md entries, features/, reviews/, README, or code
+- `review-audit` - read-only general audit of a selected scope against all project rules (compliance table, ponytail over-engineering lens, duplication by concept, security/test spot-checks); reports findings with evidence and per-package disposition, makes no fixes and writes no files
 
 ### 5.6 Skill anatomy (borrowed pattern, condensed)
 
@@ -313,7 +314,7 @@ Keep skills isolated and focused: one skill per concern, load only when activate
 
 ### 5.7 When to split (wshobson-inspired, deferred)
 
-If bundled skills grow beyond about 12, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. For now keep the flat `skills/` layout; document the threshold here rather than splitting prematurely. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
+If bundled skills grow beyond about 12, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. At twelve skills the flat `skills/` layout stays: the set is still discoverable and no trigger pain was observed; split only on real evidence, not on the count alone. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
 
 ### 6. Docs Health Check
 

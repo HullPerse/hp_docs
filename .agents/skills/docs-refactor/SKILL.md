@@ -26,6 +26,8 @@ Brings existing code into compliance with the project's own rules from `.docs/`.
 
 If the user did not specify an area - ask: whole project, one module, or specific rule groups. Never guess from recently modified files.
 
+For a read-only general audit without fixes, use the `review-audit` skill instead: it runs the same compliance table plus the over-engineering, duplication, and spot-check axes and ends at disposition, with no code changes.
+
 ## Compliance audit
 
 Walk every rule area and collect violations:
@@ -38,6 +40,7 @@ Walk every rule area and collect violations:
 | State | Single source of truth, no duplication between stores, server state in queries where applicable |
 | UI/UX | Implemented loading/error/empty/disabled/stale states, focus indicators, design tokens instead of hardcoded values, duplicate components |
 | Anti-slop / deslop | Comment-parrots, debug logs, dead code, placeholder data, em/en dashes in texts, dictionary word tags in documentation |
+| Over-engineering (ponytail lens) | Speculative abstractions, one-implementation interfaces, unrequested configurability, reimplemented stdlib/native/installed solutions, missing `ponytail:` ceiling markers |
 | Security | SECURITY.md contract: capability budget versus actual outbound calls, secrets hygiene, recorded audit commands runnable and current |
 | Tests | Testing contract: full testing-axis review with statuses, domain rules covered, persistence integration-tested, tests shipped together with features |
 
