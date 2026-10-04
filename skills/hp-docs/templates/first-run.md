@@ -113,11 +113,11 @@ Is there a large product scope worth tracking in a separate file?
 
 ### Question 6: Backend logging (backend projects only)
 
-- hp_logger - logging package by HullPerse for Bun/Elysia backends: transports, redaction, Prometheus metrics (github.com/HullPerse/hp_logger).
-- Ecosystem package - pino, winston, or another; pick during deep analysis with package comparison.
+- hp logger template `(recommended)` - copy the bundled minimal Bun logger (`templates/code/logger/`) into the backend logging path: zero dependencies, colored console output. It is a base, not a target: add level text, a context object, and secret redaction as the server grows.
+- Ecosystem package - pino, winston, or another for transports, structured JSON, redaction, or metrics out of the box; pick during deep analysis with package comparison.
 - None yet / not a backend project - skip; revisit when the backend appears.
 
-The recommendation status of this question is intentionally neutral until the canonical stack recommendation is revised.
+Default to the template for small Bun/Elysia servers; choose an ecosystem package when the project needs transports, structured logs, or a metrics export.
 
 ### Question 7: Security profile
 
@@ -140,7 +140,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), `docs-init` (package installation), and `hp-docs-update` (update-only migration of generated template files). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), `docs-init` (package installation), `hp-docs-update` (update-only migration of generated template files), `review-audit` (read-only general audit), and `code-cleanup` (behavior-preserving mechanical cleanup). Install all of them: they are small and their triggers differ.
 
 ---
 

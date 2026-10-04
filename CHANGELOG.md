@@ -2,6 +2,30 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [1.7.0] - 2026-10-04
+
+### Added
+
+- Skill `code-cleanup`: behavior-preserving mechanical cleanup (dead code, unused exports and dependencies, semantic duplicates, backward-compat cruft, leftover comments/logs/stubs); first case converts `try/catch/finally` to the bundled Result helpers with a per-site conversion table and typecheck-plus-tests proof of unchanged behavior
+- Bundled code templates: `templates/code/logger/` (minimal zero-dependency Bun console logger) and `templates/code/attempt/` (`toError`, `attempt`, `attemptSync`, `withFallback`)
+- DEVELOPMENT.md "Error handling (Result helpers)" subsection with the per-site conversion table; the "No bare catch" rule now points at the bundled `attempt` helpers
+- Anti-slop code rules extended after auditing six clean-code sources (clean-code-javascript, clean-code-typescript, domain-driven-hexagon, modular-monolith-with-ddd, react-philosophies, a pasted principles text): naming and signature rules, commented-out and journal/positional comment removal, TODO routing to DECISIONS.md, the throw-vs-Result boundary for guards, the duplication caveat (merge lookalike code only when one abstraction fits), and error reporting via the logger
+
+### Changed
+
+- Initialization Question 6 (backend logging): the `hp_logger` package option is replaced by the bundled `logger` template `(recommended)` for small Bun servers; ecosystem package and none remain
+- DEVELOPMENT.md observability rule: the bundled `logger` template is a permitted base for small Bun servers; level text, context objects, and redaction are the growth path, not a precondition
+- Skill set twelve to thirteen (`code-cleanup` added); README, docs-init, first-run, and the hp-docs skill updated; flat `skills/` layout kept
+
+### Fixed
+
+- first-run.md skill list was missing `review-audit` (now lists all thirteen)
+- README missing blank line before the "References" heading
+
+### Removed
+
+- `hp_logger` reference from Question 6 and the hp-docs skill question list
+
 ## [1.6.0] - 2026-09-29
 
 ### Added

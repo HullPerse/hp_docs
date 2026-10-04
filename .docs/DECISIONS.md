@@ -408,3 +408,31 @@ User decision journal. The agent must check this file before any question and ap
 - Context: the user asked to bump the version and commit with push after implementing the batch.
 - Consequence: installs of main and tag-pinned consumers get the review-audit skill, the addy borrows, the compact-result rule, the design excerpts, and the diagram mode.
 - Source: release task, 2026-09-29.
+
+### 2026-10-04: hp_logger removed, bundled logger template adopted
+
+- Decision: drop the external `hp_logger` reference and ship the risovach_new backend logger as a code template at `.agents/skills/hp-docs/templates/code/logger/` (`logger.ts`, `logger.config.ts`, `logger.types.ts`). Weaken the observability rule in DEVELOPMENT.md and first-run: structured logging (level, message, context, no secrets) stays the goal, while level-as-text, context objects, and redaction are the growth path, not a precondition for shipping a small Bun server.
+- Context: the docs pointed at a package that no longer exists; the user wanted the working risovach logger as the base instead of an external dependency.
+- Consequence: first-run Q6 and the hp-docs/docs-init skill lists describe a bundled template; no external package is referenced. hp_logger remains only in historical DECISIONS/CHANGELOG text.
+- Source: hp_docs audit session 2026-10-04.
+
+### 2026-10-04: attempt Result-helper pattern adopted
+
+- Decision: bundle `.agents/skills/hp-docs/templates/code/attempt/attempt.ts` with `toError`, `attempt`, `attemptSync`, and `withFallback`, and set the project rule "a fallible call returns a Result instead of throwing, so the caller decides what a rejection means; aim for zero `try/catch` outside the helper". A per-site conversion table covers normal flow, sync calls, cleanup-swallow, cleanup-propagate, and floating promises. The rule is explicitly not a ban on `throw`: guards and invariant violations still throw to fail fast, and domain errors stay `Error` subclasses with codes.
+- Context: the user wanted the hp_loc attempt pattern, but as a proposal with per-site conversions, not a blind codemod.
+- Consequence: DEVELOPMENT.md gains "Error handling (Result helpers)"; the code-cleanup skill owns the migration and its proof. `attemptAll` and `onFinally` were dropped from the helper.
+- Source: hp_docs audit session 2026-10-04.
+
+### 2026-10-04: code-cleanup skill created
+
+- Decision: add skill `code-cleanup` (thirteenth bundled skill) for behavior-preserving mechanical cleanup: dead code, unused exports/interfaces/dependencies, semantic duplicates, backward-compat cruft, leftover comments/logs/stubs, and mechanical `try/catch` migration. It records a baseline, classifies candidates, gates on per-package disposition, converts per site, and proves behavior unchanged. Boundaries: prose -> deslop, simplification judgement -> ponytail, rule compliance -> docs-refactor, read-only audit -> review-audit. Include a "Findings that are not cleanup" routing section.
+- Context: mechanical cleanup is neither rule compliance (docs-refactor) nor a read-only audit (review-audit), so it needs its own skill.
+- Consequence: README/docs-init/hp-docs skill lists move to thirteen; flat `skills/` layout stays per the 5.7 note; the skill ships with the two code templates above.
+- Source: hp_docs audit session 2026-10-04.
+
+### 2026-10-04: Cleanliness rules audited against six clean-code sources
+
+- Decision: audit the code-cleanup skill and the anti-slop code rules against clean-code-javascript, clean-code-typescript, domain-driven-hexagon, modular-monolith-with-ddd, react-philosophies, and a pasted clean-code principles text, then fold in the gaps. Applied: (1) split duplicated source of truth (always a defect) from incidental lookalike duplication (merge only when one abstraction fits; a leaky abstraction is worse than the duplication); (2) state the throw boundary - guards and invariant violations throw to fail fast, Result is for normal-flow failure; (3) catalog commented-out code, journal/changelog comments in source, positional/banner markers, and TODO/FIXME routing to DECISIONS.md; (4) treat unused interfaces/extension points as dead code, distinct from ponytail's over-engineering judgement; (5) route non-mechanical findings instead of fixing them in a cleanup pass; (6) add compact naming and signature rules (no abbreviations, booleans as yes/no, verb functions, positive form, no boolean/nil arguments that only pick a branch); (7) route error reporting to the logger, not `console.log`. Design-only principles (SOLID, immutability, DDD value objects, architecture tests, TDD) stay out on purpose.
+- Context: user asked for a full audit of the skill and the rules against the five repos plus the pasted text before finalizing either.
+- Consequence: DEVELOPMENT.md anti-slop code section and the Error handling subsection grow; no health-check heading counts change (additions are bullets and prose). Covered by feature file `.docs/features/code-cleanup.md`.
+- Source: hp_docs audit session 2026-10-04.

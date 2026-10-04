@@ -93,7 +93,7 @@ When comparing 2+ competing packages in the same category, write and run a minim
 
 ### Observability checklist (when the project runs in production)
 
-- structured logging: level, message, context object; no secrets or PII in logs;
+- structured logging: level, message, context object; no secrets or PII in logs. The bundled `logger` template (`.agents/skills/hp-docs/templates/code/logger/`) is a permitted base for small Bun servers: it ships as a minimal starting point, and level-as-text, context objects, and redaction are the growth path, not a precondition for shipping the server;
 - metrics: RED (rate, errors, duration) or USE (utilization, saturation, errors) with named thresholds;
 - tracing: boundary spans for external calls where relevant;
 - symptom-based alerts, not noise; every alert has an owner and a runbook pointer.
@@ -219,16 +219,33 @@ Applied to code, documentation, UI copy, agent replies, commit messages.
 
 - Rare comments only for non-obvious cause, invariant, workaround, or security constraint.
 - No comment-parrots restating code; no giant doc-comments.
+- No commented-out code, journal or changelog comments in source, or positional/banner markers; version control keeps history. TODO/FIXME markers are not a decision mechanism (see the TODO rule below).
 - No speculative abstractions, empty extension points, unused interfaces, fake plugin systems.
-- No duplicated state or duplicated sources of truth.
+- No duplicated state or duplicated sources of truth: the same fact stored or maintained in two places. That is always a defect. Lookalike code that only shares a shape is not automatically a defect: merge it only when one abstraction fits cleanly, because a leaky or speculative abstraction costs more than the duplication. Record the merge-or-keep choice.
 - No reimplementation of existing logic: before writing new code, search the codebase by concept (synonyms, related terms, similar shapes), not only by name; reuse a similar implementation or record in DECISIONS.md why a new one is justified.
-- Clear names, small modules, typed errors, tested domain logic.
-- No debug logs, dead code, placeholder success paths, or fake data in production.
+- Clear names, small modules, typed errors, tested domain logic. Names describe intent without repeating context the location already gives; no abbreviations except established domain terms; booleans read as yes/no (`isActive`, `hasAccess`); functions are verbs; prefer the positive form (`isEnabled` over `isNotDisabled`).
+- Signatures stay obvious: two or fewer parameters where practical; no boolean flag parameters and no boolean/nil arguments that exist only to pick a branch - split the function instead. One job per function at one level of abstraction; prefer early returns over nested conditionals.
+- Make side effects explicit in the name and the return value; prefer composition over inheritance; clean up listeners, timers, and subscriptions on teardown. Optimize for the reader and stay idiomatic; avoid surprising metaprogramming unless the framework requires it.
+- No debug logs, dead code, placeholder success paths, or fake data in production. Route error reporting to the logger (the `logger` template), not `console.log`; a bare `console.error` is a fallback, not the goal.
 - Lint and type errors are fixed or argued; suppression without a recorded reason is not a solution.
 - No TODO comments instead of decisions; record unresolved items in `.docs/DECISIONS.md`.
-- No bare `catch {}`. Every catch either (1) uses the Result helpers when the failure is normal flow, (2) surfaces via a `console.error`/`warn`, (3) writes observable state (a counter, a fallback marker), or (4) carries a comment naming the protected invariant and why silence is safe.
+- No bare `catch {}`. Every catch either (1) uses the `attempt` helpers (`.agents/skills/hp-docs/templates/code/attempt/`) when the failure is normal flow, (2) surfaces via a `console.error`/`warn`, (3) writes observable state (a counter, a fallback marker), or (4) carries a comment naming the protected invariant and why silence is safe.
 - Prefer lookup maps over switch/if-else chains where the value set is stable and the map is built once; keep switches on genuinely hot branches only with a benchmark delta that justifies them.
 - Do not build a large abstraction for one hypothetical future case.
+
+### Error handling (Result helpers)
+
+Preferred, as a proposal: a fallible call returns a Result instead of throwing, so the caller decides what a rejection means. The bundled `attempt` template (`.agents/skills/hp-docs/templates/code/attempt/attempt.ts`) provides `toError`, `attempt`, `attemptSync`, and `withFallback`. This is not a ban on `throw`: throwing stays correct for invariant violations and programmer errors that should fail fast (guards), while Result is for failures that are part of normal flow. Domain errors stay `Error` subclasses with codes so the type survives the collapse to `Error`. Aim for zero `try/catch` outside the helper; convert each site by choosing the variant that preserves behavior:
+
+| Site | Convert to |
+| --- | --- |
+| failure is normal flow | `const [data, error] = await attempt(call)` plus an explicit fallback |
+| sync fallible call | `attemptSync(() => ...)` |
+| cleanup, failure swallowed | `await attempt(call).finally(stop)` - `attempt` never rejects, so `finally` always runs |
+| cleanup, failure must propagate | `await attempt(call).finally(stop)` then `if (error) throw error` |
+| floating promise | `.catch(() => {})` with a comment naming why silence is safe |
+
+The helper itself and an intentional floating-promise `.catch(() => {})` are the only expected remainders. Never bulk-replace without picking the variant per site: a blind codemod can swallow an error that had to propagate. The `code-cleanup` skill owns this migration and its proof.
 
 ### UI and UX
 

@@ -27,6 +27,7 @@ npx skills add HullPerse/hp_docs --skill security-audit
 npx skills add HullPerse/hp_docs --skill project-documentation
 npx skills add HullPerse/hp_docs --skill hp-docs-update
 npx skills add HullPerse/hp_docs --skill review-audit
+npx skills add HullPerse/hp_docs --skill code-cleanup
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -50,7 +51,7 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all twelve skills landed with readable frontmatter.
+3. Verifies all thirteen skills landed with readable frontmatter.
 4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
@@ -230,7 +231,7 @@ Turns what a project already knows into user-facing documentation: reads `.docs/
 
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all twelve skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all thirteen skills landed, then hands off to the first-run flow which owns all initialization questions.
 
 ### `hp-docs-update` - template migration
 
@@ -240,11 +241,17 @@ Updates only the template-generated files of an already-initialized project when
 
 Runs a general audit of a selected scope (whole project, module, feature, commit range) against all project rules: compliance table plus ponytail over-engineering lens, duplication by concept, and security/test spot-checks. Reports findings with exact evidence and asks a disposition per package (fix now via docs-refactor, defer, reject). Makes no fixes and writes no files.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes twelve bundled skills, including `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, and `review-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+### `code-cleanup` - behavior-preserving mechanical cleanup
+
+Removes cruft without changing behavior: dead code, unused exports, unused dependencies, semantic duplicates, backward-compatibility leftovers, leftover comments/logs/stubs, and mechanical error-handling migration. Its first case is the bundled Result pattern: it converts `try/catch/finally` to the `attempt` helpers with a per-site conversion table, and proves behavior did not change with typecheck plus tests before and after. It is not prose cleanup (`deslop`), not simplification judgement (`ponytail`), not rule compliance (`docs-refactor`), and not a read-only audit (`review-audit`): it edits code and must show evidence.
+
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes thirteen bundled skills, including `code-cleanup`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, and `review-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 
-`examples/mini-project/` shows filled docs on a fictional TypeScript/Bun CLI: what templates look like after first-run, including the decision to drop DESIGN.md and CHECKLIST.md as unnecessary for a non-UI micro-tool.## References
+`examples/mini-project/` shows filled docs on a fictional TypeScript/Bun CLI: what templates look like after first-run, including the decision to drop DESIGN.md and CHECKLIST.md as unnecessary for a non-UI micro-tool.
+
+## References
 
 Built from real production usage and these upstream sources:
 

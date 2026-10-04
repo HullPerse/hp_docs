@@ -103,11 +103,11 @@ The answer defines every command in the docs (`bun run lint`, `pnpm lint`, ...).
 
 **Q6: Backend logging** (backend projects only)
 
-- hp_logger - logging package by HullPerse for Bun/Elysia backends: transports, redaction, Prometheus metrics (github.com/HullPerse/hp_logger)
-- Ecosystem package - pino, winston, or another; pick during deep analysis with package comparison
+- hp logger template (recommended) - copy the bundled minimal Bun logger (`templates/code/logger/`) into the backend logging path: zero dependencies, colored console output. A base, not a target: add level text, a context object, and secret redaction as the server grows
+- Ecosystem package - pino, winston, or another for transports, structured JSON, redaction, or metrics; pick during deep analysis with package comparison
 - None yet / not a backend project - skip; revisit when the backend appears
 
-Recommendation status intentionally neutral until the canonical stack recommendation is revised.
+Default to the template for small Bun/Elysia servers; choose an ecosystem package when the project needs transports, structured logs, or a metrics export.
 
 **Q7: Security profile**
 
@@ -301,6 +301,7 @@ Bundled skills:
 - `docs-init` - install the package into a clean project (runner question, CLI install with git-clone fallback, verification) and hand off to this first-run flow; triggers on "install hp_docs" or on skills present without root AGENTS.md
 - `hp-docs-update` - update-only migration of generated template `.docs/` files to a newer hp_docs template version, driven by `.docs/hp-docs.meta.json` and a dry-run ADD/KEEP/CONFLICT plan with approval; never touches DECISIONS.md entries, features/, reviews/, README, or code
 - `review-audit` - read-only general audit of a selected scope against all project rules (compliance table, ponytail over-engineering lens, duplication by concept, security/test spot-checks); reports findings with evidence and per-package disposition, makes no fixes and writes no files
+- `code-cleanup` - behavior-preserving mechanical cleanup (dead code, unused exports/dependencies, semantic duplicates, backward-compat cruft); first case converts `try/catch/finally` to the bundled `attempt` helpers with a per-site conversion table and typecheck-plus-tests proof of unchanged behavior
 
 ### 5.6 Skill anatomy (borrowed pattern, condensed)
 
@@ -314,7 +315,7 @@ Keep skills isolated and focused: one skill per concern, load only when activate
 
 ### 5.7 When to split (wshobson-inspired, deferred)
 
-If bundled skills grow beyond about 12, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. At twelve skills the flat `skills/` layout stays: the set is still discoverable and no trigger pain was observed; split only on real evidence, not on the count alone. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
+If bundled skills grow beyond about fifteen, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. At thirteen skills the flat `skills/` layout stays: the set is still discoverable and no trigger pain was observed; split only on real evidence, not on the count alone. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
 
 ### 6. Docs Health Check
 
