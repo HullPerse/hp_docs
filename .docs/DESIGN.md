@@ -11,8 +11,9 @@ The design preset is chosen at project initialization and recorded in `.docs/DEC
 | Scandinavian `(recommended)` | Web and product interfaces by default: calm black-and-white base, restrained typography |
 | Neo-brutalism | When the user explicitly wants a harsh high-contrast style: radius 0, thick borders, hard shadows, monospace font |
 | Zed dark | Native desktop applications (GPUI/compact tools): dark theme, high information density |
+| Windows 95 | Dense beveled utility chrome for tracker, downloader, player, and tool windows: raised/sunken bevels, window metaphors, block progress |
 
-For non-UI projects (CLI, backend-only) keep only this section and section 5, or delete the file entirely.
+For non-UI projects (CLI, backend-only) keep only this section and section 7, or delete the file entirely.
 
 ## 1. Preset "Scandinavian" (default)
 
@@ -81,7 +82,47 @@ Dark compact editor-grade theme for native tools. One neutral scale carries surf
 - Radii 4/6/8px; 1px borders, 2px `border_focused` focus; tab bar 32px, buttons 26px tall.
 - No decorative gradients or glow; 100-150ms ease-out color transitions.
 
-## 4. Components (common requirements)
+## 4. Preset "Windows 95" (beveled utility chrome)
+
+Dense utility interface built from raised and sunken bevels, window and panel metaphors, visible borders, and direct labels. Do not flatten it into a modern card surface: the bevels carry the affordance.
+
+### Bevel vocabulary
+
+Five border classes carry fixed semantics:
+
+- Raised control and button face: 2px solid with light top/left, dark bottom/right.
+- Sunken track, pressed control, active tab: 2px solid with dark top/left, light bottom/right.
+- Small sunken inset: 1px variant for inactive tabs and tight insets.
+- Raised 3D panel: inset highlight plus outset shadow for window panels.
+- Marker border: reserved for the single favorite or marked state, never for generic emphasis.
+
+Shape, bevel, density, and contrast ride on data attributes so components stay unaware: rounding none/frame/all in one CSS block (default radius 0), bevel raised/flat, compact density via smaller control height, font size, and gap, high-contrast retro style with pure black/white bevels and a 3px focus color.
+
+### Token contract
+
+`:root` variables map to utilities through a theme block. Split face from field: window silver for chrome, content white for surfaces that carry reading text. Titlebar text is picked by luminance against the gradient. Partial overrides use one override map with per-row reset; every override ships a default. New visual tokens require a decision entry. Guard suite: body text passes AA on face and field, titlebar label passes on its gradient, status accents keep a perceptual distance floor from each other.
+
+### Progress recipe
+
+Sunken track with two fills. Blocks (default): a repeating mask of 8px blocks plus 2px gaps cut over a percentage-width fill; the partially filled edge block is intentional. Slots: a fixed cell count (12 in the source project) with filled count `floor(value / max * cells)`, at least 1 cell when value is above zero, full only at value equal to max. Indeterminate: a 40 percent chunk sweeping across the track. A solid style opt-in drops the mask and renders slots as percentage. Two invariants: the track owns flex (never pass a non-flex display utility over it or zero-basis cells collapse), and fill classes must resolve to a theme token (an unmapped class renders transparent cells).
+
+### Titlebar and bars
+
+One titlebar primitive (gradient variables, drag region with carve-outs for controls, double-click maximize, small labeled buttons) plus panel, toolbar, and statusbar primitives. The main window keeps the native OS frame by default; a custom bar is an explicit opt-in experiment. In-app windows keep their own headers.
+
+### Tabs pattern
+
+Active tab is sunken with a transparent bottom border pulled above the content; inactive tabs use the small inset border on the surface color. Roving tab index with container-level arrow handling, `aria-selected`, and a tooltip reason for disabled tabs. Documented tradeoff: marking the active tab natively disabled keeps the visual honest but removes it from keyboard focus and announces it as disabled; the alternative is a click guard with the tab focusable.
+
+### Single menu and overlay stack
+
+One shared context-menu wrapper over the installed primitive, never a bespoke menu per surface. Entries that duplicate a visible button fire that button. Disabled buttons mean disabled entries. Escape unwinds through one shared overlay stack. Hint badges live in a fixed portal above content: uniform label length per run, content ranks before chrome, hidden or clipped targets earn no badge, overflow reports a count instead of paging, activation flashes through the existing outline treatment.
+
+### Motion and focus
+
+Transitions are off by default; micro-interactions stay under 200ms; no looping in persistent chrome. Ambient looping lives only on transient fullscreen surfaces with a static reduced-motion fallback. Reduced motion keeps color and opacity feedback and drops transform motion. Focus is a 1px dotted outline inside controls (thicker solid treatment for high-contrast); icon-only controls carry names; color is never the only state signal; async surfaces expose loading, empty, error, disabled, stale, dirty, and recovery states.
+
+## 5. Components (common requirements)
 
 Regardless of preset, every component is described before implementation:
 
@@ -101,7 +142,7 @@ Regardless of preset, every component is described before implementation:
 
 Pre-delivery pass for every surface: no emoji as icons (SVG only); clickable elements show pointer affordance; contrast 4.5:1 for body text; visible focus states; `prefers-reduced-motion` respected; responsive check at 375/768/1024/1440px.
 
-## 5. A11y and required states
+## 6. A11y and required states
 
 Normative values (WCAG 2.2):
 
@@ -137,7 +178,7 @@ Run this pass when a surface looks "generated": default sans with no typographic
 
 Note the Inter exception: the Scandinavian preset defaults to Inter Variable or the system stack, which stays allowed. Flag the font only combined with other telltales above showing that no product decision was made.
 
-## 6. Rules
+## 7. Rules
 
 - Never create a second component when an analog exists in shared directories.
 - Never hardcode colors, radii, or spacing; use the preset's tokens only.
