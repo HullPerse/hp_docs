@@ -450,3 +450,10 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user asked what the caveman-ai/trim-1 project is (1.2 MB gradient-boosted extractive line selector, pure Go, deterministic, Apache-2.0; the model inside JuliusBrussee/caveman, whose terse style hp_docs already adapted and whose proxy/middleware was rejected) and what hp_docs could take. First disposition was docs-only with an optional-tool mention; the user then narrowed it to rules with nothing to install. Its own honest numbers justify the gentle default: balanced cuts ~2% on short dense tool outputs with evidence kept, ~89% on long documents.
 - Consequence: agents trimming foreign output follow the five-line discipline; no dependency, no vendored text, no new skill or template file; section counts unchanged.
 - Source: trim-1 evaluation session 2026-10-15 (github.com/caveman-ai/trim-1, huggingface.co/caveman-so/trim-1).
+
+### 2026-10-15: hp-docs 1.8.0 released
+
+- Decision: the Unreleased batch ships as version 1.8.0: hp-docs skill and package.json bumped to 1.8.0 (skill frontmatter was still 1.6.0, corrected in the same pass), the meta template example updated, Unreleased changelog content moved to the `[1.8.0] - 2026-10-15` section, commit tagged `v1.8.0`.
+- Context: the user ordered commit, push, and release after the trim-1 trimming-discipline change landed on top of the win95-performance batch.
+- Consequence: installs of main and tag-pinned consumers get the Windows 95 preset, the PERFORMANCE.md template, the deep-performance skill, the four utility templates with Question 8, and the trimming discipline.
+- Source: release task, 2026-10-15.

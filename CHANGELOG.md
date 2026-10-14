@@ -2,7 +2,7 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
-## [Unreleased]
+## [1.8.0] - 2026-10-15
 
 ### Added
 

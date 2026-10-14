@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.6.0
+version: 1.8.0
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile, optional utility templates), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
