@@ -443,3 +443,10 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user audit request on the local iluhaAnime folder (repo not checked): Win95 as a docs preset, extractable decisions, PERFORMANCE.md rules, deep perf skill analysis, separate perf audit skill, self-written modules as opt-in templates. Plan-mode questions answered 2026-10-15 (Win95 now, PERFORMANCE.md full port, custom skill with best-of borrows, utils pacer/signal/hotkeys/resize) with an explicit build order.
 - Consequence: first-run asks eight questions; hp-docs-update migrates PERFORMANCE.md when present; sync scripts carry the new pair; no version bump or tag in this task.
 - Source: win95-performance batch, plan Q/A plus user build order 2026-10-15.
+
+### 2026-10-15: trim-1 trimming discipline borrowed as rules only
+
+- Decision: borrow the trim-1 context-trimming discipline as documentation rules only, with no installation and no tool recommendation in the templates. One bullet added to the AGENT_PROMPT.md chat-answer style (verbatim-only drops, original order, removal markers, no trimming without a query, fail-closed under ~10% cut, gentle default with aggressive only on reason, neighbor lines plus block header). Docs destination: this journal only, no feature file.
+- Context: user asked what the caveman-ai/trim-1 project is (1.2 MB gradient-boosted extractive line selector, pure Go, deterministic, Apache-2.0; the model inside JuliusBrussee/caveman, whose terse style hp_docs already adapted and whose proxy/middleware was rejected) and what hp_docs could take. First disposition was docs-only with an optional-tool mention; the user then narrowed it to rules with nothing to install. Its own honest numbers justify the gentle default: balanced cuts ~2% on short dense tool outputs with evidence kept, ~89% on long documents.
+- Consequence: agents trimming foreign output follow the five-line discipline; no dependency, no vendored text, no new skill or template file; section counts unchanged.
+- Source: trim-1 evaluation session 2026-10-15 (github.com/caveman-ai/trim-1, huggingface.co/caveman-so/trim-1).

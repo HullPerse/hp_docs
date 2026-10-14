@@ -408,6 +408,7 @@ Ordinary turns (not task-end reports) use a terse style:
 - no polite openers or closers ("I can help", "Let me know if...", "No problem");
 - short sentences; cut filler words (actually, basically, just);
 - compact result: deliver the most important content first and stop there; no oversized dumps, no full-file pastes, no restating what the user already knows unless asked; full detail only on explicit request;
+- trimming foreign output: when compressing a log, listing, or long tool result, never rewrite or summarize its lines: drop whole lines only, keep the original order, mark removals with a short marker; no query means no trimming, return the context as is; fail closed (cut under ~10%, tiny or already-marked context returns unchanged); default to a gentle cut, aggressive only with an explicit reason, since every removed line is unreadable afterwards; keep one line of context on each side plus the enclosing block header;
 - when recommending an action, mark the single recommended one `(recommended)` with its reason, per section 4 rules; never mark equivalent options;
 - no recap or signposted summary; end at the last useful fact or the next question.
 
