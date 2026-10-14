@@ -2,6 +2,21 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [Unreleased]
+
+### Added
+
+- DESIGN.md Preset "Windows 95" (fourth preset): portable beveled-chrome recipe distilled from iluhaAnime (bevel vocabulary, face/field token contract, progress/titlebar/tabs/menu patterns, motion and focus); DESIGN.md grows 7 to 8 top-level sections
+- Optional `.docs/PERFORMANCE.md` template: bench commands and profiles, mandatory budget/checksum/minDelta gates, what-to-bench plus N/A domains, evidence standard, bench-first rejections, fix hierarchy, scale table, journal rule
+- Skill `deep-performance`: profiler, arch-audit, bench-engineer, algo-opt, and verify modes with confirmed/probable/theoretical finding classes; methods paraphrased with no dependency; read-only until the user approves a fix package
+- Code templates `pacer/`, `signal-store/`, `hotkeys-core/`, `resize/` plus a `code/README.md` take/skip table; offered through a new first-run Question 8 multiselect separate from backend logging
+- Feature file `.docs/features/win95-performance-batch.md` carrying the batch disposition
+
+### Changed
+
+- Initialization questions seven to eight (Question 8: optional utility templates); skill set thirteen to fourteen; README, docs-init, first-run, and the hp-docs skill updated; flat `skills/` layout kept
+- `hp-docs-update` scope boundary and the update prompt cover PERFORMANCE.md when the project has it; `hp-docs.meta.json` records the design preset including windows-95, selected utility templates, and the PERFORMANCE.md entry
+
 ## [1.7.0] - 2026-10-04
 
 ### Added

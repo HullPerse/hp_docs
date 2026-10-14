@@ -14,6 +14,7 @@ $pairs = @(
     @(".docs\TESTING.md",                 "TESTING.md"),
     @(".docs\SECURITY.md",                "SECURITY.md"),
     @(".docs\DESIGN.md",                 "DESIGN.md"),
+    @(".docs\PERFORMANCE.md",            "PERFORMANCE.md"),
     @(".docs\CHECKLIST.md",              "CHECKLIST.md"),
     @(".docs\REVIEWER.md",               "REVIEWER.md"),
     # DECISIONS.md excluded on purpose: live journal holds repo-specific decisions,

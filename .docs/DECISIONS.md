@@ -1,4 +1,4 @@
-# {{PROJECT_NAME}} Decisions
+﻿# {{PROJECT_NAME}} Decisions
 
 User decision journal. The agent must check this file before any question and append decisions after answers, so nothing gets asked twice. All entries are written in English; entries dated before the v1.3.0 language migration were translated from their Russian originals.
 
@@ -436,3 +436,10 @@ User decision journal. The agent must check this file before any question and ap
 - Context: user asked for a full audit of the skill and the rules against the five repos plus the pasted text before finalizing either.
 - Consequence: DEVELOPMENT.md anti-slop code section and the Error handling subsection grow; no health-check heading counts change (additions are bullets and prose). Covered by feature file `.docs/features/code-cleanup.md`.
 - Source: hp_docs audit session 2026-10-04.
+
+### 2026-10-15: Win95 preset, PERFORMANCE.md, deep-performance skill, utility templates
+
+- Decision: implement now as one batch, docs in the new feature file `.docs/features/win95-performance-batch.md` plus this entry plus CHANGELOG Unreleased. (1) DESIGN.md gains Preset "Windows 95" (portable recipe only; domain tokens and OS integration stay in iluhaAnime); sections grow 7 to 8 with Components/A11y/Rules renumbered to 5/6/7 and every health check updated. (2) New optional `.docs/PERFORMANCE.md` template (8 sections from the iluhaAnime bench practice); created at first-run only for perf-sensitive projects or on request. (3) New skill `deep-performance` (profiler, arch-audit, bench-engineer, algo-opt, verify; confirmed/probable/theoretical classes); external skills borrowed as paraphrase only, no dependency, no copied text. (4) New code templates `pacer/`, `signal-store/`, `hotkeys-core/`, `resize/` (minimal standalone ports, snap guides and framework hooks left behind) offered through a new first-run Question 8 multiselect separate from backend logging; `attempt` not re-offered, title parser and date utils left behind. Skill set thirteen to fourteen; flat `skills/` layout kept.
+- Context: user audit request on the local iluhaAnime folder (repo not checked): Win95 as a docs preset, extractable decisions, PERFORMANCE.md rules, deep perf skill analysis, separate perf audit skill, self-written modules as opt-in templates. Plan-mode questions answered 2026-10-15 (Win95 now, PERFORMANCE.md full port, custom skill with best-of borrows, utils pacer/signal/hotkeys/resize) with an explicit build order.
+- Consequence: first-run asks eight questions; hp-docs-update migrates PERFORMANCE.md when present; sync scripts carry the new pair; no version bump or tag in this task.
+- Source: win95-performance batch, plan Q/A plus user build order 2026-10-15.

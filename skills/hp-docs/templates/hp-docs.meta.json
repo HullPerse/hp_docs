@@ -4,13 +4,15 @@
   "version": "<hp-docs template version used at initialization, e.g. 1.7.0>",
   "template_revision": "<git revision or date of the template used at initialization, or unknown>",
   "language": "<docs language from initialization Question 1, e.g. en>",
-  "design_preset": "<chosen preset from Question 4: scandinavian, neo-brutalism, zed-dark, custom, or none for non-UI projects>",
+  "design_preset": "<chosen preset from Question 4: scandinavian, neo-brutalism, zed-dark, windows-95, custom, or none for non-UI projects>",
+  "utility_templates": "<selected templates from Question 8: pacer, signal-store, hotkeys-core, resize, none>",
   "generated_files": [
     ".docs/AGENT_PROMPT.md",
     ".docs/DEVELOPMENT.md",
     ".docs/TESTING.md",
     ".docs/SECURITY.md",
     ".docs/DESIGN.md",
+    ".docs/PERFORMANCE.md",
     ".docs/CHECKLIST.md",
     ".docs/REVIEWER.md",
     ".docs/ROADMAP.md"

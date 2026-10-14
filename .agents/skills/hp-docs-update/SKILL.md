@@ -18,7 +18,7 @@ Brings the generated documentation of an initialized project in line with a newe
 
 Scope boundary, always:
 
-- May touch: `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md`, `.docs/TESTING.md`, `.docs/SECURITY.md`, `.docs/DESIGN.md`, `.docs/CHECKLIST.md`, `.docs/REVIEWER.md`, `.docs/ROADMAP.md` (template-generated files only).
+- May touch: `.docs/AGENT_PROMPT.md`, `.docs/DEVELOPMENT.md`, `.docs/TESTING.md`, `.docs/SECURITY.md`, `.docs/DESIGN.md`, `.docs/PERFORMANCE.md` (when the project has it), `.docs/CHECKLIST.md`, `.docs/REVIEWER.md`, `.docs/ROADMAP.md` (template-generated files only).
 - May append to `.docs/DECISIONS.md`: one short entry recording the update itself.
 - Never touches: existing DECISIONS.md entries, `.docs/features/`, `.docs/reviews/`, `.docs/answers/`, README, AGENTS.md, product-spec.md, or any source code.
 

@@ -322,6 +322,7 @@ Docs in `.docs/`:
 - `SECURITY.md` - security contract: profile, trust boundaries, capability budget, audit axes, exfiltration proof.
 - `DECISIONS.md` - user decision journal (so nothing gets asked twice).
 - `DESIGN.md` - design system: presets, tokens, components, UI/UX rules (when applicable).
+- `PERFORMANCE.md` - optional performance contract: bench commands, gates, evidence standard (created for perf-sensitive projects).
 - `CHECKLIST.md` - checklist before/during/after implementation.
 - `REVIEWER.md` - independent review prompt.
 - `reviews/` - issue files, created only when independent review finds problems.

@@ -1,7 +1,7 @@
 ---
 name: hp-docs
 version: 1.6.0
-description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
+description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile, optional utility templates), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
 # HP-Docs Skill
@@ -94,6 +94,7 @@ The answer defines every command in the docs (`bun run lint`, `pnpm lint`, ...).
 - Scandinavian `(recommended)` - calm black-and-white base, alpha ink ladder, Inter/system sans, 8px rhythm
 - Neo-brutalism - radius 0, 2px borders, hard shadows, monospace font
 - Zed dark - dark theme for native desktop tools
+- Windows 95 - dense beveled utility chrome for tracker, downloader, player, and tool windows
 - Custom - user describes style or reference; rewrite DESIGN.md section for it
 
 **Q5: Product spec** (optional)
@@ -119,6 +120,18 @@ Which profile fits what this project ships? It sets the depth of `.docs/SECURITY
 - Minimal - micro utility without external input: dependency audit command only
 
 No `(recommended)` marker: the answer follows from what the project publishes. The duty to report security findings at any time does not depend on this choice.
+
+**Q8: Optional utility templates**
+
+Does the project want extra utilities from the bundled code templates? Multi-select, separate from backend logging. Each template copies only when selected.
+
+- pacer - the only timing engine (`scheduleTask`, `sleep`, `debounce`, `throttle`); take when more than one place needs debounce, throttle, or delayed retry
+- signal-store - minimal cells plus derived values (`createCell`, `createDerived`, `batch`); take when a tiny store replaces scattered useState pairs or zustand/jotai
+- hotkeys-core - chord parse plus one shortcut registry; take when shortcuts grow past raw window listeners
+- resize - rect resize/move math plus coalesced ResizeObserver; take when drag handles, crop rects, or observer layout sync repeat
+- None - skip all four; revisit when the need appears
+
+The `attempt` helpers are not offered here: they already ship as the default error-handling rule with their own template.
 
 ### 3. Stack Comparison
 
@@ -302,6 +315,7 @@ Bundled skills:
 - `hp-docs-update` - update-only migration of generated template `.docs/` files to a newer hp_docs template version, driven by `.docs/hp-docs.meta.json` and a dry-run ADD/KEEP/CONFLICT plan with approval; never touches DECISIONS.md entries, features/, reviews/, README, or code
 - `review-audit` - read-only general audit of a selected scope against all project rules (compliance table, ponytail over-engineering lens, duplication by concept, security/test spot-checks); reports findings with evidence and per-package disposition, makes no fixes and writes no files
 - `code-cleanup` - behavior-preserving mechanical cleanup (dead code, unused exports/dependencies, semantic duplicates, backward-compat cruft); first case converts `try/catch/finally` to the bundled `attempt` helpers with a per-site conversion table and typecheck-plus-tests proof of unchanged behavior
+- `deep-performance` - deep performance engineering with benchmark proof (profile hot paths with evidence, audit architecture and algorithms, build reproducible benchmarks with p50/p95/p99 plus memory under load, verify every optimization with repeat measurements)
 
 ### 5.6 Skill anatomy (borrowed pattern, condensed)
 
@@ -315,7 +329,7 @@ Keep skills isolated and focused: one skill per concern, load only when activate
 
 ### 5.7 When to split (wshobson-inspired, deferred)
 
-If bundled skills grow beyond about fifteen, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. At thirteen skills the flat `skills/` layout stays: the set is still discoverable and no trigger pain was observed; split only on real evidence, not on the count alone. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
+If bundled skills grow beyond about fifteen, consider an isolated plugin layout (`skills/<name>/agents/`, `skills/`, `commands/`) with an 8KB cap per skill file. At fourteen skills the flat `skills/` layout stays: the set is still discoverable and no trigger pain was observed; split only on real evidence, not on the count alone. A future split also adds a 3-layer quality gate to `scripts/sync-templates` CI: static section-count check (current), LLM judge for slop/structure, and Monte Carlo trigger accuracy - for now only the static check is required.
 
 ### 6. Docs Health Check
 
@@ -327,7 +341,7 @@ Docs Health Check:  (top-level ## sections)
   DEVELOPMENT.md     [15/15 sections] OK   (incl. Typing by language, Benchmark-first, Security baseline)
   TESTING.md         [14/14 sections] OK
   SECURITY.md        [11/11 sections] OK
-  DESIGN.md          [ 7/7 sections]  OK   (# 0 presets + # 1..6; or deleted for non-UI)
+  DESIGN.md          [ 8/8 sections]  OK   (# 0 presets + # 1..7; or deleted for non-UI)
   CHECKLIST.md       [ 5/5 sections]  OK
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
   DECISIONS.md       [ 2/2 sections]  OK
@@ -438,21 +452,36 @@ Permanent project contract. Must contain ALL of these sections:
 
 ### .docs/DESIGN.md
 
-Design system documentation with three built-in presets. Must contain ALL of these sections:
+Design system documentation with four built-in presets. Must contain ALL of these sections:
 
 0. **Preset selection**: table of presets and the rule that the preset is chosen at initialization and logged in DECISIONS.md; user-defined style rewrites section 1 only
 1. **Preset "Scandinavian" (default)**: alpha ink ladder (100%/64%/44% black over white, no gray casts), typography (Inter Variable/system sans, weight 500-600 headings, no all-caps), 8px rhythm, chapters-not-card-stacks, left alignment, one icon family, dark theme alpha recalculation rules, contrast validation
 2. **Preset "Neo-brutalism"**: radius 0, 2px borders, hard shadows, monospace font, `:root` token set, component list
 3. **Preset "Zed dark"**: dark desktop/GPUI theme tokens, compact sizes, no decorative gradients
-4. **Components (common requirements)**: variants, sizes, props, states for every component; variant API via shadcn cva when React/Tailwind present; touch targets 44x44, tabular numbers, text-balance/pretty, aspect-ratio reserve
-5. **A11y and required states**: focus indicators >= 2px, sr-only labels, keyboard navigation, color never the only signal; plus design review rubric (contrast, rhythm, typography, iconography, density, states)
-6. **Rules**: no duplicate components, no hardcoded values, preset changes require a decision; plus system completeness checklist (tokens, components, patterns, docs, governance), component sources note (shadcn, coss, beautifului/beui/rareui/reui as reference only), and purposeful motion policy (purpose/frequency/speed, prefers-reduced-motion, transitions.dev vocabulary)
+4. **Preset "Windows 95"**: bevel vocabulary (raised/sunken/inset/panel/marker), shape/bevel/density/contrast axes on data attributes, face-vs-field token contract with override map and guard suite, progress recipe (blocks mask, fixed slots, indeterminate sweep, solid opt-in), titlebar and bar primitives, tabs pattern with the disabled tradeoff, single context-menu wrapper plus overlay and hint-layer rules, motion and focus treatment
+5. **Components (common requirements)**: variants, sizes, props, states for every component; variant API via shadcn cva when React/Tailwind present; touch targets 44x44, tabular numbers, text-balance/pretty, aspect-ratio reserve
+6. **A11y and required states**: focus indicators >= 2px, sr-only labels, keyboard navigation, color never the only signal; plus design review rubric (contrast, rhythm, typography, iconography, density, states)
+7. **Rules**: no duplicate components, no hardcoded values, preset changes require a decision; plus system completeness checklist (tokens, components, patterns, docs, governance), component sources note (shadcn, coss, beautifului/beui/rareui/reui as reference only), and purposeful motion policy (purpose/frequency/speed, prefers-reduced-motion, transitions.dev vocabulary)
 
-At initialization keep only the chosen preset section, remove or mark the others as unused. For non-UI projects keep sections 0 and 5 only, or delete the file.
+At initialization keep only the chosen preset section, remove or mark the others as unused. For non-UI projects keep sections 0 and 7 only, or delete the file.
 
 ### .docs/ROADMAP.md
 
 Optional feature roadmap template: phases, ID-based entries, statuses done/now/deferred/rejected, return conditions for deferred/rejected items. Created when there are more than ~5 dispositioned features.
+
+### .docs/PERFORMANCE.md (optional)
+
+Performance contract template. Created when the project has performance-sensitive paths or the user asks for explicit perf rules; otherwise DEVELOPMENT.md plus TESTING.md carry the rule. Must contain ALL of these sections:
+
+0. **Scope note**: when the file exists and when it is skipped
+1. **Commands and profiles**: quick/full/slow/compare/native bench commands, `@quick`/`@slow` tags, env-gated live probes
+2. **Benchmark gates**: budget header mandatory, 5% regression threshold, checksum returns, deterministic fixtures, chatter and scale bench rules
+3. **What to bench**: perf-sensitive paths only, explicit not-applicable domains, timing vs chattiness vs scale kinds
+4. **Evidence standard**: machine plus runtime plus cold/warm plus corpus, median of three, 10% equivalence, per-call comparisons, retained vs transient heap
+5. **Bench-first rejections**: throwaway spikes outside the repo with recorded numbers and cleanup proof
+6. **Fix hierarchy**: correctness, then algorithmic, then render, then micro with bench deltas, plus the deliberately-not-taken list
+7. **Scale table**: per-item evidence with the extrapolation formula stated openly
+8. **Journal**: every decision logged with numbers, verification, and return conditions
 
 ### product-spec.md (project root, optional)
 

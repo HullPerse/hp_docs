@@ -100,6 +100,7 @@ The answer defines every command across all docs.
 - Scandinavian `(recommended)` - calm black-and-white base, alpha ink ladder, Inter/system sans, 8px rhythm.
 - Neo-brutalism - radius 0, 2px borders, hard shadows, monospace font.
 - Zed dark - dark theme for native desktop tools.
+- Windows 95 - dense beveled utility chrome for tracker, downloader, player, and tool windows.
 - Custom - describe in words or by reference; the agent rewrites section 1 of DESIGN.md to match.
 
 Non-UI projects: the section is removed along with the other presets.
@@ -130,6 +131,18 @@ Which profile fits what this project ships? It sets the depth of `.docs/SECURITY
 
 No `(recommended)` marker: the answer follows from what the project actually publishes. Unclear cases default to `backend` for servers and `internal-tool` otherwise. The duty to report security findings at any time does not depend on this choice.
 
+### Question 8: Optional utility templates
+
+Does the project want extra utilities from the bundled code templates? Multi-select, separate from backend logging. Each template copies only when selected.
+
+- pacer - the only timing engine (`scheduleTask`, `sleep`, `debounce`, `throttle`); take when more than one place needs debounce, throttle, or delayed retry.
+- signal-store - minimal cells plus derived values (`createCell`, `createDerived`, `batch`); take when a tiny store replaces scattered useState pairs or zustand/jotai.
+- hotkeys-core - chord parse plus one shortcut registry; take when shortcuts grow past raw window listeners.
+- resize - rect resize/move math plus coalesced ResizeObserver; take when drag handles, crop rects, or observer layout sync repeat.
+- None - skip all four; revisit when the need appears.
+
+The `attempt` helpers are not offered here: they already ship as the default error-handling rule with their own template.
+
 ---
 
 ## Step 2.6: Installing skills into the project
@@ -140,7 +153,7 @@ If skills ship from this repository, copy them into the target project so agents
 cp -r skills/* <project>/.agents/skills/
 ```
 
-Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), `docs-init` (package installation), `hp-docs-update` (update-only migration of generated template files), `review-audit` (read-only general audit), and `code-cleanup` (behavior-preserving mechanical cleanup). Install all of them: they are small and their triggers differ.
+Contents: `hp-docs` (this flow), `deslop` (prose cleanup), `scandinavian-design` (deep UI work), `docs-refactor` (bring code to its own docs rules), `docs-onboard` (connect a fresh agent chat), `test-architect` (test strategy and implementation), `test-reviewer` (adversarial test review), `security-audit` (security review and exfiltration proof), `project-documentation` (product docs generated from project knowledge), `docs-init` (package installation), `hp-docs-update` (update-only migration of generated template files), `review-audit` (read-only general audit), `code-cleanup` (behavior-preserving mechanical cleanup), and `deep-performance` (deep performance engineering with benchmark proof). Install all of them: they are small and their triggers differ.
 
 ---
 
@@ -153,7 +166,7 @@ Replace all `{{...}}` with real project data:
 | `{{PROJECT_NAME}}` | Name from package.json/name or README |
 | `{{PROJECT_CONTEXT}}` | Stack + description from README/package.json |
 | `{{PROJECT_OVERVIEW}}` | Description + directory tree |
-| `{{FIXED_DECISIONS}}` | Answers to questions 1-7: manager, lint preset, language, design preset, data-flow model, backend logging, security profile + base rules from README |
+| `{{FIXED_DECISIONS}}` | Answers to questions 1-8: manager, lint preset, language, design preset, data-flow model, backend logging, security profile, selected utility templates + base rules from README |
 | `{{DIRECTORY_STRUCTURE}}` | Directory tree analysis |
 | `{{COMMANDS}}` | package.json scripts written through the chosen manager |
 | `{{TEST_RUNNER}}`, `{{TEST_COMMAND}}`, and related testing placeholders | Existing test framework, scripts, configuration, and available test tools |
@@ -165,11 +178,12 @@ Per-file actions:
 - **DEVELOPMENT.md**: fill "Typing by language" with the chosen variant (TS/Rust/Python/Go); fix the data-flow model (query library or background tasks) under "Fixed decisions".
 - **TESTING.md**: fill the test runner, commands, directories, isolation rules, external-service policy, and available coverage, mutation, benchmark, property, fuzz, and stress tools. Keep the full testing-axis review and adapt actual tests to the project contract.
 - **SECURITY.md**: fill the profile from question 7, audit commands from package scripts and available tools, trust boundaries, the capability budget from code analysis, assets, entry points, and the review date. Keep all axes listed; mark not-applicable ones with reasons instead of deleting them.
-- **DESIGN.md**: keep the chosen preset section, delete the other two (or mark "not used"). For a non-UI project keep sections 0 and 5 or delete the file.
+- **DESIGN.md**: keep the chosen preset section, delete the other three (or mark "not used"). For a non-UI project keep sections 0 and 7 or delete the file.
+- **PERFORMANCE.md**: create from the template when the project has performance-sensitive paths (hot loops, search/sort/parse, large lists, IPC chatter, native bridges) or the user asks for explicit perf rules; otherwise skip it and rely on the DEVELOPMENT.md benchmark rule plus the TESTING.md performance axis.
 - **AGENT_PROMPT.md**: verify the "Data flow rules" subsection reflects the chosen model.
 - If Question 1 chose a non-English language: translate every generated `.docs/` file and AGENTS.md into that language now, keeping structure and section counts identical. Do not translate the deslop word-tag lists - they are bilingual reference content.
 
-After the per-file actions, write `.docs/hp-docs.meta.json` from `templates/hp-docs.meta.json` with real values: the hp-docs version, template revision, documentation language (Question 1), design preset (Question 4), and the list of generated template files. The `hp-docs-update` skill reads this file later to detect template drift.
+After the per-file actions, write `.docs/hp-docs.meta.json` from `templates/hp-docs.meta.json` with real values: the hp-docs version, template revision, documentation language (Question 1), design preset (Question 4), selected utility templates (Question 8), and the list of generated template files (including PERFORMANCE.md when created). The `hp-docs-update` skill reads this file later to detect template drift.
 
 Never delete placeholders you could not fill - mark them `<!-- TODO: fill manually -->`.
 
@@ -180,6 +194,7 @@ Never delete placeholders you could not fill - mark them `<!-- TODO: fill manual
 Create on demand, never upfront:
 
 - `.docs/ROADMAP.md` - with 5+ dispositioned features forming phases.
+- `.docs/PERFORMANCE.md` - when the project has performance-sensitive paths or the user asks for explicit perf rules (see the per-file action in step 3).
 - `.docs/answers/` - on user request for long research answers.
 - `product-spec.md` - if chosen in question 5.
 - `DOCUMENTATION_SPEC.md` - when the project maintains product documentation and will use the `project-documentation` skill.
@@ -202,7 +217,8 @@ Docs Health Check:
   DEVELOPMENT.md     [15/15 sections] OK
   TESTING.md         [14/14 sections] OK
   SECURITY.md        [11/11 sections] OK
-  DESIGN.md          [ 7/7 sections]  OK   (or deleted for non-UI)
+  DESIGN.md          [ 8/8 sections]  OK   (or deleted for non-UI)
+  PERFORMANCE.md     [ 8/8 sections]  OK   (when created; optional file)
   CHECKLIST.md       [ 5/5 sections]  OK
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
   DECISIONS.md       [ 2/2 sections]  OK
@@ -274,7 +290,7 @@ When initializing:
 
 ## Step 9: Recording decisions
 
-Add entries: template initialization, each answer to questions 1-7, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
+Add entries: template initialization, each answer to questions 1-8, chosen data-flow model, created optional files. Format lives in `.docs/DECISIONS.md`.
 
 ---
 

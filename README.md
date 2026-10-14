@@ -28,6 +28,7 @@ npx skills add HullPerse/hp_docs --skill project-documentation
 npx skills add HullPerse/hp_docs --skill hp-docs-update
 npx skills add HullPerse/hp_docs --skill review-audit
 npx skills add HullPerse/hp_docs --skill code-cleanup
+npx skills add HullPerse/hp_docs --skill deep-performance
 
 # Pin a specific version (tag tree URL)
 npx skills add https://github.com/HullPerse/hp_docs/tree/<tag>/skills/hp-docs
@@ -51,8 +52,8 @@ The `docs-init` skill handles everything end to end:
 
 1. Checks whether the package is already installed.
 2. Asks which runner to use (npx / bunx / pnpm dlx), installs into `.agents/skills/`; falls back to `git clone` + manual copy when no JS runtime exists; retries with `--copy` on Windows symlink failures.
-3. Verifies all thirteen skills landed with readable frontmatter.
-4. Hands off to the first-run flow, which asks the seven initialization questions and generates `AGENTS.md` + `.docs/`.
+3. Verifies all fourteen skills landed with readable frontmatter.
+4. Hands off to the first-run flow, which asks the eight initialization questions and generates `AGENTS.md` + `.docs/`.
 5. Reports what was created and how to update later (`npx skills update hp-docs`).
 
 ## Update .docs in an Existing Project
@@ -73,7 +74,8 @@ Run the hp-docs-update skill (or read its SKILL.md from the repo and follow it) 
 the generated .docs files to the current hp_docs template.
 
 Scope: only template-generated files may change - AGENT_PROMPT.md, DEVELOPMENT.md,
-TESTING.md, SECURITY.md, DESIGN.md, CHECKLIST.md, REVIEWER.md, ROADMAP.md. Never edit
+TESTING.md, SECURITY.md, DESIGN.md, PERFORMANCE.md (when the project has it),
+CHECKLIST.md, REVIEWER.md, ROADMAP.md. Never edit
 DECISIONS.md entries, features/, reviews/, answers/, README, AGENTS.md, or source code.
 
 First show me a dry-run plan with one action per file (ADD / KEEP / CONFLICT) and wait
@@ -104,7 +106,7 @@ Then open any agent in the project. It finds `AGENTS.md` rules missing and runs 
 1. Determines the project state (existing code / empty repo / fresh agent in a documented project).
 2. Lists available MCP tools.
 3. Scans package files, lockfile, directory tree.
-4. Asks seven questions: documentation language, package manager, lint preset, design preset, optional product spec, backend logging, security profile.
+4. Asks eight questions: documentation language, package manager, lint preset, design preset, optional product spec, backend logging, security profile, optional utility templates.
 5. Generates the full `.docs/` from bundled templates with real project data.
 6. Runs the docs health check and verifies lint/typecheck/test commands.
 
@@ -129,6 +131,7 @@ Same flow - the agent picks it up on the next session start.
     TESTING.md               # testing contract and migration flow
     SECURITY.md              # security contract: profile, capability budget, audit axes
     DESIGN.md                # chosen design preset
+    PERFORMANCE.md           # optional performance contract (perf-sensitive projects)
     CHECKLIST.md             # implementation checklist
     REVIEWER.md              # independent review prompt
     DECISIONS.md             # decision journal
@@ -163,8 +166,8 @@ Documentation language follows Question 1: English canonical by default; pick an
 
 - **Stack-adaptive data flow**: query-library projects get TanStack Query rules; desktop/CLI projects get background-task rules (UI never blocks); anything else gets equivalent rules agreed at init.
 - **Typing by language**: TS (no `any`, boundary `unknown` narrowed via Zod), Rust (Option/Result, isolated `unsafe` FFI), Python (strict typing), Go (error values).
-- **Design presets**: Scandinavian (default: alpha ink ladder over white, Inter/system sans, 8px rhythm), neo-brutalism (radius 0, hard shadows), Zed dark (native tools). Custom style rewrites the preset section.
-- **Initialization questions**: documentation language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec, backend logging, security profile.
+- **Design presets**: Scandinavian (default: alpha ink ladder over white, Inter/system sans, 8px rhythm), neo-brutalism (radius 0, hard shadows), Zed dark (native tools), Windows 95 (beveled utility chrome). Custom style rewrites the preset section.
+- **Initialization questions**: documentation language, package manager (Bun recommended), lint preset (Ultracite + oxlint/oxfmt recommended), design preset, optional product spec, backend logging, security profile, optional utility templates (pacer, signal-store, hotkeys-core, resize multiselect).
 
 ### Tools
 
@@ -180,6 +183,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 | `.docs/TESTING.md` | Behavior-first test strategy, migration, and verification contract |
 | `.docs/SECURITY.md` | Security contract: profile, trust boundaries, capability budget, audit axes |
 | `.docs/DESIGN.md` | Design presets and UI rules |
+| `.docs/PERFORMANCE.md` | Optional performance contract: bench commands, gates, evidence standard |
 | `.docs/CHECKLIST.md` | Before/during/after implementation checklist |
 | `.docs/REVIEWER.md` | Independent review prompt (read-only, evidence-based findings) |
 | `.docs/DECISIONS.md` | Decision journal |
@@ -195,7 +199,7 @@ Documentation language follows Question 1: English canonical by default; pick an
 
 ### `hp-docs` - documentation engine
 
-The core skill. On first run it analyzes the project stack, compares it against the canonical baseline, detects file naming conventions, and generates the complete `.docs/` set from bundled templates. It owns the initialization questions (documentation language, package manager, lint preset, design preset, product spec, backend logging), performs deep code/dependency/architecture analysis with rule-compliance auditing on request, and runs docs health checks. Every later session works by the contract it generated.
+The core skill. On first run it analyzes the project stack, compares it against the canonical baseline, detects file naming conventions, and generates the complete `.docs/` set from bundled templates. It owns the initialization questions (documentation language, package manager, lint preset, design preset, product spec, backend logging, security profile, optional utility templates), performs deep code/dependency/architecture analysis with rule-compliance auditing on request, and runs docs health checks. Every later session works by the contract it generated.
 
 ### `deslop` - prose de-slopping catalog
 
@@ -231,7 +235,7 @@ Turns what a project already knows into user-facing documentation: reads `.docs/
 
 ### `docs-init` - package installer
 
-Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all thirteen skills landed, then hands off to the first-run flow which owns all initialization questions.
+Installs the whole package into a clean project through an agent conversation: detects installation state, asks which runner to use (npx / bunx / pnpm dlx), handles no-node fallback via git clone and Windows symlink failures via `--copy`, verifies all fourteen skills landed, then hands off to the first-run flow which owns all initialization questions.
 
 ### `hp-docs-update` - template migration
 
@@ -245,7 +249,11 @@ Runs a general audit of a selected scope (whole project, module, feature, commit
 
 Removes cruft without changing behavior: dead code, unused exports, unused dependencies, semantic duplicates, backward-compatibility leftovers, leftover comments/logs/stubs, and mechanical error-handling migration. Its first case is the bundled Result pattern: it converts `try/catch/finally` to the `attempt` helpers with a per-site conversion table, and proves behavior did not change with typecheck plus tests before and after. It is not prose cleanup (`deslop`), not simplification judgement (`ponytail`), not rule compliance (`docs-refactor`), and not a read-only audit (`review-audit`): it edits code and must show evidence.
 
-Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes thirteen bundled skills, including `code-cleanup`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, and `review-audit`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
+### `deep-performance` - deep performance engineering
+
+Profiles hot paths with evidence instead of guessing, audits architecture and algorithms, builds reproducible benchmarks (throughput, latency p50/p95/p99, memory under load), and verifies every optimization with repeat measurements plus correctness and regression checks. Findings split into confirmed, probable, and theoretical; no claim ships without its artifact. Read-only until the user approves a fix package.
+
+Canonical skill sources live in `skills/`; `.agents/skills/` holds synced working copies. The package includes fourteen bundled skills, including `code-cleanup`, `test-architect`, `test-reviewer`, `security-audit`, `project-documentation`, `review-audit`, and `deep-performance`. Run `scripts/sync-templates.ps1` (or `.sh`) after editing live files. Russian trigger phrases in some skill descriptions are kept deliberately as activation keys for Russian-speaking users; the deslop word-tag catalog is bilingual by design because it must catch Russian machine-text patterns too.
 
 ## Example Project
 
