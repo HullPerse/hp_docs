@@ -83,6 +83,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Review the diff for unrelated changes.
 - [ ] Check for debug logs, placeholder data, dead code, stray comments.
 - [ ] Verify typing per the project language rules ("Typing by language" in DEVELOPMENT.md): TS - no explicit `any`, `unknown` only at boundary with narrowing; Rust - Option/Result boundaries, unsafe isolated; Python - no silent Any on public boundaries.
+- [ ] Verify type usage: no duplicated shape, exhaustive union switches, `Record` keys derived rather than `string`, literal tables checked with `satisfies`, no utility type without a consumer.
 - [ ] Verify data flow per the fixed model: query rules (one query per file, `data` naming, explicit isLoading/isError/isFetching) or background-task pattern.
 - [ ] Check file locations: shared types in `types/*.types.ts` (`.d.ts` only for ambient declarations), helpers in `lib/*.utils.ts`, configs in `config/*.config.ts`, hooks in `hooks/**/*.hook.ts`, API clients in `api/**/*.api.ts`.
 - [ ] Check component file names: camelCase without hyphens, one concept, before the service suffix.

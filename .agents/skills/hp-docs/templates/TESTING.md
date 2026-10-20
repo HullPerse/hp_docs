@@ -45,6 +45,8 @@ For each public behavior, build a test matrix. Consider the cases that apply to 
 
 The matrix is a reasoning tool. Every row is marked `covered`, `not applicable` with a reason, `deferred` with a return condition, or `unavailable` with a reason. Do not pass values that the type or public contract cannot accept merely to enlarge a checklist.
 
+Type-level contracts (branded ids, shared utility types, derived keys) are pinned separately with `@ts-expect-error` in a type test file. The typecheck command is the evidence; a runtime assertion cannot prove a compile-time guarantee.
+
 Every test answers: "What meaningful regression would make this test fail?" A test with no clear answer is removed or redesigned.
 
 ## 4. Assertions and names

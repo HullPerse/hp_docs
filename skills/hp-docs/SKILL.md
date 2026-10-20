@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.9.0
+version: 1.10.0
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile, optional utility templates), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
@@ -423,7 +423,7 @@ The main session contract. Must contain ALL of these sections:
 9. **Planning and implementation**: scope, plan, affected files, test strategy, minimal changes, no speculative abstractions, existing code reuse; plus spec and brainstorming gate (socratic pass, chunked scope saved and approved), bite-sized plan format (file + change + verification + rollback), verification-before-completion, and two-stage review (spec compliance then quality, critical blocks next step)
 10. **Minimalism ladder (ponytail, mode full)**: 7 rungs (skip YAGNI -> reuse project code -> stdlib -> native platform -> installed dependency -> one line -> minimal code), root-cause bug fixes via caller grep, no unrequested abstractions, `ponytail:` comments for deliberate ceilings, laziness forbidden at trust boundaries/error handling/security/a11y/explicit requests
 11. **Data flow rules (stack-adaptive)**: if a server query library is used - TanStack Query rules (one query per file preferred, `data` naming, explicit `isLoading`/`isError`, separate `isFetching`); otherwise project data-flow rules fixed at init (background threads + UI event subscription for desktop, per hpClean pattern); equivalent rules formulated per stack and agreed with the user
-12. **Type rules**: language variants in DEVELOPMENT.md "Typing by language" - TS (no `any`, `unknown` only in boundary narrowed via Zod/type guard), Rust (Option/Result boundaries, unsafe only in isolated FFI), Python (strict typing), Go (error values)
+12. **Type rules**: language variants in DEVELOPMENT.md "Typing by language" - TS (no `any`, `unknown` only in boundary narrowed via Zod/type guard; type usage: derive over duplicate shapes, discriminated unions with exhaustive switch, `Record` with derived keys, `satisfies` literal tables, brands only at boundaries, consumer gate for utility types), Rust (Option/Result boundaries, unsafe only in isolated FFI), Python (strict typing), Go (error values)
 13. **Directory boundaries**: where types, helpers, configs, hooks, API clients go
 14. **File naming**: project convention detected during first-run (see file naming analysis); preserve established patterns, service suffixes, and casing
 15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration; plus reference patterns (DAMP over DRY, Beyonce Rule, definition of done, anti-patterns)
@@ -556,7 +556,7 @@ When user selects deep analysis, perform ALL of these checks:
 ### 1. Code Analysis
 
 - Architecture: responsibility mixing, logic duplication, speculative abstractions
-- Typing: `any`, hidden `unknown`, weak types
+- Typing: `any`, hidden `unknown`, weak types, duplicated shapes, non-exhaustive unions, `Record` misuse, consumer-less utility types
 - Error handling: boundaries, typed errors, graceful degradation
 - States: loading, error, empty, disabled, dirty, stale, recovery
 - Tests: behavior contract, test matrix, domain and integration coverage, error paths, regression risks, test isolation, and available advanced checks

@@ -2,6 +2,19 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [1.10.0] - 2026-10-20
+
+### Added
+
+- DEVELOPMENT.md "TypeScript type usage": derive instead of duplicating shapes, discriminated unions with exhaustive switches, `Record` as the default for finite key maps with derived keys, `as const` plus `satisfies` tables, brands only at boundaries, interface/type/enum defaults, consumer gate with type-test pins, and limits on type-level programming
+- `review-audit` "Type usage checklist" plus a use / needs-consumer / rejected triage list
+- Feature file `.docs/features/typescript-type-usage.md`
+
+### Changed
+
+- AGENT_PROMPT type rule points at the type-usage contract; CHECKLIST gains a verification item; TESTING records type tests and typecheck as their evidence
+- `hp-docs` skill type descriptions include type usage in the contract and in deep analysis
+
 ## [1.9.0] - 2026-10-20
 
 ### Added

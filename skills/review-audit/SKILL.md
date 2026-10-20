@@ -36,7 +36,7 @@ Run each axis as a scripted sweep: one search or count command per axis, and the
 | Axis | What is checked |
 | --- | --- |
 | File organization | Naming (casing, suffixes), directory boundaries (`types/`, `lib/`, `config/`, `hooks/`, `api/` or project equivalents), local code outside pinned locations |
-| Typing | Project language rules from DEVELOPMENT.md (TS any/unknown, Rust unsafe, Python Any, Go error values) |
+| Typing | Project language rules from DEVELOPMENT.md (TS any/unknown, Rust unsafe, Python Any, Go error values); for TypeScript also the type-usage checklist below: duplicated shapes, non-exhaustive unions, `Record<string>` with known keys, consumer-less utility types |
 | Data flow | Fixed model: query rules or background tasks; no duplicated manual state |
 | State | Single source of truth, no duplication between stores |
 | UI/UX | Loading, empty, error, disabled, dirty, stale, recovery states; focus indicators; tokens instead of hardcoded values; no duplicate components |
@@ -63,6 +63,27 @@ Apply when the scope acquires resources or holds state across time. Skip with a 
 - Shutdown and errors: release on failure, cancellation, navigation, window close, and process termination; no work that outlives its owner.
 
 A resource existing is not a defect. A missing lifecycle, unbounded growth, duplicated acquisition, or measured degradation is. A leak claim needs a retention path (who holds the reference, what should release it) plus a measurement; a suspicion without evidence is a Risk, not a finding.
+
+## Type usage checklist (TypeScript)
+
+Apply when the scope is TypeScript or TSX. Skip for other languages with a one-line reason.
+
+- Duplicated shapes: the same fields declared twice; one should derive from the other.
+- `any`, leaked `unknown`, and casts at call sites where the parser should cast once at the boundary.
+- Unions switched without an exhaustive `default` (an `assertNever` call or an explicit throw).
+- `Record<string, V>` where the key set is finite, or keys not derived from the source union or `keyof typeof`.
+- Handwritten unions duplicating a literal table that already exists.
+- Brands spread across ordinary call sites, or missing where runtime-identical ids mix.
+- Utility types with no consumer, and type-level programming the project does not already use.
+- Shared type contracts without a type-test pin.
+
+Triage when a type is proposed:
+
+- use without asking: `Partial`, `Record`, `Pick`, `Omit`, `Exclude`, `Extract`, `NonNullable`, `ReturnType`, `Parameters`, `Awaited`, `keyof`, `typeof`, indexed access, `infer`, `as const`, `satisfies`, discriminated unions, type predicates;
+- needs a consumer: branded or opaque ids, `DeepPartial`, `DeepReadonly`, `Mutable`, `Prettify`, `Exact`, `XOR`/`AtLeastOne`/`ExactlyOne`, `NonEmptyArray`, `EventMap`, template literal types, mapped types, `Required`, narrow `Readonly`;
+- rejected by default: type-level parsers and state machines, recursive conditional or mapped types, key remapping with `as`, case-conversion types, overloads and assertion signatures added for style, `const` type parameters, new TypeScript `enum`, `namespace` typing, `Record<string, unknown>` used as a domain shape.
+
+A type without a consumer is a speculative abstraction, not a standard.
 
 ## Report format
 

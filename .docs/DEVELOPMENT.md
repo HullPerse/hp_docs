@@ -69,6 +69,19 @@ Base typing rules are fixed at initialization for the project language. Template
 
 For another language the agent formulates an equivalent in the same spirit and agrees on it with the user.
 
+### TypeScript type usage
+
+Applies to TypeScript projects. Keep this block when the stack is TypeScript and drop it otherwise.
+
+- Derive, never duplicate. One declaration per shape; derive the rest with `keyof`, `typeof`, indexed access, `Pick`/`Omit`, `ReturnType`/`Parameters`, `Awaited`. A second hand-written copy of the same shape is a defect.
+- Model state as a discriminated union with a literal `kind` or `status`, switch exhaustively, and call an `assertNever` helper in `default`. Optional-field bags for mutually exclusive states are a defect.
+- `Record<K, V>` is the default for finite key maps: derive `K` from the source union or `keyof typeof`, so a missing key fails compilation. `Record<string, V>` only for genuinely open maps (external payloads, plugin registries), never as a substitute for a domain shape. `Partial<Record<K, V>>` for sparse maps; `Map` when keys are dynamic or non-string.
+- Literal tables are `as const`, checked with `satisfies`, and their unions are derived from the table (`typeof TABLE[number]`), not written twice.
+- Branded ids only where runtime-identical values mix at a boundary (ids, paths, hashes). One cast at the parser; call sites stay plain. Branding everything is noise.
+- Object contracts use `interface`; unions, intersections, mapped and derived shapes use `type`. Do not introduce TypeScript `enum`; use a literal union, plus an `as const` table when a runtime list is needed. An existing project convention wins over this default.
+- Shared utility types need a consumer and a type-test pin (`@ts-expect-error` in the type test file); `tsc --noEmit` is the proof. No consumer means no type.
+- Limit: no type-level parsers, state machines, or recursive conditional types unless the project already relies on them. Types never validate runtime data; the boundary validates first, then asserts the narrowed type.
+
 ## Benchmark-first package comparison
 
 When comparing 2+ competing packages in the same category, write and run a minimal micro-benchmark before recommending. Do not rely solely on documentation claims or external benchmarks that may be outdated.

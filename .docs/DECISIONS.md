@@ -478,3 +478,17 @@ User decision journal. The agent must check this file before any question and ap
 - Context: the user ordered commit, push, release, and a docs update for iluhaAnime in the same session.
 - Consequence: installs of main and tag-pinned consumers get section-first reading, scripted analysis, review artifacts, and the resource lifecycle contract with PERFORMANCE.md section 9.
 - Source: release task, 2026-10-20.
+
+### 2026-10-20: TypeScript type usage contract
+
+- Decision: implement now as a distributed contract, no new template file. (1) DEVELOPMENT.md gains "TypeScript type usage" under "Typing by language": derive instead of duplicating shapes, discriminated unions with exhaustive switch and an `assertNever` helper, `Record<K, V>` for finite key maps with derived keys (`Record<string, V>` only for open maps), `Partial<Record>` and `Map` boundaries, `as const` tables checked with `satisfies` and unions derived from the table, brands only where runtime-identical values mix, interface/type defaults and no new TypeScript `enum`, consumer gate plus `@ts-expect-error` type-test pins, and limits on type-level programming with no runtime validation from types. (2) AGENT_PROMPT section 5 item 10 points at it; CHECKLIST gains a verification item; TESTING section 3 records that type contracts are pinned in a type test and typecheck is the evidence. (3) `review-audit` gains a "Type usage checklist" and a use / needs-consumer / rejected triage list; `hp-docs` skill type descriptions and the deep-analysis typing line are updated. Basis: the iluhaAnime "TypeScript utility types" subsection and its 2026-10-15 70-item catalog decision, generalized.
+- Context: the template only forbade `any` and leaked `unknown`, so agents had no rule for deriving shapes, modelling states, building key maps, or gating utility types. The user asked to generalize the iluhaAnime practice and named `Record<>` specifically.
+- Consequence: the TypeScript variant block is dropped at init for non-TypeScript stacks. Health-check counters unchanged (DEVELOPMENT 15, AGENT_PROMPT 12, TESTING 14, CHECKLIST 5) because the additions are a subsection, a sentence, and a checklist item. iluhaAnime's section is supplemented with the same generic rules while its adopted list stays. No dependency.
+- Source: type-usage session 2026-10-20.
+
+### 2026-10-20: hp-docs 1.10.0 released
+
+- Decision: the TypeScript type usage batch ships as version 1.10.0. The skill frontmatter and package.json are bumped from 1.9.0, the meta template example moves to 1.10.0, the Unreleased changelog becomes `[1.10.0] - 2026-10-20`, and the commit is tagged `v1.10.0`.
+- Context: the user ordered implementation from the type-usage plan; iluhaAnime follows in the same session.
+- Consequence: installs of main and tag-pinned consumers get the TypeScript type-usage contract, the review-audit type checklist and triage list, and the type-test rule.
+- Source: release task, 2026-10-20.
