@@ -56,3 +56,13 @@ Maintain a system-requirements evidence table with per-item cold/warm figures, b
 ## 8. Journal
 
 Every perf decision logs date, context, before/after numbers, verification (tests, typecheck, lint, build), and the return condition. Rejected spikes log the cleanup proof. No claim of the form "X percent faster" ships without the artifact it was measured from.
+
+## 9. Retention and long-run
+
+Memory numbers answer a different question than the benches above: what stays alive, not what one pass costs. Measure retained state, not peak RSS.
+
+- Repeat the cycle that should release the resource (mount/unmount, open/close, connect/disconnect, start/stop) at least 20 times, then compare retained objects and live resources against the warm baseline.
+- TypeScript/Bun: heap snapshot diff for retained objects, `heapUsed` after a forced GC, live listener and handle counts. React: DevTools snapshot plus detached DOM node count after repeated mount/unmount; StrictMode double-invocation exposes non-idempotent cleanup.
+- Rust and native: heaptrack, dhat, or valgrind for allocation growth; allocation counts and `Arc::strong_count` in a test for reference cycles; explicit release of decoders, players, and FFI memory on close.
+- Not evidence: RSS alone (allocator arenas), a single run, a slow drop after GC, JIT warmup, or a passing test suite. Expected allocator caching is stated as expected, not counted as growth.
+- Every leak claim names the suspected retention path: who holds the reference and what should release it. An unconfirmed suspicion is a risk with a next verification step, never a proven defect.

@@ -32,6 +32,8 @@ For a read-only general audit without fixes, use the `review-audit` skill instea
 
 Walk every rule area and collect violations:
 
+Collect with scripted sweeps: one search or count command per area, the table as the output, `file:line` only for findings.
+
 | Area | What is checked |
 | --- | --- |
 | File organization | Naming (casing, suffixes), directory boundaries (`types/`, `lib/`, `config/`, `hooks/`, `api/` or project equivalents), local types/helpers outside pinned locations |

@@ -1,6 +1,6 @@
 ---
 name: hp-docs
-version: 1.8.0
+version: 1.9.0
 description: Universal .docs template system for AI agents (English canonical, translated at init to the chosen project language). Handles first-run project analysis and initialization questions (documentation language, package manager, lint/format preset, design preset, product spec, backend logging, security profile, optional utility templates), stack comparison, testing and security contract setup, template setup, deep code/dependency/architecture analysis with rule compliance auditing, and new project initialization.
 ---
 
@@ -413,11 +413,11 @@ The project-specific profile comes from initialization question 7; commands come
 The main session contract. Must contain ALL of these sections:
 
 1. **Project context**: backend stack, frontend stack, DB, directory layout
-2. **Mandatory reading list**: ordered list of files to read before work
+2. **Mandatory reading list**: ordered list of files to read before work, read by section (heading index first, then the sections the task touches; DECISIONS.md as a tail plus a topic search)
 3. **DECISIONS.md gate**: must read before audit, must write after decisions
 4. **Disposition gate**: two separate questions before each new feature (implementation disposition + documentation destination)
 5. **`(recommended)` rules**: when to use, single-select vs multi-select, when NOT to use
-6. **Mandatory first stage: audit**: what to check, classification (Blocker/Risk/Gap/Optimization/Clear), when to stop; plus anti-rationalization table (excuse -> required response) and always-on security reporting
+6. **Mandatory first stage: audit**: what to check, classification (Blocker/Risk/Gap/Optimization/Clear), when to stop; plus anti-rationalization table (excuse -> required response), always-on security reporting, and scripted analysis (one search or script prints counts and paths, not the corpus)
 7. **Critical mode**: don't agree with bad ideas, direct verdict format, allowed sharp language
 8. **Questions and decisions**: hierarchy of truth sources, when to ask, question lifecycle (10 steps), grill mode (one question at a time, recommended answer per question, depth-first decision tree, codebase before asking)
 9. **Planning and implementation**: scope, plan, affected files, test strategy, minimal changes, no speculative abstractions, existing code reuse; plus spec and brainstorming gate (socratic pass, chunked scope saved and approved), bite-sized plan format (file + change + verification + rollback), verification-before-completion, and two-stage review (spec compliance then quality, critical blocks next step)
@@ -427,7 +427,7 @@ The main session contract. Must contain ALL of these sections:
 13. **Directory boundaries**: where types, helpers, configs, hooks, API clients go
 14. **File naming**: project convention detected during first-run (see file naming analysis); preserve established patterns, service suffixes, and casing
 15. **Testing contract**: link to `.docs/TESTING.md`; behavior-first matrix; unit, integration, edge, error, regression, determinism, async/concurrency, performance, property, mutation, fuzz, coverage, mocking, flakiness, maintenance; existing-suite migration; plus reference patterns (DAMP over DRY, Beyonce Rule, definition of done, anti-patterns)
-16. **Documentation**: update DECISIONS.md, features, TESTING.md, DESIGN.md, README
+16. **Documentation**: update DECISIONS.md, features, TESTING.md, DESIGN.md, README; finding sets over about 40 lines go to `.docs/reviews/<scope>-<date>.md`, not into the chat
 17. **Anti-slop rules**: ASCII punctuation only (no em/en dash), no template intros, no comment-parrots, no debug logs, no dead code, no placeholder data, no TODO instead of decision logging; deslop prose subsection (voice preservation, rule-of-three, parataxis, negative parallelism, significance inflation, vague attribution) pointing to the catalog in DEVELOPMENT.md
 18. **Response format**: Audit, Decisions needed, Scope+Plan, Progress, Verification, Final state; plus the terse chat style for ordinary turns (answer first, no polite filler, structure kept for task reports)
 19. **Available tools**: mandatory MCP check at session start - list available servers, use documentation tools (context7) for any library/API question before answering from memory, apply task-appropriate tools instead of workarounds
@@ -482,6 +482,7 @@ Performance contract template. Created when the project has performance-sensitiv
 6. **Fix hierarchy**: correctness, then algorithmic, then render, then micro with bench deltas, plus the deliberately-not-taken list
 7. **Scale table**: per-item evidence with the extrapolation formula stated openly
 8. **Journal**: every decision logged with numbers, verification, and return conditions
+9. **Retention and long-run**: repeated cycles (at least 20) against a warm baseline, retained state versus peak RSS, per-stack tooling (heap snapshot diff and live handle counts for JS/Bun and React, heaptrack/dhat/valgrind and `Arc` counts for Rust and native), what is not evidence (allocator arenas, a single run, GC lag, JIT warmup, a passing suite), and the retention path named for every leak claim
 
 ### product-spec.md (project root, optional)
 
@@ -560,7 +561,7 @@ When user selects deep analysis, perform ALL of these checks:
 - States: loading, error, empty, disabled, dirty, stale, recovery
 - Tests: behavior contract, test matrix, domain and integration coverage, error paths, regression risks, test isolation, and available advanced checks
 - Security: secrets in code, XSS, injections, trust boundaries, undeclared outbound channels against the SECURITY.md capability budget
-- Performance: memory leaks, unoptimized renders, missing memoization
+- Performance: hot paths, allocations, caches, resource lifecycle and retention (listeners, timers, subscriptions, observers, handles, workers), growth policies, long-run degradation; the full lifecycle checklist lives in the `review-audit` skill
 
 ### 2. Dependency Analysis
 

@@ -32,6 +32,7 @@ Run only the modes the scope needs. Skip a mode with a one-line reason.
 3. **bench-engineer** - reproducible benchmarks with deterministic fixtures and seeded data: throughput, latency p50/p95/p99, memory at several input sizes, behavior under sustained load. Baseline first, then optimized variant, same machine and corpus.
 4. **algo-opt** - complexity check (`O(n)`, `O(n log n)`, `O(n^2)`), caching, indexing, incremental updates, batching, fewer allocations. Each proposal names the current complexity and the target one.
 5. **verify** - repeat measurements (median of at least three), correctness tests, regression suite, trade-off note. A claim without a repeat run is a hypothesis, not a result.
+6. **retention** - what stays alive over time: repeated cycles and soak runs, heap snapshots, retained-object diffs, live handle and listener counts, cache growth. Separate expected allocator caching and GC lag from real growth; every leak finding names the retention path and the measurement behind it.
 
 ## Finding classes
 
@@ -45,8 +46,8 @@ Every finding is labeled so the user sees what is proven:
 
 Pick the profiler that fits the runtime instead of forcing one tool:
 
-- TypeScript/Bun/Node plus React: sampling profiler, React render counts, store subscription audit, TanStack Query fan-out and stale-window check, bundle and import-cost check.
-- Rust/native: `cargo bench`, criterion-style harnesses, release-profile numbers, clippy-clean benches.
+- TypeScript/Bun/Node plus React: sampling profiler, React render counts, store subscription audit, TanStack Query fan-out and stale-window check, bundle and import-cost check; heap snapshot diff, live listener and handle counts, detached DOM nodes for retention.
+- Rust/native: `cargo bench`, criterion-style harnesses, release-profile numbers, clippy-clean benches; heaptrack or dhat for allocation growth, `Arc::strong_count` for reference cycles.
 - System level: utilization, saturation, and errors per resource (USE method borrowed as a checklist), flame graphs for the saturated one only.
 
 ## Report format

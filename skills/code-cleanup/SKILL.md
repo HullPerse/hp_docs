@@ -59,8 +59,10 @@ Cleanup edits code. It must leave evidence that behavior is unchanged.
 
 Fix the scope (whole project, module, diff, or one cleanup kind). Inventory
 candidates with exact locations: symbol, file, line, and why it looks dead or
-duplicated. Record the baseline: run typecheck, lint, and tests and keep the
-output. A cleanup without a baseline cannot be proven.
+duplicated. Build the inventory with one search per cleanup kind and print the
+candidate table; reading files one by one is the slow path. Record the baseline:
+run typecheck, lint, and tests and keep the output. A cleanup without a baseline
+cannot be proven.
 
 ### 2. Classify every candidate
 

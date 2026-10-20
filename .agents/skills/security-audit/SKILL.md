@@ -38,7 +38,7 @@ Run the sweep from SECURITY.md section 4 and record exact locations:
 - lifecycle scripts in every reachable package.json, including dependencies' manifests;
 - environment reads beyond declared variables and writes outside declared paths.
 
-Every hit resolves against the capability budget or becomes a finding. Record "sweep clean at revision X" explicitly instead of staying silent.
+Every hit resolves against the capability budget or becomes a finding. Record "sweep clean at revision X" explicitly instead of staying silent. The sweep prints hits grouped by channel with counts; a clean sweep is one line, not a listing.
 
 ### 4. Run the recorded commands
 

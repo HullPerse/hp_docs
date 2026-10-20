@@ -2,6 +2,28 @@
 
 All notable changes to the documentation template and skills. Keep a Changelog format; semantic versioning: major - breaking contract changes, minor - new rules/files/skills, patch - wording and fixes.
 
+## [1.9.0] - 2026-10-20
+
+### Added
+
+- AGENT_PROMPT section 7 "Resource lifecycle and retention": owner and release path, growth policy for collections, cancellation for detached async work, "presence is not a defect", proportionate trigger, evidence requirement
+- AGENT_PROMPT section 2 "Read by section, not by file": heading index first, targeted sections, DECISIONS.md as a tail read plus a topic search, whole files only when they are the deliverable
+- AGENT_PROMPT section 3 "Scripted analysis instead of corpus reading": repo-wide questions answered by one search or script that prints counts and paths, with the query kept as evidence
+- AGENT_PROMPT section 9 "Long findings go to a file": finding sets over about 40 lines land in `.docs/reviews/<scope>-<date>.md`, the chat reports verdict, top findings, and path
+- PERFORMANCE.md section 9 "Retention and long-run": at least 20 repeated cycles against a warm baseline, per-stack retention tooling, what is not evidence, retention path required for every leak claim (sections 8 to 9)
+- `review-audit` axis and "Resource lifecycle checklist" (listeners, timers, observers, async, caches, buffers, native resources, React, Rust and desktop, shutdown)
+- `deep-performance` mode `retention` plus retention tooling in the stack adapters
+- REVIEWER.md step 6 lifecycle check; TESTING.md section 10 repeated-cycle case; three CHECKLIST items; root AGENTS.md key rule
+- Feature files `.docs/features/docs-retrieval.md` and `.docs/features/resource-lifecycle.md`
+
+### Changed
+
+- `docs-onboard` reads section-first instead of demanding a full read of every document; sections outside the task scope are named as not yet read
+- `review-audit`, `docs-refactor`, `security-audit`, and `code-cleanup` collect with scripted sweeps and report tables instead of file dumps
+- Root AGENTS.md key rules and CHECKLIST gain the reading, scripted-analysis, and review-artifact rules
+- `hp-docs` deep-analysis performance line no longer mixes leaks with memoization; it points at the lifecycle checklist
+- README References records context-mode as ideas only (ELv2, no code reuse)
+
 ## [1.8.0] - 2026-10-15
 
 ### Added

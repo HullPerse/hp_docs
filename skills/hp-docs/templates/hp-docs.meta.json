@@ -1,7 +1,7 @@
 {
   "_readme": "Written by the hp-docs first-run flow; read by the hp-docs-update skill. Replace every example value with the real project data. This file is documentation metadata, not part of the template rules.",
   "package": "hp-docs",
-  "version": "<hp-docs template version used at initialization, e.g. 1.8.0>",
+  "version": "<hp-docs template version used at initialization, e.g. 1.9.0>",
   "template_revision": "<git revision or date of the template used at initialization, or unknown>",
   "language": "<docs language from initialization Question 1, e.g. en>",
   "design_preset": "<chosen preset from Question 4: scandinavian, neo-brutalism, zed-dark, windows-95, custom, or none for non-UI projects>",

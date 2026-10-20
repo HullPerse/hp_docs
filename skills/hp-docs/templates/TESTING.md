@@ -119,6 +119,8 @@ A benchmark records environment, workload, baseline, current result, difference,
 
 Never hide a correctness failure inside a benchmark. Never set an arbitrary threshold without a baseline or an agreed budget.
 
+Resource lifecycle is its own case. When the change acquires listeners, timers, subscriptions, observers, streams, handles, workers, or grows a cache, add a repeated-cycle test (mount/unmount, open/close, connect/disconnect, start/stop) or a soak run, and mark the axis covered, not applicable with a reason, deferred with a return condition, or unavailable. Evidence is retained-state growth across cycles, not RSS alone: allocator arenas, GC lag, and JIT warmup produce growth that is not a leak. A passing suite never proves the absence of a leak by itself.
+
 ## 11. Coverage and quality
 
 Coverage percentage is evidence about executed code, not proof of test quality. Review line, branch, behavior, error-path, and critical-path coverage. Mutation score is useful evidence when a supported tool can run.

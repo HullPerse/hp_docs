@@ -31,6 +31,8 @@ If the user did not specify a scope - ask: whole project, one module or director
 
 Walk every axis that applies to the scope. Skip an axis only with a one-line reason.
 
+Run each axis as a scripted sweep: one search or count command per axis, and the table is the output. Cite `file:line` for findings only; a dump of every match is not evidence.
+
 | Axis | What is checked |
 | --- | --- |
 | File organization | Naming (casing, suffixes), directory boundaries (`types/`, `lib/`, `config/`, `hooks/`, `api/` or project equivalents), local code outside pinned locations |
@@ -42,7 +44,25 @@ Walk every axis that applies to the scope. Skip an axis only with a one-line rea
 | Duplication | Semantic duplicates by concept (synonyms, related terms, similar shapes), not only by name; each hit names files, symbols, and the actual problem, no refactor sketch |
 | Security spot-check | Actual outbound calls (network, child processes, filesystem writes, env reads, lifecycle scripts) against the SECURITY.md capability budget; secrets hygiene; undeclared channels are Blocker findings |
 | Tests spot-check | Behavior contract present, domain rules covered, integration at real boundaries, no mocks of the system under test, no sleep-based sync |
+| Resource lifecycle | Every acquired listener, timer, subscription, observer, stream, handle, worker, and native object has a release path on success, failure, cancel, unmount, and shutdown; caches, queues, and maps have a growth policy; no duplicate acquisition; a suspected leak names the retention path |
 | Deslop | Comment-parrots, debug logs, dead code, placeholder data, em/en dashes, word-tag hits in touched texts |
+
+## Resource lifecycle checklist
+
+Apply when the scope acquires resources or holds state across time. Skip with a one-line reason otherwise.
+
+- Listeners and subscriptions: add/remove symmetry, duplicate registration on re-run, cleanup on unmount.
+- Timers and frames: interval, timeout, animation frame, and scheduled callback stopped on teardown and on the error path.
+- Observers and streams: `ResizeObserver`, `IntersectionObserver`, `MutationObserver`, media elements, readers, sockets, and WebSocket handlers closed or disconnected.
+- Async work: owner, cancellation, stale results not applied to disposed state, rejected background promises handled.
+- Caches and collections: growth policy, eviction, entries removed when the entity is disposed; no unbounded promise map, retry queue, or dedupe registry.
+- Buffers and payloads: no retained request or response bodies, DOM nodes, media frames, or binary buffers when metadata suffices.
+- Native resources: file handles, connections, workers, players, decoders, and FFI allocations released by their documented API.
+- React: effect cleanup symmetric, StrictMode double-invocation safe, object URLs revoked, media stopped, workers terminated, no `useMemo` or ref added as a supposed leak fix.
+- Rust and desktop: no `Arc`/`Rc` cycle, `WeakEntity` where ownership must not extend, `cx.observe`/`cx.subscribe` handles dropped, spawned tasks bounded and abortable, channels bounded.
+- Shutdown and errors: release on failure, cancellation, navigation, window close, and process termination; no work that outlives its owner.
+
+A resource existing is not a defect. A missing lifecycle, unbounded growth, duplicated acquisition, or measured degradation is. A leak claim needs a retention path (who holds the reference, what should release it) plus a measurement; a suspicion without evidence is a Risk, not a finding.
 
 ## Report format
 

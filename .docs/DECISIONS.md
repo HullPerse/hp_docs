@@ -1,4 +1,4 @@
-﻿# {{PROJECT_NAME}} Decisions
+# {{PROJECT_NAME}} Decisions
 
 User decision journal. The agent must check this file before any question and append decisions after answers, so nothing gets asked twice. All entries are written in English; entries dated before the v1.3.0 language migration were translated from their Russian originals.
 
@@ -457,3 +457,24 @@ User decision journal. The agent must check this file before any question and ap
 - Context: the user ordered commit, push, and release after the trim-1 trimming-discipline change landed on top of the win95-performance batch.
 - Consequence: installs of main and tag-pinned consumers get the Windows 95 preset, the PERFORMANCE.md template, the deep-performance skill, the four utility templates with Question 8, and the trimming discipline.
 - Source: release task, 2026-10-15.
+
+### 2026-10-20: Docs retrieval discipline borrowed from context-mode
+
+- Decision: implement now as three rules with no code and no dependency, documented in the new feature file `.docs/features/docs-retrieval.md` plus this entry plus CHANGELOG Unreleased. (1) Read by section: build the heading index, read the sections the task touches, read whole files only when the file is the deliverable, treat DECISIONS.md as a tail read plus a topic search. Lands in AGENT_PROMPT section 2, a root AGENTS.md key rule, two CHECKLIST items, and `docs-onboard` step 2, which no longer demands a full read of every document. (2) Scripted analysis: repo-wide questions are answered by one search or script that prints counts and paths; the query and its result are the evidence, a raw dump is not. Lands in AGENT_PROMPT section 3 and the verification step in section 5, with one line each in `review-audit`, `docs-refactor`, `security-audit`, `code-cleanup`. (3) Findings as files: sets over about 40 lines go to `.docs/reviews/<scope>-<date>.md`, the chat reports verdict, top findings, and path. Lands in AGENT_PROMPT section 9, CHECKLIST, and `reviews/README.md`. Deferred: a `docs-doctor` validation script and a DECISIONS.md archive format, both with return conditions in the feature file. Rejected: FTS5/BM25, reciprocal rank fusion, trigram and fuzzy matching, hooks, MCP server, SQLite event capture, sandboxes, TTL cache, progressive throttling.
+- Context: the user pointed at github.com/mksglu/context-mode and asked what could be reused for our documentation. The repository is an MCP runtime under ELv2, so only ideas were paraphrased; no code or text was copied and nothing is installed. Measured problem: the mandatory reading list costs about 32k tokens at session start and DECISIONS.md alone is 60.8k characters with no compression mechanism.
+- Consequence: agent onboarding reads sections instead of full files; audit skills print tables instead of dumps; long findings become review artifacts. Health-check counters unchanged (AGENT_PROMPT 12, DEVELOPMENT 15, TESTING 14, SECURITY 11, DESIGN 8, CHECKLIST 5, REVIEWER 8) because every addition is a subsection, bullet, or checklist item. No version bump.
+- Source: context-mode evaluation session 2026-10-20, plan discussion; disposition answered with "do it" over the recommended option set.
+
+### 2026-10-20: Resource lifecycle and retention rules (variant A)
+
+- Decision: implement the resource-lifecycle batch in distributed form, with no new template file. (1) AGENT_PROMPT section 7 gains "Resource lifecycle and retention": owner and release path, growth policy for collections, cancellation for detached async work, "presence is not a defect", proportionate trigger, evidence requirement. (2) CHECKLIST gains three items: acquisition and release path, growth policy, repeated-cycle verification. (3) TESTING section 10 gains the repeated-cycle and soak case plus the "RSS alone is not evidence" rule. (4) PERFORMANCE.md gains section 9 "Retention and long-run", sections 8 to 9, with the first-run health check updated. (5) `review-audit` gains an axis row and a ten-category "Resource lifecycle checklist"; `deep-performance` gains a `retention` mode and retention tooling in the stack adapters; REVIEWER step 6 gains the lifecycle check; the weak `hp-docs` deep-analysis line that mixed leaks with memoization is replaced. (6) Root AGENTS.md gains a key rule. Stack coverage: TS/Bun, React, Rust/GPUI.
+- Context: the user proposed a standalone AGENT_RESOURCE_LIFECYCLE.md with nine sections plus new `.docs/quality/` and `.docs/performance/` directories. Review found about 60 percent overlap with existing contracts, a second source of truth, and about 2k tokens of permanent reading cost. The user chose the distributed variant A over the standalone file (variant B) and asked for all three stack sections now.
+- Consequence: no new template file, no first-run file list change, no `hp-docs.meta.json` entry, no `hp-docs-update` scope change. Lifecycle detail is loaded only during audits. Health-check counters: PERFORMANCE 8 to 9; AGENT_PROMPT 12, DEVELOPMENT 15, TESTING 14, SECURITY 11, DESIGN 8, CHECKLIST 5, REVIEWER 8 unchanged because the additions are subsections, bullets, or checklist items. No version bump.
+- Source: memory-leak analysis session 2026-10-20; disposition: variant A.
+
+### 2026-10-20: hp-docs 1.9.0 released
+
+- Decision: the two 2026-10-20 batches (docs retrieval discipline and resource lifecycle) ship as version 1.9.0. The hp-docs skill frontmatter and package.json are bumped from 1.8.0, the meta template example moves to 1.9.0, the Unreleased changelog content becomes `[1.9.0] - 2026-10-20`, and the commit is tagged `v1.9.0`.
+- Context: the user ordered commit, push, release, and a docs update for iluhaAnime in the same session.
+- Consequence: installs of main and tag-pinned consumers get section-first reading, scripted analysis, review artifacts, and the resource lifecycle contract with PERFORMANCE.md section 9.
+- Source: release task, 2026-10-20.

@@ -215,7 +215,7 @@ Brings an existing codebase to compliance with its own `.docs/` rules. Runs a co
 
 ### `docs-onboard` - session bootstrap
 
-Connects a fresh agent chat to a project that already has AGENTS.md and `.docs/`. Reads the entry point, follows its mandatory reading list, checks available MCP tools, and returns a compact contract summary (stack, hard rules, recent decisions) so the agent immediately works by project rules instead of guessing them.
+Connects a fresh agent chat to a project that already has AGENTS.md and `.docs/`. Reads the entry point, follows its reading list section by section, checks available MCP tools, and returns a compact contract summary (stack, hard rules, recent decisions) so the agent immediately works by project rules instead of guessing them.
 
 ### `test-architect` - testing strategy and implementation
 
@@ -273,6 +273,7 @@ Built from real production usage and these upstream sources:
 - Design intelligence (paraphrased excerpts): [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill), [pbakaus/impeccable](https://github.com/pbakaus/impeccable)
 - Diagram contract (paraphrased, no renderer): [tt-a1i/archify](https://github.com/tt-a1i/archify)
 - Rejected for vendoring, search index only: [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify), [Egonex-AI/Understand-Anything](https://github.com/Egonex-AI/Understand-Anything), [ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills), [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) (proxy/middleware; terse style already adapted)
+- Context economy (paraphrased, ideas only, no dependency): [mksglu/context-mode](https://github.com/mksglu/context-mode) - section-level reading, scripted analysis, findings as files; the MCP server, FTS5 index, and hooks are out of scope, and the ELv2 license forbids code reuse
 - Tooling presets: [ultracite](https://ultracite.ai), oxlint/oxfmt
 - Skills distribution: [vercel-labs/skills](https://github.com/vercel-labs/skills)
 

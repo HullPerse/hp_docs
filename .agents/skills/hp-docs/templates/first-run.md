@@ -218,7 +218,7 @@ Docs Health Check:
   TESTING.md         [14/14 sections] OK
   SECURITY.md        [11/11 sections] OK
   DESIGN.md          [ 8/8 sections]  OK   (or deleted for non-UI)
-  PERFORMANCE.md     [ 8/8 sections]  OK   (when created; optional file)
+  PERFORMANCE.md     [ 9/9 sections]  OK   (when created; optional file)
   CHECKLIST.md       [ 5/5 sections]  OK
   REVIEWER.md        [ 8/8 sections]  OK   (issue-file template headings inside the code fence do not count)
   DECISIONS.md       [ 2/2 sections]  OK

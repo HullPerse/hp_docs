@@ -7,6 +7,8 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] List available MCP servers and tools; for library questions use a documentation tool before answering from memory; apply task-relevant tools instead of workarounds.
 - [ ] Read `.docs/AGENT_PROMPT.md`.
 - [ ] Read `.docs/DEVELOPMENT.md`.
+- [ ] Read by section: heading index first, then the sections the task touches; DECISIONS.md as a tail plus a topic search, never the whole journal.
+- [ ] For repo-wide questions run one search or script that prints counts and paths; a raw dump is not evidence.
 - [ ] Read `.docs/TESTING.md` before writing or reviewing tests.
 - [ ] Read `.docs/SECURITY.md`; note the security profile, trust boundaries, and capability budget.
 - [ ] Identify which trust boundaries the change touches and which capabilities (network, processes, filesystem, environment, lifecycle scripts) it adds or alters.
@@ -50,6 +52,8 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Bug fix made at the shared root, not on the one named path; callers verified via grep.
 - [ ] Re-read target files right before editing when they were loaded earlier in the session; no stale-read overwrites of concurrent changes.
 - [ ] Deliberate simplifications with a known ceiling marked with a `ponytail:` comment naming the upgrade path.
+- [ ] Every resource acquired by the change (listener, timer, subscription, observer, stream, handle, worker, native object) has a release path on success, failure, cancel, unmount, and shutdown.
+- [ ] Every cache, queue, map, or buffer that can grow has a growth policy (limit, TTL, eviction, backpressure); no unbounded collection added.
 - [ ] Do not change existing behavior without a task.
 - [ ] No speculative abstractions or dead extension points.
 - [ ] Implement loading, empty, error, dirty, stale, recovery states.
@@ -72,6 +76,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 - [ ] Run typecheck: {{TYPECHECK_COMMAND}}.
 - [ ] Run relevant tests: {{TEST_COMMAND}}.
 - [ ] Run configured coverage, mutation, property/fuzz, benchmark, stress, flake, and concurrency checks, or record each as not applicable or unavailable with a reason.
+- [ ] For resource-touching changes, exercise repeated cycles (mount/unmount, open/close, connect/disconnect, start/stop) or record the check as not applicable; report lifecycle findings with their evidence.
 - [ ] Run recorded security commands from `.docs/SECURITY.md` ({{AUDIT_COMMAND}} and others), or record each as not applicable or unavailable with a reason.
 - [ ] Review the diff for accidental new outbound channels: network calls, child processes, filesystem writes, eval or dynamic imports.
 - [ ] Record an approved exception if a test layer cannot run.
@@ -100,6 +105,7 @@ Use for every non-trivial task. Copy only relevant items into the task plan.
 
 - [ ] Record chosen implementation disposition and documentation destination in the feature file or `.docs/DECISIONS.md`.
 - [ ] Append every significant decision, behavior change, or user-facing bug fix to `.docs/DECISIONS.md` before the final report; state explicitly when there were none.
+- [ ] Findings longer than about 40 lines written to `.docs/reviews/<scope>-<date>.md`, with verdict and path in the report instead of the body.
 - [ ] Update `.docs/DESIGN.md` if UX/visual rules changed.
 - [ ] Update module README if commands/structure/conventions changed.
 - [ ] Suggest independent review via `.docs/REVIEWER.md` for large changes.

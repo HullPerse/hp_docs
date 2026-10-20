@@ -28,9 +28,19 @@ Example:
 
 Do not assume a system does not exist because you have seen one file. Search for all related types, routes, services, state, persistence, tests, and mentions across the docs.
 
+### Read by section, not by file
+
+The reading list is a contract, not a corpus to pour into context. Build the heading index first (search tool or `grep -n '^#\{1,3\} ' .docs/*.md`), then read the sections the task touches:
+
+- a section read in full counts as read; skipping a section the task touches does not, and "read it later" is not a section read;
+- read whole files only when the file is the deliverable: this file, `.docs/CHECKLIST.md`, the active feature file;
+- `.docs/DECISIONS.md` is read as a tail plus a topic search: the last entries verbatim before any question or write (the parallel-sessions protocol needs a fresh tail), then a search by topic (module, feature, error, API name); never load the whole journal to answer one question;
+- when a targeted read is not enough, widen deliberately and name the files you widened to; silent full reads "just in case" are the cost this rule removes;
+- reports cite section headings ("AGENT_PROMPT section 5, verification") instead of pasting the source text back.
+
 ### Strict DECISIONS.md gate
 
-- Before the audit, the agent must read `.docs/DECISIONS.md` and check for conflicting or already-accepted decisions.
+- Before the audit, the agent must check `.docs/DECISIONS.md` (tail plus topic search, per "Read by section") for conflicting or already-accepted decisions.
 - Every significant decision, behavior change, UX change, architectural change, public API change, security or persistence fix, and every user-facing bug fix must get a short entry in `.docs/DECISIONS.md` within the same task.
 - The entry must be added before the final report. If there were no significant decisions or behavior changes, the agent states that explicitly in the report.
 - Never override an entry in `.docs/DECISIONS.md` silently. On conflict, stop and ask the user.
@@ -117,6 +127,16 @@ When an excuse appears, name it, apply the response, and continue the required w
 - Do not invent criticism for tone's sake. If the idea is good or the risk unconfirmed, say so directly.
 - After criticism, still ask the necessary question if the decision remains with the user.
 - When the user's decision is bad, the agent must push back rather than present an equal-weight list of options. State the preferred path and why the others are worse.
+
+### Scripted analysis instead of corpus reading
+
+Repo-wide questions are answered by one command that prints the answer, not by reading files into context:
+
+- counts, where-used, rule-compliance sweeps, dead exports, dependency and secret scans, pre-refactor inventory: write the query (search tool pipeline, `rg`, `jq`, or a short throwaway script in the system temp directory) and print a table or the matching paths with line numbers;
+- print the answer, not the raw output: a count plus paths beats pages of matches, and the smallest useful excerpt beats a whole file;
+- a repeated check becomes a repo script with its command recorded in `.docs/DECISIONS.md`; a one-off stays throwaway and is not committed;
+- this does not license weaker evidence: the query and its result appear in the report, and a claim without a command stays unverified;
+- applies to every repo-wide pass: `review-audit`, `docs-refactor`, `security-audit`, `code-cleanup`, `deep-performance`, `.docs/agents-audit.prompt.md`.
 
 ## 4. Questions and decisions
 
@@ -227,7 +247,7 @@ Before declaring a task done, prove the fix:
 1. Reproduce the original failure or missing behavior with a test or a command.
 2. Apply the minimal fix.
 3. Rerun the same reproduction plus the relevant suite.
-4. Show the output. Evidence is required; manual claim is not.
+4. Show the output. Evidence is required; manual claim is not. Evidence is a command and its result (counts, paths, table), not a paste of everything the command printed (see "Scripted analysis" in section 3).
 
 ### Two-stage review (spec then quality)
 
@@ -288,6 +308,17 @@ Numbers come only from executed commands and their recorded artifacts. Never wri
 
 Reference values in documentation are classified: normative accessibility values (WCAG 2.2 contrast 4.5:1 and 3:1, target minimum 24x24 CSS px where applicable), UX heuristics (about 100 ms, 1 s and 10 s response boundaries; 44x44 px comfort target; 45-90 character line length; transition timings), and educational reference (frame envelopes 8.3 ms at 120 Hz and 16.7 ms at 60 Hz; the Jeff Dean latency table as a dated historical reference). Heuristics and educational values are not acceptance thresholds: a real budget or claim still requires an executed measurement.
 
+### Resource lifecycle and retention
+
+Applies when a change acquires a resource or holds state across time: listeners, timers, intervals, animation frames, subscriptions, observers, streams, sockets, workers, file handles, native objects, caches, queues, buffers.
+
+- Pair acquisition with release in the same scope or under one declared owner; cleanup covers success, failure, cancellation, unmount, and shutdown, and is safe to call twice when the API allows it.
+- Every collection that can grow over time needs a growth policy: size limit, TTL, eviction, backpressure, or a bounded buffer. An unbounded `Map`, queue, or retry list is a finding, not a default.
+- Long-running or detached async work needs an owner and cancellation (`AbortController` or the platform equivalent). Ignoring a stale result is not cancellation.
+- The presence of a resource is not a defect. A defect is a missing lifecycle, unbounded growth, duplicated acquisition, or measured degradation.
+- A change that acquires nothing says so in one line instead of running the checklist.
+- Findings go into Verification with the evidence that produced them. Passing tests never prove the absence of a leak.
+
 ## 8. Testing and verification contract
 
 Every new feature includes tests in the same change. The full testing contract lives in `.docs/TESTING.md`.
@@ -325,6 +356,13 @@ At session end update the affected docs:
 - `.docs/DEVELOPMENT.md` - newly fixed rules.
 
 Do not duplicate long explanations. Reference the source document and keep summaries short. Tracked documentation must not land in `.gitignore`.
+
+### Long findings go to a file
+
+- findings longer than about 40 lines (audit report, security pass, migration inventory, performance profile, multi-package review) are written to `.docs/reviews/<scope>-<date>.md`;
+- the chat carries the verdict, the top findings, and the file path; the report body is never pasted into the chat;
+- one file per run; unrelated runs never share a file;
+- the file follows the same anti-slop rules and the issue format in `.docs/reviews/README.md`; link it from `.docs/DECISIONS.md` when a finding drove a decision.
 
 ## 10. Style and anti-slop rules
 
